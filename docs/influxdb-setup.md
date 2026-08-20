@@ -115,12 +115,12 @@ WEATHER_DATASOURCE=api
 WEATHER_CITY=Brussels
 
 # Set your OpenWeatherMap API key (get one free at https://openweathermap.org/api)
-OPENWEATHERMAP_API_KEY=89f75483c9c6531e7808466bc1cba6b6
+OPENWEATHERMAP_API_KEY=<YOUR_API>
 
 # Enable InfluxDB and configure connection
 INFLUXDB_ENABLED=true
 INFLUXDB_URL=http://localhost:8181
-INFLUXDB_TOKEN=apiv3_WyGQnzPYzf31wz3tWcmNtM8rGCNIjGCGQQADSMVtMOQn30l-fs8eMKyll0ZZoO45dHUveTQ-toARYHDHlgdKWw
+INFLUXDB_TOKEN=<YOUR_INFLUXDB_API>
 INFLUXDB_DATABASE=weather
 ```
 

@@ -28,77 +28,120 @@
 
     <main class="app-content">
 
-        <!-- Status bar -->
-        <div class="status-bar">
-            <h2 class="section-heading">Current Conditions</h2>
-            <div class="status-info">
-                <span id="data-source" class="status-tag"></span>
-                <span id="last-updated">Loading...</span>
+        <!-- Header card: Current Conditions | Station + city selector -->
+        <div class="header-card">
+            <div class="header-card__left">
+                <h2 class="section-heading">Current Conditions</h2>
+                <div class="status-info">
+                    <span id="data-source" class="status-tag"></span>
+                    <span id="last-updated">Loading...</span>
+                </div>
+                <h3 class="section-heading" id="station-label">Station: --</h3>
+                <select id="city-select" class="city-select">
+                    <option value="">Loading cities...</option>
+                </select>
+                <!-- Current conditions hero -->
+                <div class="current-hero">
+                    <cds-tile class="hero-tile">
+                        <div class="hero-layout">
+                            <div class="hero-main">
+                                <img id="current-icon" class="hero-icon" src="https://openweathermap.org/img/wn/01d@2x.png" alt="Weather condition">
+                                <div class="hero-temp-block">
+                                    <div class="hero-temp">
+                                        <span class="hero-temp__value" id="val-temperature">--</span>
+                                        <span class="hero-temp__unit">°C</span>
+                                    </div>
+                                    <div class="hero-condition" id="current-description">--</div>
+                                </div>
+                            </div>
+                            <div class="hero-details">
+                                <div class="hero-detail">
+                                    <svg class="detail-icon-svg" viewBox="0 0 32 32" width="36" height="36">
+                                        <path d="M16 4a1 1 0 0 0-1 1v2.1A8 8 0 0 0 8.1 14H6a1 1 0 0 0 0 2h2.1A8 8 0 0 0 15 22.9V25a1 1 0 0 0 2 0v-2.1a8 8 0 0 0 6.9-6.9H26a1 1 0 0 0 0-2h-2.1A8 8 0 0 0 17 7.1V5a1 1 0 0 0-1-1zm0 5a6 6 0 1 1 0 12 6 6 0 0 1 0-12zm0 2a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" fill="#8d8d8d"/>
+                                    </svg>
+                                    <div class="detail-info">
+                                        <span class="detail-value" id="val-humidity">--</span>
+                                        <span class="detail-unit">%</span>
+                                    </div>
+                                    <span class="detail-label">Humidity</span>
+                                </div>
+                                <div class="hero-detail">
+                                    <svg class="detail-icon-svg" viewBox="0 0 32 32" width="36" height="36">
+                                        <path d="M16 2C8.3 2 2 8.3 2 16s6.3 14 14 14 14-6.3 14-14S23.7 2 16 2zm0 2c6.6 0 12 5.4 12 12s-5.4 12-12 12S4 22.6 4 16 9.4 4 16 4z" fill="#8d8d8d"/>
+                                        <path d="M16 8v7.3l4.9 4.9 1.4-1.4L17 13.6V8z" fill="#8d8d8d"/>
+                                        <circle cx="16" cy="16" r="2" fill="#8d8d8d"/>
+                                    </svg>
+                                    <div class="detail-info">
+                                        <span class="detail-value" id="val-pressure">--</span>
+                                        <span class="detail-unit">hPa</span>
+                                    </div>
+                                    <span class="detail-label">Pressure</span>
+                                </div>
+                                <div class="hero-detail">
+                                    <svg class="detail-icon-svg" viewBox="0 0 32 32" width="36" height="36">
+                                        <path d="M20 6a3.9 3.9 0 0 0-3.86 3.25H4v2h12.14A3.9 3.9 0 0 0 20 14a4 4 0 0 0 0-8zm0 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" fill="#8d8d8d"/>
+                                        <path d="M12 18a3.9 3.9 0 0 0-3.86 3.25H4v2h4.14A3.9 3.9 0 0 0 12 26a4 4 0 0 0 0-8zm0 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" fill="#8d8d8d"/>
+                                        <path d="M26 14a3.9 3.9 0 0 0-3.86 3.25H4v2h18.14A3.9 3.9 0 0 0 26 22a4 4 0 0 0 0-8zm0 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" fill="#8d8d8d"/>
+                                    </svg>
+                                    <div class="detail-info">
+                                        <span class="detail-value" id="val-windSpeed">--</span>
+                                        <span class="detail-unit">km/h</span>
+                                    </div>
+                                    <span class="detail-label">Wind</span>
+                                </div>
+                                <div class="hero-detail">
+                                    <svg class="detail-icon-svg" viewBox="0 0 32 32" width="36" height="36">
+                                        <path d="M16 4l-1 .5C14.4 4.8 8 8.6 8 16a8 8 0 0 0 16 0c0-7.4-6.4-11.2-7-11.5L16 4zm0 3c1.6 1.2 6 5.1 6 9a6 6 0 0 1-12 0c0-3.9 4.4-7.8 6-9z" fill="#8d8d8d"/>
+                                    </svg>
+                                    <div class="detail-info">
+                                        <span class="detail-value" id="val-rainfall">--</span>
+                                        <span class="detail-unit">mm</span>
+                                    </div>
+                                    <span class="detail-label">Rainfall</span>
+                                </div>
+                                <div class="hero-detail">
+                                    <div class="wind-compass" id="wind-compass">
+                                        <span class="compass-arrow" id="compass-arrow">&#8593;</span>
+                                    </div>
+                                    <div class="detail-info">
+                                        <span class="detail-value" id="val-windDirection">--</span>
+                                        <span class="detail-unit">&deg;</span>
+                                    </div>
+                                    <span class="detail-label">Direction</span>
+                                </div>
+                            </div>
+                        </div>
+                    </cds-tile>
+                </div>
+            </div>
+            <div class="header-card__right">
+            <!-- Station location map -->
+            <section class="map-section">
+                <cds-tile>
+                    <div class="map-header">
+                        <h3 class="section-heading" id="map-title">Station Location</h3>
+                    </div>
+                    <div id="station-map" class="station-map"></div>
+                </cds-tile>
+            </section>
             </div>
         </div>
 
-        <!-- Current value tiles -->
-        <div class="gauge-grid">
-            <cds-tile class="gauge-tile" id="tile-temperature">
-                <div class="value-card">
-                    <div class="value-card__icon">&#x1f321;</div>
-                    <div class="value-card__data">
-                        <span class="value-card__value" id="val-temperature">--</span>
-                        <span class="value-card__unit">°C</span>
-                    </div>
-                    <div class="value-card__label">Temperature</div>
+        <!-- Forecast with tabs -->
+        <section class="forecast-section">
+            <div class="forecast-header">
+                <h2 class="section-heading">Forecast</h2>
+                <div class="tab-bar" role="tablist">
+                    <button class="tab-btn tab-btn--active" role="tab" data-tab="hourly" aria-selected="true">Hourly</button>
+                    <button class="tab-btn" role="tab" data-tab="5day" aria-selected="false">5-Day</button>
                 </div>
-            </cds-tile>
-            <cds-tile class="gauge-tile" id="tile-humidity">
-                <div class="value-card">
-                    <div class="value-card__icon">&#x1f4a7;</div>
-                    <div class="value-card__data">
-                        <span class="value-card__value" id="val-humidity">--</span>
-                        <span class="value-card__unit">%</span>
-                    </div>
-                    <div class="value-card__label">Humidity</div>
-                </div>
-            </cds-tile>
-            <cds-tile class="gauge-tile" id="tile-pressure">
-                <div class="value-card">
-                    <div class="value-card__icon">&#x1f4ca;</div>
-                    <div class="value-card__data">
-                        <span class="value-card__value" id="val-pressure">--</span>
-                        <span class="value-card__unit">hPa</span>
-                    </div>
-                    <div class="value-card__label">Pressure</div>
-                </div>
-            </cds-tile>
-            <cds-tile class="gauge-tile" id="tile-windSpeed">
-                <div class="value-card">
-                    <div class="value-card__icon">&#x1f4a8;</div>
-                    <div class="value-card__data">
-                        <span class="value-card__value" id="val-windSpeed">--</span>
-                        <span class="value-card__unit">km/h</span>
-                    </div>
-                    <div class="value-card__label">Wind Speed</div>
-                </div>
-            </cds-tile>
-            <cds-tile class="gauge-tile" id="tile-rainfall">
-                <div class="value-card">
-                    <div class="value-card__icon">&#x1f327;</div>
-                    <div class="value-card__data">
-                        <span class="value-card__value" id="val-rainfall">--</span>
-                        <span class="value-card__unit">mm</span>
-                    </div>
-                    <div class="value-card__label">Rainfall</div>
-                </div>
-            </cds-tile>
-        </div>
-
-        <!-- Station location map -->
-        <section class="map-section">
-            <cds-tile>
-                <div class="map-header">
-                    <h3 class="section-heading" id="map-title">Station Location</h3>
-                </div>
-                <div id="station-map" class="station-map"></div>
-            </cds-tile>
+            </div>
+            <div class="forecast-scroll" id="forecast-hourly" role="tabpanel">
+                <p class="forecast-loading">Loading forecast...</p>
+            </div>
+            <div class="forecast-scroll" id="forecast-5day" role="tabpanel" style="display:none">
+                <p class="forecast-loading">Loading forecast...</p>
+            </div>
         </section>
 
         <!-- History charts -->

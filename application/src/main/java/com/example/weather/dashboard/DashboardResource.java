@@ -1,11 +1,14 @@
 package com.example.weather.dashboard;
 
 import com.example.weather.api.WeatherApiService;
+import com.example.weather.model.ForecastEntry;
 import com.example.weather.model.WeatherReading;
 import com.example.weather.scheduler.WeatherScheduler;
 import com.example.weather.storage.InfluxDbService;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
@@ -54,13 +57,44 @@ public class DashboardResource {
     }
 
     @GET
+    @Path("/forecast")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<ForecastEntry> forecast() {
+        return weatherApiService.fetchForecast();
+    }
+
+    @GET
     @Path("/location")
     @Produces(MediaType.APPLICATION_JSON)
     public Map<String, Object> location() {
         return Map.of(
             "name", weatherApiService.getStationName(),
             "latitude", weatherApiService.getLatitude(),
-            "longitude", weatherApiService.getLongitude()
+            "longitude", weatherApiService.getLongitude(),
+            "description", weatherApiService.getCurrentDescription(),
+            "icon", weatherApiService.getCurrentIcon()
         );
+    }
+
+    @GET
+    @Path("/cities")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Map<String, Object> cities() {
+        return Map.of(
+            "cities", weatherApiService.getCities(),
+            "active", weatherApiService.getActiveCity()
+        );
+    }
+
+    @PUT
+    @Path("/city")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Map<String, Object> changeCity(Map<String, String> body) {
+        String newCity = body.get("city");
+        if (newCity != null && !newCity.isBlank()) {
+            weatherApiService.setActiveCity(newCity.trim());
+        }
+        return Map.of("active", weatherApiService.getActiveCity());
     }
 }
