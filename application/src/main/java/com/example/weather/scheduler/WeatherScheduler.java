@@ -21,6 +21,10 @@ public class WeatherScheduler {
 
     private final AtomicReference<WeatherReading> latestReading = new AtomicReference<>();
 
+    public void collectNow() {
+        collectAndStore();
+    }
+
     @Scheduled(every = "${weather.collect.interval:30s}")
     void collectAndStore() {
         WeatherReading reading = weatherApiService.fetchReading();

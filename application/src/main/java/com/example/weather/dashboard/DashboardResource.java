@@ -94,6 +94,7 @@ public class DashboardResource {
         String newCity = body.get("city");
         if (newCity != null && !newCity.isBlank()) {
             weatherApiService.setActiveCity(newCity.trim());
+            weatherScheduler.collectNow();
         }
         return Map.of("active", weatherApiService.getActiveCity());
     }
