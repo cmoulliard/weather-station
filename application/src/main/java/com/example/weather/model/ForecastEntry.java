@@ -7,7 +7,9 @@ public record ForecastEntry(
     double humidity,
     double pressure,
     double windSpeed,
+    double windDirection,
     double rainfall,
+    double rainProbability,
     String description,
     String icon,
     Instant timestamp

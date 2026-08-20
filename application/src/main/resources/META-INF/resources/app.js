@@ -27,6 +27,148 @@ function owmIconUrl(icon, size) {
     return 'https://openweathermap.org/img/wn/' + icon + (size || '@2x') + '.png';
 }
 
+/* ── SVG weather icons ─────────────────────────── */
+
+function weatherSvgIcon(code) {
+    var isNight = code.endsWith('n');
+    var type = code.substring(0, 2);
+    switch (type) {
+        case '01': return isNight ? svgClearNight() : svgSun();
+        case '02': return isNight ? svgCloudNight() : svgCloudSun();
+        case '03': return svgCloud();
+        case '04': return svgClouds();
+        case '09': return svgShowerRain();
+        case '10': return isNight ? svgRainNight() : svgRainSun();
+        case '11': return svgThunder();
+        case '13': return svgSnow();
+        case '50': return svgFog();
+        default:   return svgCloud();
+    }
+}
+
+function svgSun() {
+    return '<svg viewBox="0 0 36 36" width="36" height="36">' +
+        '<circle cx="18" cy="18" r="7" fill="#f5a623" stroke="#e8971e" stroke-width="0.5"/>' +
+        '<g stroke="#f5a623" stroke-width="2" stroke-linecap="round">' +
+        '<line x1="18" y1="3" x2="18" y2="7"/><line x1="18" y1="29" x2="18" y2="33"/>' +
+        '<line x1="3" y1="18" x2="7" y2="18"/><line x1="29" y1="18" x2="33" y2="18"/>' +
+        '<line x1="7.4" y1="7.4" x2="10.2" y2="10.2"/><line x1="25.8" y1="25.8" x2="28.6" y2="28.6"/>' +
+        '<line x1="7.4" y1="28.6" x2="10.2" y2="25.8"/><line x1="25.8" y1="10.2" x2="28.6" y2="7.4"/>' +
+        '</g></svg>';
+}
+
+function svgClearNight() {
+    return '<svg viewBox="0 0 36 36" width="36" height="36">' +
+        '<path d="M25 6C17 6 11 12 11 20s6 14 14 14c2 0 3.5-.3 5-1-2.5.5-7-1-9.5-4.5S18 20 19 16s3.5-6.5 6-8c-1-.3-2-.5-3-.5z" fill="#f5d76e" stroke="#d4b84a" stroke-width="0.5"/>' +
+        '<circle cx="27" cy="10" r="1" fill="#f5d76e"/><circle cx="30" cy="15" r="0.7" fill="#f5d76e"/>' +
+        '</svg>';
+}
+
+function svgCloud() {
+    return '<svg viewBox="0 0 36 36" width="36" height="36">' +
+        '<path d="M10 26h18a7 7 0 0 0 1-13.9A8.5 8.5 0 0 0 12.3 14 6 6 0 0 0 10 26z" fill="#b0bec5" stroke="#90a4ae" stroke-width="0.5"/>' +
+        '</svg>';
+}
+
+function svgCloudSun() {
+    return '<svg viewBox="0 0 36 36" width="36" height="36">' +
+        '<circle cx="12" cy="13" r="5.5" fill="#f5a623"/>' +
+        '<g stroke="#f5a623" stroke-width="1.5" stroke-linecap="round">' +
+        '<line x1="12" y1="3" x2="12" y2="5.5"/><line x1="12" y1="20.5" x2="12" y2="23"/>' +
+        '<line x1="2" y1="13" x2="4.5" y2="13"/><line x1="19.5" y1="13" x2="22" y2="13"/>' +
+        '<line x1="5" y1="6" x2="6.8" y2="7.8"/><line x1="17.2" y1="18.2" x2="19" y2="20"/>' +
+        '<line x1="5" y1="20" x2="6.8" y2="18.2"/><line x1="17.2" y1="7.8" x2="19" y2="6"/>' +
+        '</g>' +
+        '<path d="M12 29h17a6 6 0 0 0 .5-11.9A7.5 7.5 0 0 0 15 18.5 5 5 0 0 0 12 29z" fill="#b0bec5" stroke="#90a4ae" stroke-width="0.5"/>' +
+        '</svg>';
+}
+
+function svgCloudNight() {
+    return '<svg viewBox="0 0 36 36" width="36" height="36">' +
+        '<path d="M15 5c-1 1.5-1.5 3.5-1 5.5.8 3 3 5 6 5.5A7.5 7.5 0 0 0 15 18.5 5 5 0 0 0 12 29h17a6 6 0 0 0 .5-11.9A7.5 7.5 0 0 0 15 18.5" fill="#b0bec5" stroke="#90a4ae" stroke-width="0.5"/>' +
+        '<path d="M16 4c-4 1-6.5 5-5.5 9 .3 1.2.9 2.2 1.6 3" fill="none" stroke="#f5d76e" stroke-width="1.5"/>' +
+        '<path d="M11 3c-1 .3-1.8 1-2.2 2 .8-.3 1.8-.2 2.5.3s1 1.3 1 2.1c1-.2 1.8-.9 2.1-1.8-.5.1-1.1 0-1.6-.3s-.8-.8-.8-1.3z" fill="#f5d76e"/>' +
+        '</svg>';
+}
+
+function svgClouds() {
+    return '<svg viewBox="0 0 36 36" width="36" height="36">' +
+        '<path d="M7 23h14a5 5 0 0 0 .5-9.9A6.5 6.5 0 0 0 9.3 14 4.5 4.5 0 0 0 7 23z" fill="#90a4ae" stroke="#78909c" stroke-width="0.5"/>' +
+        '<path d="M14 29h16a6 6 0 0 0 .5-11.9A7.5 7.5 0 0 0 16 18.5 5 5 0 0 0 14 29z" fill="#b0bec5" stroke="#90a4ae" stroke-width="0.5"/>' +
+        '</svg>';
+}
+
+function svgShowerRain() {
+    return '<svg viewBox="0 0 36 36" width="36" height="36">' +
+        '<path d="M8 20h18a6 6 0 0 0 .5-11.9A7.5 7.5 0 0 0 12 10.5 5 5 0 0 0 8 20z" fill="#90a4ae" stroke="#78909c" stroke-width="0.5"/>' +
+        '<g stroke="#4fc3f7" stroke-width="1.5" stroke-linecap="round">' +
+        '<line x1="12" y1="23" x2="10" y2="28"/><line x1="18" y1="23" x2="16" y2="28"/>' +
+        '<line x1="24" y1="23" x2="22" y2="28"/><line x1="15" y1="25" x2="13" y2="30"/>' +
+        '<line x1="21" y1="25" x2="19" y2="30"/>' +
+        '</g></svg>';
+}
+
+function svgRainSun() {
+    return '<svg viewBox="0 0 36 36" width="36" height="36">' +
+        '<circle cx="10" cy="10" r="4.5" fill="#f5a623"/>' +
+        '<g stroke="#f5a623" stroke-width="1.2" stroke-linecap="round">' +
+        '<line x1="10" y1="2" x2="10" y2="4"/><line x1="10" y1="16" x2="10" y2="18"/>' +
+        '<line x1="2" y1="10" x2="4" y2="10"/><line x1="16" y1="10" x2="18" y2="10"/>' +
+        '<line x1="4.3" y1="4.3" x2="5.7" y2="5.7"/><line x1="14.3" y1="14.3" x2="15.7" y2="15.7"/>' +
+        '<line x1="4.3" y1="15.7" x2="5.7" y2="14.3"/><line x1="14.3" y1="5.7" x2="15.7" y2="4.3"/>' +
+        '</g>' +
+        '<path d="M12 22h16a5.5 5.5 0 0 0 .5-10.9A7 7 0 0 0 15 13 4.5 4.5 0 0 0 12 22z" fill="#b0bec5" stroke="#90a4ae" stroke-width="0.5"/>' +
+        '<g stroke="#4fc3f7" stroke-width="1.5" stroke-linecap="round">' +
+        '<line x1="16" y1="25" x2="14.5" y2="29"/><line x1="22" y1="25" x2="20.5" y2="29"/>' +
+        '<line x1="28" y1="25" x2="26.5" y2="29"/>' +
+        '</g></svg>';
+}
+
+function svgRainNight() {
+    return '<svg viewBox="0 0 36 36" width="36" height="36">' +
+        '<path d="M10 4c-1 .3-1.8 1-2.2 2 .8-.3 1.8-.2 2.5.3s1 1.3 1 2.1c1-.2 1.8-.9 2.1-1.8-.5.1-1.1 0-1.6-.3s-.8-.8-.8-1.3z" fill="#f5d76e"/>' +
+        '<path d="M12 22h16a5.5 5.5 0 0 0 .5-10.9A7 7 0 0 0 15 13 4.5 4.5 0 0 0 12 22z" fill="#b0bec5" stroke="#90a4ae" stroke-width="0.5"/>' +
+        '<g stroke="#4fc3f7" stroke-width="1.5" stroke-linecap="round">' +
+        '<line x1="16" y1="25" x2="14.5" y2="29"/><line x1="22" y1="25" x2="20.5" y2="29"/>' +
+        '<line x1="28" y1="25" x2="26.5" y2="29"/>' +
+        '</g></svg>';
+}
+
+function svgThunder() {
+    return '<svg viewBox="0 0 36 36" width="36" height="36">' +
+        '<path d="M8 18h18a6 6 0 0 0 .5-11.9A7.5 7.5 0 0 0 12 8.5 5 5 0 0 0 8 18z" fill="#78909c" stroke="#607d8b" stroke-width="0.5"/>' +
+        '<polygon points="19,19 15,26 18,26 16,33 24,24 20,24 23,19" fill="#fdd835" stroke="#f9a825" stroke-width="0.3"/>' +
+        '<g stroke="#4fc3f7" stroke-width="1.3" stroke-linecap="round">' +
+        '<line x1="11" y1="21" x2="9.5" y2="26"/><line x1="27" y1="21" x2="25.5" y2="26"/>' +
+        '</g></svg>';
+}
+
+function svgSnow() {
+    return '<svg viewBox="0 0 36 36" width="36" height="36">' +
+        '<path d="M8 20h18a6 6 0 0 0 .5-11.9A7.5 7.5 0 0 0 12 10.5 5 5 0 0 0 8 20z" fill="#b0bec5" stroke="#90a4ae" stroke-width="0.5"/>' +
+        '<g fill="#4fc3f7">' +
+        '<circle cx="12" cy="25" r="1.5"/><circle cx="18" cy="24" r="1.5"/><circle cx="24" cy="25" r="1.5"/>' +
+        '<circle cx="15" cy="29" r="1.5"/><circle cx="21" cy="29" r="1.5"/>' +
+        '</g></svg>';
+}
+
+function svgFog() {
+    return '<svg viewBox="0 0 36 36" width="36" height="36">' +
+        '<g stroke="#90a4ae" stroke-width="2.5" stroke-linecap="round">' +
+        '<line x1="6" y1="12" x2="30" y2="12"/>' +
+        '<line x1="8" y1="17" x2="28" y2="17"/>' +
+        '<line x1="6" y1="22" x2="30" y2="22"/>' +
+        '<line x1="10" y1="27" x2="26" y2="27"/>' +
+        '</g></svg>';
+}
+
+function windArrowSvg(deg) {
+    var rot = ((deg || 0) + 180) % 360;
+    return '<svg viewBox="0 0 20 20" width="16" height="16" style="transform:rotate(' + rot + 'deg)">' +
+        '<path d="M10 2L6 14h3v4h2v-4h3z" fill="#525252"/>' +
+        '</svg>';
+}
+
 /* ── History charts ─────────────────────────────── */
 
 function createHistoryCharts() {
@@ -309,29 +451,115 @@ function renderHourlyForecast(data) {
     if (!container || !data.length) return;
     container.innerHTML = '';
 
-    data.forEach(function(entry) {
-        var card = document.createElement('div');
-        card.className = 'forecast-card';
+    var COL_W = 85;
+    var CHART_H = 160;
+    var PAD_TOP = 30;
+    var PAD_BOTTOM = 20;
+    var totalW = data.length * COL_W;
 
+    var temps = data.map(function(e) { return e.temperature; });
+    var minT = Math.floor(Math.min.apply(null, temps) - 1);
+    var maxT = Math.ceil(Math.max.apply(null, temps) + 1);
+    var rangeT = maxT - minT || 1;
+
+    function tempY(t) {
+        return PAD_TOP + (1 - (t - minT) / rangeT) * (CHART_H - PAD_TOP - PAD_BOTTOM);
+    }
+
+    // Build SVG chart
+    var points = [];
+    var circles = '';
+    var labels = '';
+    var nightRects = '';
+
+    data.forEach(function(entry, i) {
+        var cx = COL_W / 2 + i * COL_W;
+        var cy = tempY(entry.temperature);
+        points.push(cx + ',' + cy);
+
+        var isNight = entry.icon.endsWith('n');
+        if (isNight) {
+            nightRects += '<rect x="' + (i * COL_W) + '" y="0" width="' + COL_W + '" height="' + CHART_H + '" fill="#e8e8e8" opacity="0.5"/>';
+        }
+
+        circles += '<circle cx="' + cx + '" cy="' + cy + '" r="4" fill="#0f62fe" stroke="#fff" stroke-width="1.5"/>';
+        labels += '<text x="' + cx + '" y="' + (cy - 12) + '" text-anchor="middle" font-size="13" font-weight="600" fill="#161616">' + Math.round(entry.temperature) + '°</text>';
+    });
+
+    // Y-axis grid lines
+    var gridLines = '';
+    var gridStep = rangeT > 10 ? 5 : (rangeT > 4 ? 2 : 1);
+    for (var g = Math.ceil(minT / gridStep) * gridStep; g <= maxT; g += gridStep) {
+        var gy = tempY(g);
+        gridLines += '<line x1="0" y1="' + gy + '" x2="' + totalW + '" y2="' + gy + '" stroke="#e0e0e0" stroke-width="0.5"/>';
+        gridLines += '<text x="4" y="' + (gy - 4) + '" font-size="10" fill="#8d8d8d">' + g + '°</text>';
+    }
+
+    var svgChart = '<svg class="hourly-chart-svg" width="' + totalW + '" height="' + CHART_H + '">' +
+        nightRects +
+        gridLines +
+        '<polyline points="' + points.join(' ') + '" fill="none" stroke="#0f62fe" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>' +
+        circles +
+        labels +
+        '</svg>';
+
+    // Build detail columns
+    var columns = '';
+    data.forEach(function(entry, i) {
         var dt = new Date(entry.timestamp);
-        var dayName = dt.toLocaleDateString(undefined, { weekday: 'short' });
-        var time = dt.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+        var hour = dt.getHours() + 'h';
+        var isNight = entry.icon.endsWith('n');
+        var cardinal = degreesToCardinal(entry.windDirection || 0);
+        var windSpeed = Math.round(entry.windSpeed);
+        var rainProb = Math.round(entry.rainProbability || 0);
+        var rainMm = entry.rainfall || 0;
 
-        card.innerHTML =
-            '<div class="forecast-card__time">' +
-                '<span class="forecast-card__day">' + dayName + '</span>' +
-                '<span class="forecast-card__hour">' + time + '</span>' +
-            '</div>' +
-            '<img class="forecast-card__icon" src="' + owmIconUrl(entry.icon) + '" alt="' + entry.description + '">' +
-            '<div class="forecast-card__temp">' + entry.temperature.toFixed(1) + '&deg;</div>' +
-            '<div class="forecast-card__desc">' + entry.description + '</div>' +
-            '<div class="forecast-card__details">' +
-                '<span>' + entry.humidity.toFixed(0) + '%</span>' +
-                '<span>' + entry.rainfall.toFixed(1) + ' mm</span>' +
-                '<span>' + entry.windSpeed.toFixed(0) + ' km/h</span>' +
+        var rainHtml = '';
+        if (rainProb > 0) {
+            rainHtml = '<div class="hourly-rain">' +
+                '<svg viewBox="0 0 12 16" width="10" height="13" class="hourly-rain-drop"><path d="M6 1C6 1 1 7.5 1 10.5a5 5 0 0 0 10 0C11 7.5 6 1 6 1z" fill="#4fc3f7"/></svg>' +
+                '<span>' + rainProb + '%</span>' +
+                '</div>';
+            if (rainMm > 0) {
+                rainHtml += '<div class="hourly-rain-mm">' + rainMm.toFixed(1) + ' mm</div>';
+            }
+        }
+
+        columns +=
+            '<div class="hourly-col' + (isNight ? ' hourly-col--night' : '') + '" style="width:' + COL_W + 'px">' +
+                '<div class="hourly-wind-dir">' +
+                    '<span class="hourly-cardinal">' + cardinal + '</span>' +
+                    windArrowSvg(entry.windDirection) +
+                '</div>' +
+                '<div class="hourly-wind-speed">' + windSpeed + ' km/h</div>' +
+                rainHtml +
+                '<div class="hourly-weather-icon">' + weatherSvgIcon(entry.icon) + '</div>' +
+                '<div class="hourly-time">' + hour + '</div>' +
             '</div>';
+    });
 
-        container.appendChild(card);
+    var wrapper = document.createElement('div');
+    wrapper.className = 'hourly-wrapper';
+    wrapper.innerHTML =
+        '<button class="hourly-nav hourly-nav--left" aria-label="Scroll left">‹</button>' +
+        '<div class="hourly-viewport">' +
+            '<div class="hourly-track" style="width:' + totalW + 'px">' +
+                svgChart +
+                '<div class="hourly-columns">' + columns + '</div>' +
+            '</div>' +
+        '</div>' +
+        '<button class="hourly-nav hourly-nav--right" aria-label="Scroll right">›</button>';
+
+    container.appendChild(wrapper);
+
+    // Nav buttons scroll the viewport
+    var viewport = wrapper.querySelector('.hourly-viewport');
+    var scrollAmount = COL_W * 4;
+    wrapper.querySelector('.hourly-nav--left').addEventListener('click', function() {
+        viewport.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    });
+    wrapper.querySelector('.hourly-nav--right').addEventListener('click', function() {
+        viewport.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     });
 }
 
@@ -367,7 +595,17 @@ function render5DayForecast(data) {
 
         var avgHumidity = day.entries.reduce(function(s, e) { return s + e.humidity; }, 0) / day.entries.length;
         var totalRain = day.entries.reduce(function(s, e) { return s + e.rainfall; }, 0);
+        var maxRainProb = day.entries.reduce(function(m, e) { return Math.max(m, e.rainProbability || 0); }, 0);
         var avgWind = day.entries.reduce(function(s, e) { return s + e.windSpeed; }, 0) / day.entries.length;
+
+        var rainInfo = '';
+        if (maxRainProb > 0) {
+            rainInfo = '<div class="forecast-card__rain">' +
+                '<svg viewBox="0 0 12 16" width="10" height="13"><path d="M6 1C6 1 1 7.5 1 10.5a5 5 0 0 0 10 0C11 7.5 6 1 6 1z" fill="#4fc3f7"/></svg>' +
+                '<span>' + Math.round(maxRainProb) + '%</span>' +
+                (totalRain > 0 ? '<span class="rain-mm">' + totalRain.toFixed(1) + ' mm</span>' : '') +
+                '</div>';
+        }
 
         card.innerHTML =
             '<div class="forecast-card__time">' +
@@ -380,6 +618,7 @@ function render5DayForecast(data) {
                 '<span class="temp-low">' + day.low.toFixed(0) + '&deg;</span>' +
             '</div>' +
             '<div class="forecast-card__desc">' + day.description + '</div>' +
+            rainInfo +
             '<div class="forecast-card__details">' +
                 '<span>' + avgHumidity.toFixed(0) + '%</span>' +
                 '<span>' + totalRain.toFixed(1) + ' mm</span>' +

@@ -145,12 +145,15 @@ public class WeatherApiService {
                     if (item.rain != null) {
                         rain = item.rain.threeHour;
                     }
+                    double windDir = item.wind != null ? item.wind.deg : 0;
                     entries.add(new ForecastEntry(
                         item.main.temp,
                         item.main.humidity,
                         item.main.pressure,
                         item.wind.speed * 3.6,
+                        windDir,
                         rain,
+                        item.pop * 100,
                         desc,
                         icon,
                         Instant.ofEpochSecond(item.dt)
@@ -176,14 +179,18 @@ public class WeatherApiService {
             double humidity = 60.0 + 20.0 * Math.cos(hourOfDay * Math.PI / 12.0) + (Math.random() - 0.5) * 5;
             double pressure = 1013.0 + 3.0 * Math.sin(i * 0.2);
             double windSpeed = 6.0 + 4.0 * Math.sin(i * 0.3) + Math.random() * 2;
+            double windDir = (45 + i * 15.0) % 360;
             double rain = Math.max(0, 1.5 * Math.sin(i * 0.4) + (Math.random() - 0.5));
+            double rainProb = Math.max(0, Math.min(100, 50 + 40 * Math.sin(i * 0.5)));
             int condIdx = i % conditions.length;
             entries.add(new ForecastEntry(
                 Math.round(temp * 10.0) / 10.0,
                 Math.round(humidity * 10.0) / 10.0,
                 Math.round(pressure * 10.0) / 10.0,
                 Math.round(windSpeed * 10.0) / 10.0,
+                Math.round(windDir * 10.0) / 10.0,
                 Math.round(rain * 10.0) / 10.0,
+                Math.round(rainProb),
                 conditions[condIdx],
                 icons[condIdx],
                 ts

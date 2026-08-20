@@ -279,6 +279,143 @@
     padding: 1rem;
 }
 
+/* ── Hourly chart-style forecast ─────────────────── */
+.hourly-wrapper {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    background: var(--cds-layer, #f4f4f4);
+    border: 1px solid var(--cds-border-subtle, #e0e0e0);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.hourly-viewport {
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+}
+
+.hourly-viewport::-webkit-scrollbar {
+    height: 6px;
+}
+
+.hourly-viewport::-webkit-scrollbar-thumb {
+    background: var(--cds-border-strong, #8d8d8d);
+    border-radius: 3px;
+}
+
+.hourly-track {
+    display: flex;
+    flex-direction: column;
+}
+
+.hourly-chart-svg {
+    display: block;
+    border-bottom: 1px solid var(--cds-border-subtle, #e0e0e0);
+}
+
+.hourly-columns {
+    display: flex;
+}
+
+.hourly-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 0;
+    flex-shrink: 0;
+    border-right: 1px solid rgba(224, 224, 224, 0.4);
+}
+
+.hourly-col:last-child {
+    border-right: none;
+}
+
+.hourly-col--night {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.hourly-wind-dir {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--cds-text-primary, #161616);
+}
+
+.hourly-cardinal {
+    font-size: 0.72rem;
+}
+
+.hourly-wind-speed {
+    font-size: 0.7rem;
+    color: var(--cds-text-secondary, #525252);
+}
+
+.hourly-rain {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #0277bd;
+}
+
+.hourly-rain-drop {
+    flex-shrink: 0;
+}
+
+.hourly-rain-mm {
+    font-size: 0.65rem;
+    color: #0277bd;
+}
+
+.hourly-weather-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+}
+
+.hourly-time {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--cds-text-primary, #161616);
+}
+
+.hourly-nav {
+    flex-shrink: 0;
+    width: 36px;
+    border: none;
+    background: var(--cds-layer, #f4f4f4);
+    color: var(--cds-text-primary, #161616);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    z-index: 1;
+}
+
+.hourly-nav:hover {
+    background: var(--cds-layer-hover, #e8e8e8);
+}
+
+.hourly-nav--left {
+    border-right: 1px solid var(--cds-border-subtle, #e0e0e0);
+}
+
+.hourly-nav--right {
+    border-left: 1px solid var(--cds-border-subtle, #e0e0e0);
+}
+
+/* ── 5-day forecast cards (kept) ─────────────────── */
 .forecast-card {
     flex: 0 0 auto;
     width: 130px;
@@ -356,6 +493,22 @@
     margin-bottom: 0.5rem;
     line-height: 1.2;
     min-height: 1.8em;
+}
+
+.forecast-card__rain {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #0277bd;
+    margin-bottom: 0.4rem;
+}
+
+.forecast-card__rain .rain-mm {
+    font-weight: 400;
+    font-size: 0.7rem;
 }
 
 .forecast-card__details {

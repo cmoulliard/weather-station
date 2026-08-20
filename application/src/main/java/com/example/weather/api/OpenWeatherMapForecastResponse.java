@@ -16,6 +16,7 @@ public class OpenWeatherMapForecastResponse {
         public Wind wind;
         public List<Weather> weather;
         public Rain rain;
+        public double pop;
         @JsonProperty("dt_txt")
         public String dtTxt;
     }
@@ -32,6 +33,7 @@ public class OpenWeatherMapForecastResponse {
         public double speed;
         public double deg;
     }
+
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Weather {
