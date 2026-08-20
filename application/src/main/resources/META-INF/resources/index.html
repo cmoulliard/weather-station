@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Weather Station Dashboard</title>
+
+    <!-- IBM Carbon Design System (CDN) -->
+    <link rel="stylesheet" href="https://unpkg.com/@carbon/styles@1.68.0/css/styles.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/@carbon/charts@1.27.18/dist/styles.min.css">
+    <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/tag/v2/latest/ui-shell.min.js"></script>
+    <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/tag/v2/latest/tile.min.js"></script>
+    <script src="https://unpkg.com/@carbon/charts@1.27.18/dist/umd/bundle.umd.cjs"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <link rel="stylesheet" href="/app.css">
+</head>
+<body class="cds-theme-zone-g10">
+
+    <!-- Carbon UI Shell Header -->
+    <cds-header aria-label="Weather Station">
+        <cds-header-name href="/" prefix="Pi">
+            Weather Station
+        </cds-header-name>
+    </cds-header>
+
+    <main class="app-content">
+
+        <!-- Status bar -->
+        <div class="status-bar">
+            <h2 class="section-heading">Current Conditions</h2>
+            <div class="status-info">
+                <span id="data-source" class="status-tag"></span>
+                <span id="last-updated">Loading...</span>
+            </div>
+        </div>
+
+        <!-- Current value tiles -->
+        <div class="gauge-grid">
+            <cds-tile class="gauge-tile" id="tile-temperature">
+                <div class="value-card">
+                    <div class="value-card__icon">&#x1f321;</div>
+                    <div class="value-card__data">
+                        <span class="value-card__value" id="val-temperature">--</span>
+                        <span class="value-card__unit">°C</span>
+                    </div>
+                    <div class="value-card__label">Temperature</div>
+                </div>
+            </cds-tile>
+            <cds-tile class="gauge-tile" id="tile-humidity">
+                <div class="value-card">
+                    <div class="value-card__icon">&#x1f4a7;</div>
+                    <div class="value-card__data">
+                        <span class="value-card__value" id="val-humidity">--</span>
+                        <span class="value-card__unit">%</span>
+                    </div>
+                    <div class="value-card__label">Humidity</div>
+                </div>
+            </cds-tile>
+            <cds-tile class="gauge-tile" id="tile-pressure">
+                <div class="value-card">
+                    <div class="value-card__icon">&#x1f4ca;</div>
+                    <div class="value-card__data">
+                        <span class="value-card__value" id="val-pressure">--</span>
+                        <span class="value-card__unit">hPa</span>
+                    </div>
+                    <div class="value-card__label">Pressure</div>
+                </div>
+            </cds-tile>
+            <cds-tile class="gauge-tile" id="tile-windSpeed">
+                <div class="value-card">
+                    <div class="value-card__icon">&#x1f4a8;</div>
+                    <div class="value-card__data">
+                        <span class="value-card__value" id="val-windSpeed">--</span>
+                        <span class="value-card__unit">km/h</span>
+                    </div>
+                    <div class="value-card__label">Wind Speed</div>
+                </div>
+            </cds-tile>
+            <cds-tile class="gauge-tile" id="tile-rainfall">
+                <div class="value-card">
+                    <div class="value-card__icon">&#x1f327;</div>
+                    <div class="value-card__data">
+                        <span class="value-card__value" id="val-rainfall">--</span>
+                        <span class="value-card__unit">mm</span>
+                    </div>
+                    <div class="value-card__label">Rainfall</div>
+                </div>
+            </cds-tile>
+        </div>
+
+        <!-- Station location map -->
+        <section class="map-section">
+            <cds-tile>
+                <div class="map-header">
+                    <h3 class="section-heading" id="map-title">Station Location</h3>
+                </div>
+                <div id="station-map" class="station-map"></div>
+            </cds-tile>
+        </section>
+
+        <!-- History charts -->
+        <section class="history-section">
+            <div class="history-header">
+                <h2 class="section-heading">Sensor History</h2>
+                <select id="range-select">
+                    <option value="-1h">Last 1 hour</option>
+                    <option value="-6h">Last 6 hours</option>
+                    <option value="-24h">Last 24 hours</option>
+                    <option value="-7d">Last 7 days</option>
+                    <option value="-30d">Last 30 days</option>
+                </select>
+            </div>
+            <div class="history-grid">
+                <cds-tile>
+                    <div id="history-temperature" class="history-chart-container"></div>
+                </cds-tile>
+                <cds-tile>
+                    <div id="history-humidity" class="history-chart-container"></div>
+                </cds-tile>
+                <cds-tile>
+                    <div id="history-pressure" class="history-chart-container"></div>
+                </cds-tile>
+                <cds-tile>
+                    <div id="history-windSpeed" class="history-chart-container"></div>
+                </cds-tile>
+                <cds-tile>
+                    <div id="history-rainfall" class="history-chart-container"></div>
+                </cds-tile>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>
