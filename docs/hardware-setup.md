@@ -1,5 +1,23 @@
 # Hardware Selection, Wiring & Pi Configuration
 
+## TODO
+
+- Reference to be evaluated: https://esphome.io/components/esp32/
+- Tuto/DIY to be read:
+  - Pi + [Adafruit HAT Pi](https://www.adafruit.com/product/2310) + sensors: https://projects.raspberrypi.org/en/projects/build-your-own-weather-station/0 
+  - https://www.haraldkreuzer.net/en/news/esp32-weather-station-weather-forecast-wireless-sensors-and-air-quality-measurement
+  - https://github.com/joelmartin11/Weather-Station
+  - https://www.instructables.com/DIY-Weather-Station-With-ESP32/
+  - https://www.makerguides.com/fr/simple-esp32-internet-weather-station-fr/
+  - https://www.raspberrypi-france.fr/station-meteo-diy-comparatif-et-tutoriel/
+- Vendeur: 
+  - https://www.gotronic.fr/cat-cartes-esp32.htm
+  - https://www.arduino.cc/
+  - https://www.upesy.fr/
+  - Weather board for Pi: https://thepihut.com/products/weather-board-for-raspberry-pi & tuto: https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-1/, https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-2/
+  - Weather componants bc-robotics: https://bc-robotics.com/?product_cat=&s=weather&post_type=product
+- Forum: https://forums.raspberrypi.com/viewforum.php?f=112&sid=e893b51c323da761164dc232a929f962
+
 ## 1. Hardware Selection
 
 ### Raspberry Pi
@@ -42,6 +60,8 @@ These are typically sold as a single **RJ11 Weather Sensor Kit** (anemometer + w
 |---------|----------|-----------------|-------|
 | **Pimoroni Weather HAT** | BME280, LTR-559 light sensor, 1.54" LCD, RJ11 connectors for wind/rain kits | ~£30 (HAT only) | [Pimoroni](https://shop.pimoroni.com/) |
 | **SparkFun MicroMod Weather Carrier Board** | RJ11 wind/rain connectors, Qwiic I2C sensor ports | ~$45 | [SparkFun](https://www.sparkfun.com/catalogsearch/result/?q=weather), [Mouser BE](https://www.mouser.be/fr/ProductDetail/DFRobot/SEN0186?qs=kE1vTINknaUaWz5cQFgJUA%3D%3D) |
+
+Investigate from SparkFun guides, how we can integrate the different pieces together : https://www.sparkfun.com/catalog/product/view/id/7790/s/sparkfun-arduino-iot-weather-station/ !
 
 ## 2. Wiring
 
