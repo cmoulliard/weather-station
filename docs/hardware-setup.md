@@ -6,7 +6,9 @@
 - Pi:
   - With [Adafruit HAT Pi](https://www.adafruit.com/product/2310) + sensors (archived): https://projects.raspberrypi.org/en/projects/build-your-own-weather-station/0
   - With Adafruit Perma-Proto HAT + BME280 + MCP3008: https://core-electronics.com.au/projects/diy-weather-station-raspberry-pi/
-  - With Weather board: https://thepihut.com/products/weather-board-for-raspberry-pi & tuto: part [1](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-1/), [2](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-2/) & [3](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-3/)
+  - With Weather board: 
+    - Standard: https://thepihut.com/products/weather-board-for-raspberry-pi with BME280 & soldiers: https://thepihut.com/products/weather-hat-pro-assembled-for-raspberry-pi
+    - Tuto: part [1](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-1/), [2](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-2/) & [3](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-3/)
 - BME280 wiring & Python:
   - Sensor plugged on Pi: https://randomnerdtutorials.com/raspberry-pi-bme280-python/
 - ESP32 Board: 
@@ -21,6 +23,7 @@
     - Carte ESP32 française: https://www.upesy.fr/
   - All: https://www.kiwi-electronics.com/en
   - Weather components bc-robotics: https://bc-robotics.com/?product_cat=&s=weather&post_type=product
+  - Sparkfun meter kit (rain gauge, wind vane, anemometer): https://thepihut.com/products/sparkfun-weather-meter-kit
 
 - Forum: https://forums.raspberrypi.com/viewforum.php?f=112&sid=e893b51c323da761164dc232a929f962
 
