@@ -24,8 +24,6 @@
 
 The BME280 is the go-to choice for weather stations. The BME680 adds a metal oxide VOC gas sensor (48h burn-in required) -- useful if indoor air quality matters. Both are available as STEMMA QT / Qwiic breakout boards for solderless I2C wiring.
 
-**Belgium / EU suppliers:** [Mouser Belgium](https://www.mouser.be/), [TME](https://www.tme.eu/) (Poland, ships to BE), [Kiwi Electronics](https://www.kiwi-electronics.com/) (Netherlands, ships to BE), [SOS Solutions](https://www.sossolutions.nl/) (Netherlands).
-
 **Wind & Rain:**
 
 | Sensor | Function | Interface | Price (approx.) | Links |

@@ -22,13 +22,17 @@ Build a complete weather station using a Raspberry Pi, environmental sensors, an
     - https://www.instructables.com/DIY-Weather-Station-With-ESP32/
     - https://www.makerguides.com/fr/simple-esp32-internet-weather-station-fr/
 
-- Seller:
-    - ESP32:
+- Suppliers:
+      - [Mouser Belgium](https://www.mouser.be/),
+      - [TME](https://www.tme.eu/) (Poland, ships to BE),
+      - [Kubii]()
+      - [Kiwi Electronics](https://www.kiwi-electronics.com/) (Netherlands, ships to BE), 
+      - [SOS Solutions](https://www.sossolutions.nl/) (Netherlands),
+      - ESP32:
         - https://www.gotronic.fr/cat-cartes-esp32.htm
         - Carte ESP32 française: https://www.upesy.fr/
-    - Weather components bc-robotics: https://bc-robotics.com/?product_cat=&s=weather&post_type=product
-    - Sparkfun meter kit (rain gauge, wind vane, anemometer): https://thepihut.com/products/sparkfun-weather-meter-kit
-    - All: https://www.kiwi-electronics.com/en
+      - [Weather components bc-robotics](https://bc-robotics.com/?product_cat=&s=weather&post_type=product)
+      - [Sparkfun meter kit - rain gauge, wind vane, anemometer](https://thepihut.com/products/sparkfun-weather-meter-kit)
 
 - Forum: https://forums.raspberrypi.com/viewforum.php?f=112&sid=e893b51c323da761164dc232a929f962
 
