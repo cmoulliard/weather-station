@@ -78,3 +78,53 @@ sudo apt-get install i2c-tools
 i2cdetect -y 1
 # The BME280 should appear at address 0x76 or 0x77
 ```
+
+## 4. Dual-Pi Setup (Sensor Node + Hub)
+
+An alternative topology uses two Raspberry Pi 3 boards: one as a sensor node collecting data, and the other as a hub running a Wi-Fi hotspot and MQTT broker. This creates a self-contained weather station with no internet dependency.
+
+### Pi 3 Model Comparison
+
+| Spec | Pi 3 Model B | Pi 3 Model B+ |
+|------|-------------|----------------|
+| CPU | 1.2 GHz quad-core | 1.4 GHz quad-core |
+| Wi-Fi | 2.4 GHz (BCM43438) | 2.4 + 5 GHz (BCM43455) |
+| Ethernet | 100 Mbps | 300 Mbps (USB 2.0 bound) |
+| RAM | 1 GB | 1 GB |
+| PoE | No | Yes (with HAT) |
+| GPIO | 40-pin | 40-pin |
+
+### Recommended Assignment
+
+**Pi 3 B+ as sensor node** (with Weather HAT on GPIO):
+- Better Wi-Fi chip (dual-band, better antenna) provides more reliable connection to the hotspot, especially outdoors
+- Same 40-pin GPIO, fully compatible with Weather HAT
+- Lower workload — runs only a lightweight Python publisher
+
+**Pi 3 B as hub / server** (hotspot + MQTT + Quarkus):
+- Runs `hostapd` (AP mode), Mosquitto MQTT broker, and the Quarkus app
+- 1 GB RAM is sufficient (Mosquitto ~5 MB, Quarkus native ~30 MB, InfluxDB3 ~100-200 MB)
+- Doesn't need the better Wi-Fi since it creates the network rather than reaching for one
+
+### Architecture
+
+```
+┌──────────────────────┐        Wi-Fi (hotspot)        ┌──────────────────────┐
+│    Pi 3 B+           │ ────────────────────────────── │    Pi 3 B            │
+│    (sensor node)     │                                │    (hub / server)    │
+│                      │   MQTT publish                 │                      │
+│  Weather HAT (GPIO)  │ ───────────────────────────►   │  Mosquitto broker    │
+│  BME280 + wind/rain  │   topic: weather/readings      │  Quarkus app         │
+│  Built-in Wi-Fi      │                                │  InfluxDB3 (opt.)    │
+│  Python publisher    │                                │  Wi-Fi AP (hostapd)  │
+└──────────────────────┘                                └──────────────────────┘
+```
+
+### Constraints
+
+| Concern | Detail |
+|---------|--------|
+| **RAM** | 1 GB on the hub Pi — monitor memory if running Quarkus + InfluxDB3 together |
+| **Wi-Fi throughput** | ~20-30 Mbps in AP mode — more than enough for sensor telemetry (a few KB/s) |
+| **Power** | Both Pis need stable 5V/2.5A supplies, especially the sensor node with the Weather HAT |
+| **Range** | Pi 3 B's built-in Wi-Fi has limited range (~10-15m indoors); position accordingly or add an external antenna |
