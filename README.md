@@ -8,8 +8,9 @@ Build a complete weather station using a Raspberry Pi, environmental sensors, an
 
 - Pi vs ESP32: https://www.raspberrypi-france.fr/station-meteo-diy-comparatif-et-tutoriel/
 - Pi:
-    - With [Adafruit HAT Pi](https://www.adafruit.com/product/2310) + sensors (archived project but really helpful using Adafruit Perma-Proto HAT): https://projects.raspberrypi.org/en/projects/build-your-own-weather-station/0
-    - With Adafruit Perma-Proto HAT + BME280 + MCP3008: https://core-electronics.com.au/projects/diy-weather-station-raspberry-pi/
+    - With [Adafruit HAT Pi](https://www.adafruit.com/product/2310) + sensors:
+      - archived project but really helpful: https://projects.raspberrypi.org/en/projects/build-your-own-weather-station/0
+      - Another interesting project: https://core-electronics.com.au/projects/diy-weather-station-raspberry-pi/
     - With Weather board:
         - Standard: https://thepihut.com/products/weather-board-for-raspberry-pi with BME280 & soldiers: https://thepihut.com/products/weather-hat-pro-assembled-for-raspberry-pi
         - Tuto: part [1](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-1/), [2](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-2/) & [3](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-3/)
