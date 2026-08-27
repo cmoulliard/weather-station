@@ -4,7 +4,7 @@
 
 - Pi vs ESP32: https://www.raspberrypi-france.fr/station-meteo-diy-comparatif-et-tutoriel/
 - Pi:
-  - With [Adafruit HAT Pi](https://www.adafruit.com/product/2310) + sensors (archived): https://projects.raspberrypi.org/en/projects/build-your-own-weather-station/0
+  - With [Adafruit HAT Pi](https://www.adafruit.com/product/2310) + sensors (archived project but really helful): https://projects.raspberrypi.org/en/projects/build-your-own-weather-station/0
   - With Adafruit Perma-Proto HAT + BME280 + MCP3008: https://core-electronics.com.au/projects/diy-weather-station-raspberry-pi/
   - With Weather board: 
     - Standard: https://thepihut.com/products/weather-board-for-raspberry-pi with BME280 & soldiers: https://thepihut.com/products/weather-hat-pro-assembled-for-raspberry-pi
