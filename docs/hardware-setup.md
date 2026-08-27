@@ -128,3 +128,69 @@ An alternative topology uses two Raspberry Pi 3 boards: one as a sensor node col
 | **Wi-Fi throughput** | ~20-30 Mbps in AP mode — more than enough for sensor telemetry (a few KB/s) |
 | **Power** | Both Pis need stable 5V/2.5A supplies, especially the sensor node with the Weather HAT |
 | **Range** | Pi 3 B's built-in Wi-Fi has limited range (~10-15m indoors); position accordingly or add an external antenna |
+
+### Mosquitto Bridge (Message Resilience)
+
+When the sensor Pi loses connectivity to the hub Pi (Wi-Fi dropout, broker restart, hotspot issue), sensor readings are lost unless buffered locally. Running Mosquitto on **both** Pis with a bridge solves this — the sensor Pi publishes to its local broker, which queues messages and forwards them to the hub when the connection is restored.
+
+#### Architecture with Bridge
+
+```
+┌──────────────────────────┐        Wi-Fi (hotspot)        ┌──────────────────────┐
+│    Pi 3 B+               │ ────────────────────────────── │    Pi 3 B            │
+│    (sensor node)          │                                │    (hub / server)    │
+│                          │                                │                      │
+│  Weather HAT (GPIO)      │                                │  Mosquitto broker    │
+│  Python publisher        │   MQTT bridge (QoS 1)         │  (main broker)       │
+│    → localhost:1883      │ ───────────────────────────►   │  persistence: true   │
+│  Mosquitto (local)       │   topic: weather/#             │  Quarkus app         │
+│    persistence: true     │                                │  InfluxDB3 (opt.)    │
+│    bridge → hub Pi       │                                │  Wi-Fi AP (hostapd)  │
+└──────────────────────────┘                                └──────────────────────┘
+```
+
+#### Sensor Pi — Mosquitto Configuration
+
+Install Mosquitto on the sensor Pi:
+
+```bash
+sudo apt-get install mosquitto
+```
+
+Edit `/etc/mosquitto/conf.d/bridge.conf`:
+
+```
+# Local broker settings
+listener 1883 localhost
+persistence true
+persistence_location /var/lib/mosquitto/
+
+# Bridge to hub Pi
+connection bridge-to-hub
+address <hub-pi-ip>:1883
+topic weather/# out 1
+cleansession false
+restart_timeout 5
+notifications false
+```
+
+Key settings:
+- `topic weather/# out 1` — forwards all `weather/` topics with QoS 1 (at-least-once delivery)
+- `cleansession false` — the hub broker remembers the bridge subscription across reconnects
+- `persistence true` — queued messages survive a sensor Pi reboot
+- `restart_timeout 5` — retry connection every 5 seconds when the hub is unreachable
+
+#### Python Publisher Change
+
+The sensor publisher connects to `localhost` instead of the remote hub:
+
+```python
+client.connect("localhost", 1883)
+```
+
+#### References
+
+- [Eclipse Mosquitto Bridge Documentation](https://mosquitto.org/man/mosquitto-conf-5.html) — official `mosquitto.conf` reference covering all bridge options
+- [Bridging Two Mosquitto Brokers (HiveMQ)](https://www.hivemq.com/blog/mqtt-bridge-mosquitto/) — step-by-step tutorial on configuring Mosquitto bridges
+- [Steve's Internet Guide — Mosquitto Bridge](http://www.steves-internet-guide.com/mosquitto-bridge-configuration/) — practical guide with examples for multi-broker setups
+- [MQTT Bridge Explained (Cedalo)](https://cedalo.com/blog/mqtt-bridge-mosquitto/) — covers bridge architecture, QoS handling, and failure scenarios
