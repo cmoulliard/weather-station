@@ -23,11 +23,10 @@ Build a complete weather station using a Raspberry Pi, environmental sensors, an
     - https://www.makerguides.com/fr/simple-esp32-internet-weather-station-fr/
 
 - Suppliers:
-      - [Mouser Belgium](https://www.mouser.be/),
-      - [TME](https://www.tme.eu/) (Poland, ships to BE),
-      - [Kubii]()
+      - [Kubii](https://www.kubii.com/fr/)
       - [Kiwi Electronics](https://www.kiwi-electronics.com/) (Netherlands, ships to BE), 
       - [SOS Solutions](https://www.sossolutions.nl/) (Netherlands),
+      - [Mouser Belgium](https://www.mouser.be/),
       - ESP32:
         - https://www.gotronic.fr/cat-cartes-esp32.htm
         - Carte ESP32 française: https://www.upesy.fr/
