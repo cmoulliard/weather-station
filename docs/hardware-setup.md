@@ -1,32 +1,5 @@
 # Hardware Selection, Wiring & Pi Configuration
 
-## References
-
-- Pi vs ESP32: https://www.raspberrypi-france.fr/station-meteo-diy-comparatif-et-tutoriel/
-- Pi:
-  - With [Adafruit HAT Pi](https://www.adafruit.com/product/2310) + sensors (archived project but really helful): https://projects.raspberrypi.org/en/projects/build-your-own-weather-station/0
-  - With Adafruit Perma-Proto HAT + BME280 + MCP3008: https://core-electronics.com.au/projects/diy-weather-station-raspberry-pi/
-  - With Weather board: 
-    - Standard: https://thepihut.com/products/weather-board-for-raspberry-pi with BME280 & soldiers: https://thepihut.com/products/weather-hat-pro-assembled-for-raspberry-pi
-    - Tuto: part [1](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-1/), [2](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-2/) & [3](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-3/)
-- BME280 wiring & Python:
-  - Sensor plugged on Pi: https://randomnerdtutorials.com/raspberry-pi-bme280-python/
-- ESP32 Board: 
-  - ESPHome & hardware + blog/tuto: https://esphome.io/components/esp32/
-  - https://www.haraldkreuzer.net/en/news/esp32-weather-station-weather-forecast-wireless-sensors-and-air-quality-measurement
-  - https://www.instructables.com/DIY-Weather-Station-With-ESP32/
-  - https://www.makerguides.com/fr/simple-esp32-internet-weather-station-fr/
-
-- Seller: 
-  - ESP32:
-    - https://www.gotronic.fr/cat-cartes-esp32.htm
-    - Carte ESP32 française: https://www.upesy.fr/
-  - Weather components bc-robotics: https://bc-robotics.com/?product_cat=&s=weather&post_type=product
-  - Sparkfun meter kit (rain gauge, wind vane, anemometer): https://thepihut.com/products/sparkfun-weather-meter-kit
-  - All: https://www.kiwi-electronics.com/en
-
-- Forum: https://forums.raspberrypi.com/viewforum.php?f=112&sid=e893b51c323da761164dc232a929f962
-
 ## 1. Hardware Selection
 
 ### Raspberry Pi
