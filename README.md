@@ -32,23 +32,17 @@ Build a complete weather station using a Raspberry Pi, environmental sensors, an
 
 - Forum: https://forums.raspberrypi.com/viewforum.php?f=112&sid=e893b51c323da761164dc232a929f962
 
-
-
 ### Software & Data
 
 | Topic | Link |
 |-------|------|
 | InfluxDB 3 Core documentation | https://docs.influxdata.com/influxdb3/core/ |
-| InfluxDB 3 Core install guide | https://docs.influxdata.com/influxdb3/core/install/ |
 | influxdb3-java client library | https://github.com/InfluxCommunity/influxdb3-java |
 | OpenWeatherMap API (free tier) | https://openweathermap.org/api |
 | Weather Underground Pi uploader example | https://github.com/garnathan/wunderground-killi/tree/main/pi |
 | WeeWX source code and documentation | https://github.com/weewx/weewx |
 | WeeWX architecture and developer notes | https://www.weewx.com/docs/5.5/devnotes/ |
-| WeeWX daemon (`weewxd`) reference | https://www.weewx.com/docs/5.5/utilities/weewxd/ |
-| WeeWX CLI (`weectl`) reference | https://www.weewx.com/docs/5.5/utilities/weectl-about/ |
 | Node-RED flow-based IoT platform | https://nodered.org/ |
-| Node-RED Dashboard 2.0 (FlowFuse) | https://dashboard.flowfuse.com/ |
 
 ### Dashboard & Visualization
 
