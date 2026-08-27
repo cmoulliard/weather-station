@@ -21,9 +21,9 @@
   - ESP32:
     - https://www.gotronic.fr/cat-cartes-esp32.htm
     - Carte ESP32 française: https://www.upesy.fr/
-  - All: https://www.kiwi-electronics.com/en
   - Weather components bc-robotics: https://bc-robotics.com/?product_cat=&s=weather&post_type=product
   - Sparkfun meter kit (rain gauge, wind vane, anemometer): https://thepihut.com/products/sparkfun-weather-meter-kit
+  - All: https://www.kiwi-electronics.com/en
 
 - Forum: https://forums.raspberrypi.com/viewforum.php?f=112&sid=e893b51c323da761164dc232a929f962
 
