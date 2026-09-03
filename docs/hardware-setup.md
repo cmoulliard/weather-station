@@ -7,7 +7,9 @@
 - https://learn.sparkfun.com/tutorials/microclimate-kit-experiment-guide
 
 Arduino:
-- La bible des tuto en français: https://newbiely.fr/tutorials/arduino-uno-r4/ et anglais: https://arduinogetstarted.com/arduino-tutorials
+- Tutorial's bible: 
+  - FR: https://newbiely.fr/tutorials/arduino-uno-r4/
+  - EN: https://newbiely.com/tutorials/arduino-uno-r4-tutorial
 - Official doc: https://docs.arduino.cc/tutorials/ and https://projecthub.arduino.cc
 - https://www.makerguides.com/arduino-weather-station-kit-dfrobot-tutorial/ 
 - https://docs.arduino.cc/tutorials/uno-r4-minima/shield-guide/
@@ -16,17 +18,6 @@ Arduino:
   - https://shop.mchobby.be/fr/
 
 ## 1. Hardware Selection
-
-### Raspberry Pi
-
-| Model | RAM | GPIO | Notes |
-|-------|-----|------|-------|
-| **Raspberry Pi 4 Model B** | 2/4/8 GB | 40-pin (I2C, SPI, UART) | Mature, widely available, large community. Broadcom BCM2711 (quad-core Cortex-A72 @ 1.8 GHz). Sufficient for headless data collection. |
-| **Raspberry Pi 5** | 4/8 GB | 40-pin (I2C, SPI, UART) | Broadcom BCM2712 (quad-core Cortex-A76 @ 2.4 GHz). PCIe 2.0 x1, dedicated RP1 I/O controller for improved GPIO/I2C timing. Better suited when running dashboards (Node-RED, Grafana) alongside data collection. |
-
-**Recommendation:** A Pi 4 with 2 GB is sufficient for headless data collection with WeeWX. Choose a Pi 5 or 4 GB+ RAM if you plan to run a local web dashboard, InfluxDB, and/or Node-RED on the same device.
-
-**OS:** Use Raspberry Pi OS Lite (64-bit, Debian Bookworm-based) for headless setups. See [Pi setup guide](../setup/pi4.md) for initial OS installation, SSH access, and network configuration.
 
 ### Sensors
 
@@ -45,812 +36,387 @@ The BME280 is the go-to choice for weather stations. The BME680 adds a metal oxi
 |--------|----------|-----------|-----------------|-------|
 | **Rain gauge** (tipping bucket) | Precipitation measurement | Reed switch pulse → GPIO | Part of kit (~€160) | [The Pi Hut](https://thepihut.com/products/weather-station-kit-with-anemometer-wind-vane-rain-bucket), [DFRobot](https://www.dfrobot.com/) |
 | **Anemometer** | Wind speed (rotation pulses/sec) | Reed switch pulse → GPIO | Part of kit | Same kit |
-| **Wind vane** | Wind direction (resistor network) | Analog → ADC (MCP3008/ADS1115) | Part of kit | Same kit |
+| **Wind vane** | Wind direction (resistor network) | Analog → ADC (ESP32-C3 built-in) | Part of kit | Same kit |
 
 These are typically sold as a single **RJ11 Weather Sensor Kit** (anemometer + wind vane + rain bucket + mounting mast). DFRobot, Pimoroni, and SparkFun all sell compatible kits.
 
-### Ready-Made Options
+**Ready-Made Options**
 
 | Product | Includes | Price (approx.) | Links |
 |---------|----------|-----------------|-------|
 | **Pimoroni Weather HAT** | BME280, LTR-559 light sensor, 1.54" LCD, RJ11 connectors for wind/rain kits | ~£30 (HAT only) | [Pimoroni](https://shop.pimoroni.com/) |
 | **SparkFun MicroMod Weather Carrier Board** | RJ11 wind/rain connectors, Qwiic I2C sensor ports | ~$45 | [SparkFun](https://www.sparkfun.com/catalogsearch/result/?q=weather), [Mouser BE](https://www.mouser.be/fr/ProductDetail/DFRobot/SEN0186?qs=kE1vTINknaUaWz5cQFgJUA%3D%3D) |
 
-Investigate from SparkFun guides, how we can integrate the different pieces together : https://www.sparkfun.com/catalog/product/view/id/7790/s/sparkfun-arduino-iot-weather-station/ !
+## 2. Architecture
 
-## 2. Wiring
+### Raspberry Pi HotSpot
 
-### BME280 (I2C)
+We use a Raspberry Pi 3B+  acting as a hub running a Wi-Fi hotspot and MQTT broker.
 
-| BME280 Pin | Raspberry Pi Pin |
-|------------|------------------|
-| VCC        | 3.3V (pin 1)     |
-| GND        | Ground (pin 6)   |
-| SDA        | GPIO 2 (pin 3)   |
-| SCL        | GPIO 3 (pin 5)   |
-
-### Rain Gauge / Anemometer
-
-Connect one wire of each sensor to GND and the other to a free GPIO pin (e.g., GPIO 5 for the rain gauge, GPIO 6 for the anemometer). These sensors use simple pulse-counting via their internal Reed switches.
-
-### Wind Vane
-
-The wind vane outputs a variable resistance. Connect it through an ADC (MCP3008 or ADS1115) if your board lacks analog inputs, or use the RJ11 breakout board provided with the sensor kit.
-
-## 3. Raspberry Pi Configuration
-
-Enable the I2C bus:
-
-```bash
-sudo raspi-config
-# Navigate to "Interface Options" -> "I2C" -> Enable
-```
-
-Verify the BME280 is detected:
-
-```bash
-sudo apt-get install i2c-tools
-i2cdetect -y 1
-# The BME280 should appear at address 0x76 or 0x77
-```
-
-## 4. Dual-Pi Setup (Sensor Node + Hub)
-
-An alternative topology uses two Raspberry Pi 3 boards: one as a sensor node collecting data, and the other as a hub running a Wi-Fi hotspot and MQTT broker. This creates a self-contained weather station with no internet dependency.
-
-### Pi 3 Model Comparison
-
-| Spec | Pi 3 Model B | Pi 3 Model B+ |
-|------|-------------|----------------|
-| CPU | 1.2 GHz quad-core | 1.4 GHz quad-core |
-| Wi-Fi | 2.4 GHz (BCM43438) | 2.4 + 5 GHz (BCM43455) |
-| Ethernet | 100 Mbps | 300 Mbps (USB 2.0 bound) |
-| RAM | 1 GB | 1 GB |
-| PoE | No | Yes (with HAT) |
-| GPIO | 40-pin | 40-pin |
-
-### Recommended Assignment
-
-**Pi 3 B+ as sensor node** (with Weather HAT on GPIO):
-- Better Wi-Fi chip (dual-band, better antenna) provides more reliable connection to the hotspot, especially outdoors
-- Same 40-pin GPIO, fully compatible with Weather HAT
-- Lower workload — runs only a lightweight Python publisher
-
-**Pi 3 B as hub / server** (hotspot + MQTT + Quarkus):
+**Pi 3 B+ as hub / server** (hotspot + MQTT + Quarkus):
 - Runs `hostapd` (AP mode), Mosquitto MQTT broker, and the Quarkus app
 - 1 GB RAM is sufficient (Mosquitto ~5 MB, Quarkus native ~30 MB, InfluxDB3 ~100-200 MB)
 - Doesn't need the better Wi-Fi since it creates the network rather than reaching for one
 
-### Architecture
+### Message Resilience (Wi-Fi Dropout)
 
-```
-┌──────────────────────┐        Wi-Fi (hotspot)        ┌──────────────────────┐
-│    Pi 3 B+           │ ────────────────────────────── │    Pi 3 B            │
-│    (sensor node)     │                                │    (hub / server)    │
-│                      │   MQTT publish                 │                      │
-│  Weather HAT (GPIO)  │ ───────────────────────────►   │  Mosquitto broker    │
-│  BME280 + wind/rain  │   topic: weather/readings      │  Quarkus app         │
-│  Built-in Wi-Fi      │                                │  InfluxDB3 (opt.)    │
-│  Python publisher    │                                │  Wi-Fi AP (hostapd)  │
-└──────────────────────┘                                └──────────────────────┘
-```
+When the ESP32-C3 loses Wi-Fi connectivity (dropout, broker restart, hotspot issue), sensor readings are lost unless handled. Unlike a Raspberry Pi, the ESP32-C3 runs bare-metal firmware — it cannot run a local Mosquitto broker or use a broker bridge.
 
-### Constraints
+**Strategies for the ESP32-C3 sensor node:**
 
-| Concern | Detail |
-|---------|--------|
-| **RAM** | 1 GB on the hub Pi — monitor memory if running Quarkus + InfluxDB3 together |
-| **Wi-Fi throughput** | ~20-30 Mbps in AP mode — more than enough for sensor telemetry (a few KB/s) |
-| **Power** | Both Pis need stable 5V/2.5A supplies, especially the sensor node with the Weather HAT |
-| **Range** | Pi 3 B's built-in Wi-Fi has limited range (~10-15m indoors); position accordingly or add an external antenna |
+| Strategy | How it works | Trade-off |
+|----------|-------------|-----------|
+| **MQTT QoS 1** | Broker acknowledges each message; ESP32 retransmits on reconnect | Only works if the connection drops briefly — PubSubClient doesn't queue across reboots |
+| **Local flash buffering** | Store readings in SPIFFS/LittleFS when Wi-Fi is down, publish batch on reconnect | Adds complexity; flash has limited write cycles (~100k) |
+| **Accept data loss** | Publish at QoS 0, accept gaps during disconnection | Simplest; acceptable if readings are frequent (every 30–60s) |
 
-### Mosquitto Bridge (Message Resilience)
-
-When the sensor Pi loses connectivity to the hub Pi (Wi-Fi dropout, broker restart, hotspot issue), sensor readings are lost unless buffered locally. Running Mosquitto on **both** Pis with a bridge solves this — the sensor Pi publishes to its local broker, which queues messages and forwards them to the hub when the connection is restored.
-
-#### Architecture with Bridge
-
-```
-┌──────────────────────────┐        Wi-Fi (hotspot)        ┌──────────────────────┐
-│    Pi 3 B+               │ ────────────────────────────── │    Pi 3 B            │
-│    (sensor node)          │                                │    (hub / server)    │
-│                          │                                │                      │
-│  Weather HAT (GPIO)      │                                │  Mosquitto broker    │
-│  Python publisher        │   MQTT bridge (QoS 1)         │  (main broker)       │
-│    → localhost:1883      │ ───────────────────────────►   │  persistence: true   │
-│  Mosquitto (local)       │   topic: weather/#             │  Quarkus app         │
-│    persistence: true     │                                │  InfluxDB3 (opt.)    │
-│    bridge → hub Pi       │                                │  Wi-Fi AP (hostapd)  │
-└──────────────────────────┘                                └──────────────────────┘
-```
-
-#### Sensor Pi — Mosquitto Configuration
-
-Install Mosquitto on the sensor Pi:
-
-```bash
-sudo apt-get install mosquitto
-```
-
-Edit `/etc/mosquitto/conf.d/bridge.conf`:
-
-```
-# Local broker settings
-listener 1883 localhost
-persistence true
-persistence_location /var/lib/mosquitto/
-
-# Bridge to hub Pi
-connection bridge-to-hub
-address <hub-pi-ip>:1883
-topic weather/# out 1
-cleansession false
-restart_timeout 5
-notifications false
-```
-
-Key settings:
-- `topic weather/# out 1` — forwards all `weather/` topics with QoS 1 (at-least-once delivery)
-- `cleansession false` — the hub broker remembers the bridge subscription across reconnects
-- `persistence true` — queued messages survive a sensor Pi reboot
-- `restart_timeout 5` — retry connection every 5 seconds when the hub is unreachable
-
-#### Python Publisher Change
-
-The sensor publisher connects to `localhost` instead of the remote hub:
-
-```python
-client.connect("localhost", 1883)
-```
+For most garden weather stations where the Pi hotspot and ESP32 are within 10–20 m, Wi-Fi dropouts are rare. **QoS 0 with frequent readings** is the pragmatic choice — a missed 30-second reading has no meaningful impact on weather data.
 
 #### References
 
-- [Eclipse Mosquitto Bridge Documentation](https://mosquitto.org/man/mosquitto-conf-5.html) — official `mosquitto.conf` reference covering all bridge options
-- [Bridging Two Mosquitto Brokers (HiveMQ)](https://www.hivemq.com/blog/mqtt-bridge-mosquitto/) — step-by-step tutorial on configuring Mosquitto bridges
+- [Eclipse Mosquitto Bridge Documentation](https://mosquitto.org/man/mosquitto-conf-5.html) — broker bridge configuration (Pi-to-Pi setups)
 - [Steve's Internet Guide — Mosquitto Bridge](http://www.steves-internet-guide.com/mosquitto-bridge-configuration/) — practical guide with examples for multi-broker setups
-- [MQTT Bridge Explained (Cedalo)](https://cedalo.com/blog/mqtt-bridge-mosquitto/) — covers bridge architecture, QoS handling, and failure scenarios
+- [ESP32 MQTT Reconnect Strategies](https://randomnerdtutorials.com/esp32-mqtt-publish-subscribe-arduino-ide/) — handling connection loss in ESP32 MQTT clients
 
-## 5. Arduino Sensor Node (BME280 + RJ11 Wind/Rain)
+## 3. ESP32-C3 WiFi Sensor Node
 
-An alternative to the dual-Pi topology: use an **Arduino Uno R4 WiFi** as the outdoor sensor node. It reads the BME280 and wind/rain sensors, publishes readings over Wi-Fi to the Raspberry Pi hub via MQTT. Compared to a Pi sensor node, the Arduino draws ~20× less power, boots instantly, and has built-in analog inputs (no external ADC needed for the wind vane).
+The **ESP32-C3 DevKIT** serves as the outdoor sensor node. It has built-in Wi-Fi, draws very little power, costs ~€5, and has analog inputs for the wind vane — no external ADC, Ethernet shield, or Wi-Fi co-processor needed. It communicates with the Raspberry Pi 3B+ hub over Wi-Fi (the Pi runs `hostapd` as a local hotspot), publishing sensor data via MQTT.
 
-### Why Arduino Uno R4 WiFi
+### ESP32-C3 Specifications
 
-| Spec | Arduino Uno R4 WiFi |
-|------|---------------------|
-| MCU | Renesas RA4M1 (Arm Cortex-M4, 48 MHz, 256 KB flash, 32 KB SRAM) |
-| Wi-Fi | ESP32-S3 module (802.11 b/g/n, 2.4 GHz) |
-| Analog inputs | 6 (A0–A5), 14-bit ADC |
-| Digital I/O | 14 (D0–D13), including 2 hardware interrupts (D2, D3) |
-| I2C | A4 (SDA) / A5 (SCL) |
-| Operating voltage | 5V |
-| Input voltage | 6–24V via VIN pin, or 5V via USB-C |
-| Current draw | ~100 mA active with Wi-Fi, ~30 mA with Wi-Fi off |
-| Price | ~€25 |
+| Spec | Value |
+|------|-------|
+| MCU | RISC-V single-core, 160 MHz |
+| Wi-Fi | Built-in 802.11 b/g/n (2.4 GHz) |
+| Bluetooth | BLE 5.0 |
+| ADC | 12-bit, 6 channels (ADC1: GPIO0–4) |
+| GPIO interrupts | Any GPIO |
+| I2C | Any GPIO (default: GPIO8=SDA, GPIO9=SCL) |
+| Operating voltage | 3.3V |
+| Power draw (active + Wi-Fi) | ~35 mA |
+| Deep sleep | ~5 µA |
+| Flash / SRAM | 4 MB flash, 400 KB SRAM |
+| Price | ~€5–8 |
+| Framework | Arduino or ESP-IDF |
 
-Links: [Arduino Store](https://store.arduino.cc/products/uno-r4-wifi), [Mouser BE](https://www.mouser.be/)
+### ESP32-C3 Board Options
+
+#### Recommended: Generic 30-pin DevKIT
+
+A **30-pin ESP32-C3 DevKIT** (~€5) is the best choice for this project. All pins are accessible via standard 0.1" headers — easy to wire RJ11 breakout boards for the weather sensors. I2C for the BME280 uses **GPIO8 (SDA) and GPIO9 (SCL)**, which avoids any conflict with the rain gauge (GPIO5) and anemometer (GPIO6) interrupt pins. Add a **Qwiic adapter cable** (SparkFun PRT-14425, ~€2) to connect to the STEMMA QT / I2C chain.
+
+| Board | Module | Form Factor | Price (approx.) | Links |
+|-------|--------|-------------|-----------------|-------|
+| **Ai-Thinker NodeMCU ESP-C3-32S-Kit** | ESP-C3-32S | 30 pins (breadboard-friendly) | ~€5 | [AliExpress](https://www.aliexpress.com/), [Amazon FR](https://www.amazon.fr/) |
+| **WeAct Studio ESP32-C3** | ESP32-C3FH4 | 30 pins, USB-C | ~€4 | [AliExpress](https://www.aliexpress.com/) |
+| **Espressif ESP32-C3-DevKitC-02** | ESP32-C3-WROOM-02 | 20 pins (official reference design) | ~€8 | [Mouser BE](https://www.mouser.be/), [DigiKey BE](https://www.digikey.be/) |
+
+**Pin assignments used in this project:**
+
+| Pin | Function | Notes |
+|-----|----------|-------|
+| GPIO8 (SDA) | I2C data | Via Qwiic adapter cable (PRT-14425) |
+| GPIO9 (SCL) | I2C clock | Via Qwiic adapter cable (PRT-14425) |
+| GPIO4 | Wind vane (analog) | ADC1_CH4, with 10 kΩ pull-down |
+| GPIO5 | Rain gauge (interrupt) | INPUT_PULLUP, FALLING edge |
+| GPIO6 | Anemometer (interrupt) | INPUT_PULLUP, FALLING edge |
+
+All boards use the same ESP32-C3 chip and are programmed identically.
+
+#### Alternative: SparkFun Thing Plus ESP32-C3
+
+The **SparkFun Thing Plus ESP32-C3** (WRL-18168, ~€20) has a built-in Qwiic connector, but it uses **GPIO5 (SDA) and GPIO6 (SCL)** for I2C — which conflicts with the rain gauge and anemometer pins. If you use this board, you must reassign the weather sensor interrupts to other GPIOs and update the sketch.
+
+#### Not Recommended: Adafruit QT Py ESP32-C3
+
+The **QT Py** (#5405) has a built-in STEMMA QT but is physically too small (17.8 × 17.8 mm) with castellated pads — impractical for connecting RJ11 breakout boards. Its Qwiic port also uses GPIO5/6, creating the same pin conflict as the SparkFun board.
+
+Links: [GoTronic (ESP32 boards)](https://www.gotronic.fr/cat-cartes-esp32.htm), [uPesy (French ESP32 boards)](https://www.upesy.fr/), [Espressif ESP32-C3 Product Page](https://www.espressif.com/en/products/socs/esp32-c3)
 
 ### Architecture
 
 ```
-┌─────────────────────────────┐       Wi-Fi        ┌──────────────────────┐
-│  Arduino Uno R4 WiFi        │ ──────────────────► │  Raspberry Pi        │
-│  (outdoor sensor node)      │   MQTT publish      │  (hub / server)      │
-│                             │   topic: weather/#  │                      │
-│  BME280 (I2C)               │                     │  Mosquitto broker    │
-│  Rain gauge (D2, interrupt) │                     │  Quarkus app         │
-│  Anemometer (D3, interrupt) │                     │  InfluxDB3 (opt.)    │
-│  Wind vane (A0, analog)     │                     │                      │
-│                             │                     │                      │
-│  Power: solar + LiPo        │                     │                      │
-└─────────────────────────────┘                     └──────────────────────┘
+                                Wi-Fi (hotspot)
+┌──────────────────────────┐ ◄──────────────────────── ┌───────────────────────────┐
+│  Raspberry Pi 3B+        │                            │  ESP32-C3 DevKIT (30 pins)│
+│  (hub / server)          │   MQTT publish             │  (sensor node)            │
+│                          │ ◄─────────────────────     │                           │
+│  Wi-Fi AP (hostapd)      │   topic: weather/#         │  GPIO8/9 → Qwiic adapter  │
+│  Mosquitto broker        │                            │   └─► LTC4311 → BME280    │
+│  Quarkus app             │                            │  Rain gauge (GPIO5)       │
+│  InfluxDB3 (opt.)        │                            │  Anemometer (GPIO6)       │
+│                          │                            │  Wind vane (GPIO4)        │
+│  Powered by:             │                            │                           │
+│  - PoE HAT + PoE switch  │                            │  Powered by:              │
+│  - or standard 5V PSU    │                            │  - PoE splitter           │
+│                          │                            │  - or USB / Solar         │
+└──────────────────────────┘                            └───────────────────────────┘
 ```
 
 ### Wiring
 
-#### BME280 → Arduino (I2C)
+#### BME280 → ESP32-C3 (I2C via STEMMA QT)
 
-| BME280 Pin | Arduino Pin | Notes |
-|------------|-------------|-------|
-| VCC | 3.3V | BME280 runs at 3.3V; Uno R4 WiFi has a 3.3V output pin |
+The **Adafruit BME280** (#2652) has a built-in STEMMA QT connector that carries both **power (3V3 + GND) and data (SDA + SCL)** — a single cable handles everything. No separate power wiring needed.
+
+The BME280 is mounted **outside in a Stevenson screen**, 3–4 m from the ESP32-C3 inside the shed. Standard STEMMA QT cables max out at 500 mm, so the long segment uses **Cat5 cable** with an **LTC4311 I2C extender** to boost the signal.
+
+##### Full STEMMA QT Cable Chain
+
+```
+Garden Shed (indoor)                                              Stevenson Screen (outdoor)
+┌────────────────────────────────────────────────────────┐       ┌──────────────────────┐
+│                                                        │       │                      │
+│  ESP32-C3     Qwiic         LTC4311        splice     │ Cat5  │  splice   STEMMA QT  │
+│  DevKIT   ──► adapter    ──► I2C        ──► terminal ──┼─ 3–4m─┼► terminal  100 mm    │
+│  (30 pins)    cable          Extender       block      │(wall, │  block    ──────►    │
+│  GPIO8=SDA    PRT-14425      #4756                     │cable  │           BME280     │
+│  GPIO9=SCL    to GPIO8/9     STEMMA IN  STEMMA OUT     │gland) │           Adafruit   │
+│                                                        │       │           #2652      │
+│                                                        │       │                      │
+│  ①             ②             ③            splice       │  ④    │  splice    ⑤         │
+└────────────────────────────────────────────────────────┘       └──────────────────────┘
+```
+
+##### Cable Segments
+
+| Step | Segment | Cable Type | Length | Connector |
+|------|---------|-----------|--------|-----------|
+| ① | DevKIT GPIO8/9 → Qwiic adapter | Qwiic adapter cable (SparkFun PRT-14425) soldered to GPIO8/9 | — | Female JST SH on adapter end |
+| ② | Qwiic adapter → LTC4311 | STEMMA QT cable (e.g., Adafruit #4210) | 100 mm | JST SH → JST SH (plug-and-play) |
+| ③ | LTC4311 STEMMA QT OUT → splice (indoor) | STEMMA QT pigtail (cut a 100 mm cable in half) | 50 mm | Solder or screw terminal block |
+| ④ | Splice → splice (through wall) | **Cat5 cable** (4 of 8 wires, twisted pairs) | **3–4 m** | Through IP68 cable gland |
+| ⑤ | Splice → BME280 (outdoor) | STEMMA QT pigtail (other half) | 50 mm | Screw terminal block → JST SH plug into BME280 |
+
+##### Cat5 Wire Mapping
+
+Use twisted pairs to reduce noise:
+
+| Cat5 Wire | I2C Signal | Color (T568B) |
+|-----------|-----------|----------------|
+| Orange solid | SDA | orange |
+| Orange/white striped | SCL | orange/white |
+| Blue solid | 3V3 | blue |
+| Blue/white striped | GND | blue/white |
+
+##### Splicing at Each End
+
+At the **indoor splice** (LTC4311 → Cat5) and **outdoor splice** (Cat5 → BME280), join the 4 wires using either:
+- **Screw terminal blocks** (4-position, ~€1) — easiest, no soldering
+- **Solder + heat-shrink tubing** — more permanent
+
+##### Important: Reduce I2C Clock Speed
+
+At 3–4 m, reduce the I2C clock from the default 400 kHz to **100 kHz** for reliable communication. Set `Wire.setClock(100000)` in the sketch setup.
+
+The LTC4311 is tested at 3 m (400 kHz, phone wire) and up to 30 m (100 kHz, Cat5). At 3–4 m with Cat5 at 100 kHz, it works reliably.
+
+##### Outdoor Cable Tips
+
+- **Drip loop:** Let the cable sag below the Stevenson screen entry point so rain drips off instead of following the cable inside
+- **UV protection:** Use conduit or UV-rated cable trunking for exposed Cat5 runs — bare jacket degrades in 1–2 years
+- **Stevenson screen mounting:** Screw the BME280 board to the internal mount plate with M2.5 standoffs, sensor-side facing down. Route the STEMMA QT cable out the bottom
+
+##### Pin-Level Reference (Generic DevKIT Only)
+
+If using a generic DevKIT without built-in STEMMA QT, connect via the Qwiic adapter cable (PRT-14425):
+
+| BME280 Pin | ESP32-C3 Pin | Notes |
+|------------|--------------|-------|
+| VCC | 3V3 | 3.3V native — no level shifter needed |
 | GND | GND | |
-| SDA | A4 (SDA) | Shared I2C bus |
-| SCL | A5 (SCL) | Shared I2C bus |
+| SDA | GPIO8 | Default I2C SDA |
+| SCL | GPIO9 | Default I2C SCL |
 
-If using a STEMMA QT / Qwiic breakout board, connect directly via the Qwiic connector — no soldering needed.
+#### RJ11 Weather Sensors → ESP32-C3
 
-#### RJ11 Weather Sensors → Arduino
+The SparkFun Weather Meter Kit (SEN-15901) sensors connect via RJ11 breakout boards (SparkFun BOB-14021 + PRT-00132).
 
-The SparkFun Weather Meter Kit (SEN-15901) or equivalent RJ11 sensor kit includes three sensors. Connect them via RJ11 breakout boards or by cutting the cables:
+**Important:** The ESP32-C3 is a **3.3V device**. The RJ11 weather sensors are passive components (reed switches and resistor ladder), so they work natively at 3.3V — no level shifting required. Enable internal pull-ups on the interrupt pins.
 
 **Rain gauge** (tipping-bucket reed switch):
 
-| Wire | Arduino Pin | Notes |
-|------|-------------|-------|
-| Wire 1 | D2 (INT0) | Hardware interrupt for pulse counting |
+| Wire | ESP32-C3 Pin | Notes |
+|------|--------------|-------|
+| Wire 1 | GPIO5 | Interrupt for pulse counting (`INPUT_PULLUP`) |
 | Wire 2 | GND | |
 
 Each tip of the bucket closes the reed switch for ~100 ms. One tip = 0.2794 mm of rain.
 
 **Anemometer** (reed switch, 1 pulse per rotation):
 
-| Wire | Arduino Pin | Notes |
-|------|-------------|-------|
-| Wire 1 | D3 (INT1) | Hardware interrupt for pulse counting |
+| Wire | ESP32-C3 Pin | Notes |
+|------|--------------|-------|
+| Wire 1 | GPIO6 | Interrupt for pulse counting (`INPUT_PULLUP`) |
 | Wire 2 | GND | |
 
 Wind speed = (pulses / time) × 2.4 km/h (per SparkFun datasheet).
 
 **Wind vane** (resistor ladder producing variable voltage):
 
-| Wire | Arduino Pin | Notes |
-|------|-------------|-------|
-| Wire 1 | A0 | Analog read — the 14-bit ADC maps resistance to direction |
+| Wire | ESP32-C3 Pin | Notes |
+|------|--------------|-------|
+| Wire 1 | GPIO4 | ADC1_CH4 — 12-bit analog read (0–4095) |
 | Wire 2 | GND through a 10 kΩ pull-down resistor | Forms a voltage divider with the internal vane resistors |
 
-The vane has 8 resistors producing 16 possible directions. Read the analog value and map it to a compass bearing using a lookup table.
+**Note on ADC:** The ESP32-C3's ADC1 channels (GPIO0–4) remain fully functional when Wi-Fi is active. ADC2 channels are unavailable during Wi-Fi transmission — always use ADC1 pins for analog reads. GPIO4 (ADC1_CH4) is safe.
+
+#### RJ11 Pin Mapping
+
+```
+Weather Meter RJ11 cables          RJ11 Breakout PCBs          ESP32-C3 DevKIT
+─────────────────────              ──────────────────          ───────────────
+
+Rain gauge RJ11 ──────────►  Breakout #1  ──► pin 2 (inner) ──► GPIO5 (interrupt)
+                                           ──► pin 5 (inner) ──► GND
+
+Anemometer + Vane RJ11 ──►  Breakout #2  ──► pin 3 (anemometer) ──► GPIO6 (interrupt)
+                                           ──► pin 4 (anemometer) ──► GND
+                                           ──► pin 1 (wind vane)  ──► GPIO4 (ADC1_CH4)
+                                           ──► pin 6 (wind vane)  ──► GND
+                                                                      │
+                                                              10 kΩ resistor
+                                                              between GPIO4 and GND
+                                                              (pull-down for
+                                                               voltage divider)
+```
 
 #### Wiring Diagram Summary
 
 ```
-                    Arduino Uno R4 WiFi
-                   ┌───────────────────┐
-  BME280 SDA ──────┤ A4 (SDA)          │
-  BME280 SCL ──────┤ A5 (SCL)          │
-  BME280 VCC ──────┤ 3.3V              │
-  BME280 GND ──────┤ GND               │
-                   │                   │
-  Rain gauge ──────┤ D2 (INT0)         │
-  Rain GND ────────┤ GND               │
-                   │                   │
-  Anemometer ──────┤ D3 (INT1)         │
-  Anemo GND ───────┤ GND               │
-                   │                   │
-  Wind vane ───────┤ A0                │
-  Vane GND ────┬───┤ GND               │
-               │   │                   │
-            10kΩ   │   VIN ────── power │
-               │   └───────────────────┘
-              GND
+  ESP32-C3 DevKIT (30 pins)                                    Stevenson Screen
+  + Qwiic adapter cable (PRT-14425)                            (3–4 m away)
+ ┌───────────────────┐                                       ┌──────────────┐
+ │                   │  Qwiic       ┌─────────┐  Cat5 3-4m  │              │
+ │  GPIO8=SDA ───────┼── adapter ──►│ LTC4311 ├══════════════┼──► [BME280]  │
+ │  GPIO9=SCL        │  PRT-14425  └─────────┘  (splice +   │   STEMMA QT  │
+ │                   │                           wall gland) │   #2652      │
+ │                   │                                       └──────────────┘
+ │                   │
+ │  GPIO5 ───────────┼──── RJ11 ─────► Rain gauge
+ │  GPIO6 ───────────┼──── RJ11 ─────► Anemometer
+ │  GPIO4 ───────────┼──── RJ11 ─────► Wind vane (ADC)
+ │  GND ─────────────┼──── (common)     + 10 kΩ pull-down
+ │                   │
+ │  USB-C ◄── PoE splitter ◄── Cat5 PoE
+ └───────────────────┘
 ```
 
-### Arduino Sketch (MQTT Client)
+#### Wiring Diagram (SVG)
 
-Libraries required (install via Arduino Library Manager):
-- **WiFiS3** (built-in with Uno R4 WiFi board package)
-- **ArduinoMqttClient** (Arduino official MQTT library)
-- **Adafruit BME280** + **Adafruit Unified Sensor**
+See the full-color wiring diagram: [esp32c3-wifi-wiring.svg](diagrams/esp32c3-wifi-wiring.svg)
 
-```cpp
-#include <WiFiS3.h>
-#include <ArduinoMqttClient.h>
-#include <Adafruit_BME280.h>
+### Powering the ESP32-C3
 
-// Wi-Fi credentials
-const char* ssid     = "weather-hub";
-const char* password = "your-password";
+The ESP32-C3 DevKIT draws ~35 mA with Wi-Fi active (~0.12 W), making it extremely easy to power compared to the Arduino options.
 
-// MQTT broker (Pi hub IP)
-const char* broker   = "192.168.4.1";
-const int   port     = 1883;
+#### Option A: PoE Switch + Splitter (Recommended for Shelter Installations)
 
-// Sensor objects
-Adafruit_BME280 bme;
-WiFiClient wifiClient;
-MqttClient mqttClient(wifiClient);
+If the ESP32-C3 is installed inside a shelter (garden cabin, shed) and you can run an Ethernet cable from the house, a PoE setup provides power over the cable — no outlet needed at the sensor location. The Ethernet cable carries **only power** here — the ESP32 uses Wi-Fi for data.
 
-// Wind/rain pulse counters (updated by ISR)
-volatile unsigned long rainPulses = 0;
-volatile unsigned long windPulses = 0;
+**Components:**
 
-// Publish interval
-const unsigned long INTERVAL_MS = 30000; // 30 seconds
-unsigned long lastPublish = 0;
-unsigned long lastWindCheck = 0;
+| Component | Spec                                                                                                                       | Price (approx.) | Purpose |
+|-----------|----------------------------------------------------------------------------------------------------------------------------|-----------------|---------|
+| PoE switch | 5-port, 802.3af/at (e.g., [TP-Link TL-SG1005P](https://www.amazon.fr/TP-Link-sg1005p-Ports-Gigabit-Desktop/dp/B0763TGBTS)) | ~€35 | Sources PoE power on all ports |
+| PoE splitter | 5V micro-USB or USB-C output (e.g., UCTRONICS PoE splitter)                                                                | ~€10 | Extracts 5V from Ethernet cable at ESP32 end |
+| PoE HAT for Pi 3B+ (optional) | Official Raspberry Pi PoE+ HAT                                                                                             | ~€20 | Powers the Pi from the same PoE switch |
+| Cat5e cable | Length as needed (up to 100 m)                                                                                             | ~€5–10 | Carries PoE power to ESP32 location |
 
-// Wind vane direction lookup (ADC value → degrees)
-// Values depend on your specific vane + pull-down resistor combo
-struct VaneEntry { int adcMin; int adcMax; float degrees; };
-const VaneEntry VANE_TABLE[] = {
-  {  150,  250, 112.5}, // ESE
-  {  250,  400,  67.5}, // ENE
-  {  400,  600,  90.0}, // E
-  {  600,  900, 157.5}, // SSE
-  {  900, 1200, 135.0}, // SE
-  { 1200, 1600, 202.5}, // SSW
-  { 1600, 2000, 180.0}, // S
-  { 2000, 2500,  22.5}, // NNE
-  { 2500, 3200,  45.0}, // NE
-  { 3200, 3800, 247.5}, // WSW
-  { 3800, 4500, 225.0}, // SW
-  { 4500, 5500, 337.5}, // NNW
-  { 5500, 6500,   0.0}, // N
-  { 6500, 8000, 292.5}, // WNW
-  { 8000, 9500, 315.0}, // NW
-  { 9500,11000, 270.0}, // W
-};
-
-void rainISR() { rainPulses++; }
-void windISR() { windPulses++; }
-
-float readWindDirection() {
-  int adc = analogRead(A0);
-  for (auto& entry : VANE_TABLE) {
-    if (adc >= entry.adcMin && adc < entry.adcMax) return entry.degrees;
-  }
-  return -1; // unknown
-}
-
-void connectWiFi() {
-  while (WiFi.status() != WL_CONNECTED) {
-    WiFi.begin(ssid, password);
-    delay(5000);
-  }
-}
-
-void connectMQTT() {
-  while (!mqttClient.connected()) {
-    mqttClient.connect(broker, port);
-    delay(2000);
-  }
-}
-
-void setup() {
-  Serial.begin(115200);
-  analogReadResolution(14); // Uno R4 supports 14-bit ADC
-
-  // BME280
-  if (!bme.begin(0x76)) {
-    Serial.println("BME280 not found!");
-    while (1) delay(1000);
-  }
-
-  // Rain & wind interrupts
-  pinMode(2, INPUT_PULLUP);
-  pinMode(3, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(2), rainISR, FALLING);
-  attachInterrupt(digitalPinToInterrupt(3), windISR, FALLING);
-
-  connectWiFi();
-  connectMQTT();
-
-  lastWindCheck = millis();
-}
-
-void loop() {
-  mqttClient.poll();
-
-  if (WiFi.status() != WL_CONNECTED) connectWiFi();
-  if (!mqttClient.connected()) connectMQTT();
-
-  unsigned long now = millis();
-  if (now - lastPublish >= INTERVAL_MS) {
-    // Read BME280
-    float temperature = bme.readTemperature();
-    float humidity    = bme.readHumidity();
-    float pressure    = bme.readPressure() / 100.0; // hPa
-
-    // Calculate wind speed (km/h)
-    unsigned long elapsed = now - lastWindCheck;
-    noInterrupts();
-    unsigned long pulses = windPulses;
-    windPulses = 0;
-    interrupts();
-    float windSpeed = (pulses / (elapsed / 1000.0)) * 2.4;
-    lastWindCheck = now;
-
-    // Rain since last publish (mm)
-    noInterrupts();
-    unsigned long rain = rainPulses;
-    rainPulses = 0;
-    interrupts();
-    float rainMM = rain * 0.2794;
-
-    // Wind direction
-    float windDir = readWindDirection();
-
-    // Build JSON payload
-    char payload[256];
-    snprintf(payload, sizeof(payload),
-      "{\"temperature\":%.1f,\"humidity\":%.1f,\"pressure\":%.1f,"
-      "\"wind_speed_kmh\":%.1f,\"wind_dir_deg\":%.1f,\"rain_mm\":%.2f}",
-      temperature, humidity, pressure, windSpeed, windDir, rainMM);
-
-    // Publish
-    mqttClient.beginMessage("weather/readings");
-    mqttClient.print(payload);
-    mqttClient.endMessage();
-
-    Serial.println(payload);
-    lastPublish = now;
-  }
-}
-```
-
-### Powering the Outdoor Arduino
-
-The Arduino Uno R4 WiFi draws ~100 mA when active with Wi-Fi. The key challenge is providing reliable outdoor power. Here are the options ranked by suitability:
-
-#### Option A: Solar Panel + LiPo Battery (Recommended for Off-Grid)
-
-Best for a fully autonomous outdoor station with no access to mains power.
-
-| Component | Spec | Price (approx.) | Purpose |
-|-----------|------|-----------------|---------|
-| Solar panel | 6V, 3.5W (or higher) | ~€12 | Charges the battery during daylight |
-| LiPo battery | 3.7V, 6000 mAh (18650 × 2 in parallel, or flat pouch) | ~€10 | Powers the Arduino overnight and during cloudy days |
-| Charge controller | TP4056 module with DW01 protection | ~€2 | Manages solar charging, prevents over-charge/over-discharge |
-| Boost converter | MT3608 or similar, output set to 5V | ~€3 | Steps up 3.7V LiPo to 5V for the Arduino VIN |
-| Weatherproof enclosure | IP65 junction box, ~150×100×70 mm | ~€8 | Protects electronics from rain and moisture |
-
-**Wiring:**
+**Setup:**
 
 ```
-Solar panel (6V)
-    │
-    ▼
-┌──────────┐     ┌──────────────┐     ┌──────────────┐
-│ TP4056   │────►│ 3.7V LiPo    │────►│ MT3608 boost │──► Arduino VIN (5V)
-│ charger  │     │ 6000 mAh     │     │ set to 5V    │
-└──────────┘     └──────────────┘     └──────────────┘
+   House / Indoor                              Shelter / Outdoor
+┌────────────────────────┐              ┌─────────────────────────────┐
+│                        │   Cat5e      │                             │
+│  PoE Switch            │ ──(PoE)────► │  PoE Splitter → 5V → ESP32 │
+│  (e.g., TL-SG1005P)   │   up to      │  (data lines unused —      │
+│     │                  │   100 m      │   ESP32 uses Wi-Fi)        │
+│     │ port 1: Pi 3B+   │              │                             │
+│     │ port 2: → ESP32  │              │  Sensors (BME280, RJ11)    │
+│     │                  │              │                             │
+│  Router / Internet     │              └─────────────────────────────┘
+└────────────────────────┘
 ```
 
-**Runtime estimate:**
-- Arduino active draw: ~100 mA at 5V ≈ ~135 mA from 3.7V LiPo
-- 6000 mAh battery: ~44 hours without any solar input
-- With a 3.5W panel and 5+ hours of sunlight per day, the station runs indefinitely in summer; may need a larger panel (6W) or battery (10000 mAh) for winter at northern latitudes
+**Note:** The Raspberry Pi 3B+ can be **powered by** PoE (with the PoE HAT) but **cannot source** PoE. A dedicated PoE switch or PoE injector is required to send power to the ESP32 over an Ethernet cable.
 
-**With deep sleep (extends battery life dramatically):**
-- Wake every 60s, read sensors, publish MQTT, sleep again
-- Active time per cycle: ~3 seconds (~100 mA) + sleep: ~5 mA
-- Average draw: ~10 mA → battery lasts ~25 days without sun
+#### Option B: USB Power (Near Outlet)
 
-To enable deep sleep on the Uno R4 WiFi, use the RTC peripheral:
+Simplest option if the ESP32 is within reach of an outlet.
 
-```cpp
-#include <RTC.h>
+| Component | Spec | Price (approx.) | Notes |
+|-----------|------|-----------------|-------|
+| USB-C cable + charger | 5V / 1A | ~€8 | Any USB charger works — the ESP32-C3 draws only ~0.12 W |
 
-void setup() {
-  RTC.begin();
-  // ... sensor setup, one-shot publish ...
-  // Sleep for 60 seconds
-  RTCTime alarmTime;
-  alarmTime.setSecond(0);
-  AlarmMatch match;
-  match.addMatchMinute(); // wake every minute
-  RTC.setAlarmCallback([](){}, alarmTime, match);
-  // Enter low-power mode (board-specific)
-}
-```
+#### Option C: Solar + LiPo (Off-Grid)
 
-> **Note:** Deep sleep on the Uno R4 WiFi requires reconnecting Wi-Fi on each wake cycle, which adds ~2–3 seconds. For sub-minute intervals, keep Wi-Fi on and use `delay()` instead.
+The ESP32-C3's low power draw allows a small solar panel and battery:
 
-#### Option B: Weatherproof USB Power Supply (Near Mains Power)
+| Component | Spec | Price (approx.) |
+|-----------|------|-----------------|
+| Solar panel | 5V, 1W | ~€5 |
+| LiPo battery | 3.7V, 2000 mAh | ~€6 |
+| TP4056 charger | With DW01 protection circuit | ~€2 |
 
-Simplest option if the station is within reach of an outdoor outlet.
+With deep sleep (wake every 60s), average draw is ~0.5 mA → battery lasts ~166 days without sun. Even a 1W panel keeps it running year-round at most latitudes.
 
-| Component | Spec | Price | Notes |
-|-----------|------|-------|-------|
-| Outdoor-rated USB-C charger | 5V / 2A, IP44+ | ~€15 | Must be rated for outdoor/wet locations |
-| USB-C cable | Outdoor-rated, UV-resistant | ~€8 | Standard cables degrade in sunlight |
-| Weatherproof enclosure | IP65 box | ~€8 | Mount the Arduino inside |
+### Pi 3B+ as Wi-Fi Hotspot
 
-**Pros:** No battery management, no charge controller, always-on.
-**Cons:** Requires proximity to an outlet; power outage = data gap.
-
-#### Option C: PoE Splitter (Near Ethernet)
-
-If you already have Ethernet cable running to the sensor location:
-
-| Component | Spec | Price |
-|-----------|------|-------|
-| PoE injector | 802.3af, at the router/switch end | ~€15 |
-| PoE splitter | 5V output, at the Arduino end | ~€10 |
-
-The PoE splitter extracts power from the Ethernet cable and outputs 5V for the Arduino. The Ethernet data lines go unused (the Arduino uses Wi-Fi), but this avoids running a separate power cable.
-
-#### Option D: 12V DC with Buck Converter (Shared with Other Outdoor Equipment)
-
-If you have a 12V source (e.g., garden lighting transformer, CCTV power supply):
-
-| Component | Spec | Price |
-|-----------|------|-------|
-| Buck converter | LM2596 module, output set to 7–9V | ~€3 |
-
-Feed the buck converter output into the Arduino's VIN pin (accepts 6–24V). The onboard regulator steps it down to 5V.
-
-### Power Comparison Summary
-
-| Option | Best For | Cost | Autonomy | Complexity |
-|--------|----------|------|----------|------------|
-| **A: Solar + LiPo** | Remote / off-grid locations | ~€35 | Indefinite (with sun) | Medium — charge controller + boost converter |
-| **B: USB mains** | Near outdoor outlet | ~€25 | Unlimited (mains) | Low — plug and play |
-| **C: PoE splitter** | Near Ethernet run | ~€25 | Unlimited (PoE) | Low — injector + splitter |
-| **D: 12V buck** | Shared 12V supply nearby | ~€5 | Unlimited (12V source) | Low — one module |
-
-**Recommendation:** For a truly outdoor, self-contained weather station, **Option A (solar + LiPo)** is the standard choice. Use a 6V/3.5W panel and a 6000 mAh LiPo as the baseline. If deep sleep is enabled (wake every 60s), a smaller panel (2W) suffices. If the station is near the house, **Option B (USB mains)** is simpler and more reliable.
-
-### Weatherproofing
-
-| Concern | Solution |
-|---------|----------|
-| **Electronics** | Mount Arduino, charge controller, and battery in an IP65 junction box. Use cable glands for sensor wires. |
-| **BME280** | Must be exposed to ambient air — mount it in a ventilated radiation shield (Stevenson screen) or under a louvered cover to avoid direct sun heating. |
-| **RJ11 cables** | Weather sensor kits come with outdoor-rated cables. Seal the entry point into the enclosure with silicone or cable glands. |
-| **Solar panel** | Mount at a ~30–45° angle facing south (northern hemisphere). Most panels are IP65+ rated. |
-| **Connectors** | Use weatherproof RJ11 connectors or seal with self-amalgamating tape. |
-
-### Arduino vs Pi Sensor Node Comparison
-
-| Aspect | Arduino Uno R4 WiFi | Raspberry Pi 3 B+ |
-|--------|--------------------|--------------------|
-| Power draw (active) | ~100 mA (0.5 W) | ~700 mA (3.5 W) |
-| Power draw (idle/sleep) | ~5 mA (deep sleep) | ~300 mA (idle, no deep sleep) |
-| Boot time | Instant (<1 s) | ~30 s |
-| Analog inputs | 6 (built-in, 14-bit) | None (needs external ADC) |
-| Local buffering | No (publishes or loses data) | Yes (local Mosquitto bridge) |
-| OS complexity | None (bare-metal sketch) | Full Linux OS |
-| Cost | ~€25 | ~€40 |
-| Solar feasible? | Yes (small panel) | Difficult (needs large panel + high-capacity battery) |
-| OTA updates | Yes (via ESP32-S3 OTA) | Yes (SSH + apt/git) |
-
-**Trade-off:** The Arduino wins on power, cost, and simplicity. The Pi wins on local buffering (Mosquitto bridge queues messages during Wi-Fi outages) and flexibility. If data loss during brief Wi-Fi dropouts is acceptable, the Arduino is the better sensor node.
-
-### References
-
-- [Arduino Uno R4 WiFi Documentation](https://docs.arduino.cc/hardware/uno-r4-wifi/) — official pinout, specs, and getting started
-- [ArduinoMqttClient Library](https://github.com/arduino-libraries/ArduinoMqttClient) — official MQTT client for Arduino
-- [SparkFun Weather Meter Kit Hookup Guide](https://learn.sparkfun.com/tutorials/weather-meter-hookup-guide/all) — wiring and calibration for the RJ11 wind/rain sensors
-- [Adafruit BME280 Arduino Guide](https://learn.adafruit.com/adafruit-bme280-humidity-barometric-pressure-temperature-sensor-breakout/arduino-test) — library setup and wiring
-- [Solar-Powered Arduino Weather Station (Instructables)](https://www.instructables.com/Solar-Powered-WiFi-Weather-Station-V4-0/) — detailed solar power design for outdoor Arduino stations
-
-## 6. Arduino Ethernet Sensor Node (Indoor — Closed Wooden Shelter)
-
-An alternative to the Wi-Fi-based Arduino setup in section 5: use an **Arduino Uno R4 Minima** with a **W5500 Ethernet Shield** for a wired connection to the Raspberry Pi hub. The Arduino is installed **inside a room of a closed wooden shelter** (garden cabin, shed, or outbuilding), protected from weather. All sensors are mounted **outside** the shelter, connected via **Qwiic cables** (I2C: BME280) and **RJ11 cables** (weather meter: rain, wind, vane) running 2–3 m through the wall back to the board.
-
-### Why Ethernet Over Wi-Fi
-
-| Concern | Wi-Fi (section 5) | Ethernet (this section) |
-|---------|-------------------|------------------------|
-| Reliability | Subject to interference, signal drops outdoors | Rock-solid wired link |
-| Latency | Variable | Consistent, low |
-| Power | ESP32-S3 radio draws ~70 mA continuously | W5500 draws ~130 mA but no reconnect cycles |
-| Range | Limited to ~15 m from AP | Up to 100 m Cat5 cable |
-| Security | Encrypted but attackable over the air | Physical access required |
-| Setup | SSID/password config | Plug and play (DHCP) |
-
-**Trade-off:** Ethernet requires running a Cat5/Cat6 cable from the shelter to the Pi hub. If the cable run is feasible, Ethernet is more reliable. If not, use the Wi-Fi setup from section 5.
-
-### RJ45 Ethernet Shield — Which One?
-
-The **W5500 Ethernet Shield** is the standard choice. It uses the WIZnet W5500 chip and is fully supported by the built-in Arduino `Ethernet` library.
-
-| Product | Chip | Notes | Price (approx.) |
-|---------|------|-------|-----------------|
-| **Arduino Ethernet Shield 2** (A000024) | W5500 | Official Arduino product, includes microSD slot. May be discontinued in some markets — check availability | ~€25 |
-| **W5500 Ethernet Shield V2 (clone)** | W5500 | Pin-compatible with Uno R4, widely available from HanRun, Keyestudio, DFRobot. Same functionality at lower cost | ~€8–12 |
-| **WIZnet W5100S Shield** | W5100S | Older chip, fewer simultaneous sockets (4 vs 8). Works but W5500 is preferred | ~€10 |
-
-**Recommendation:** Any **W5500-based shield** works. The clones are functionally identical to the official shield. The W5500 uses SPI (pins D10–D13) and leaves I2C (A4/A5) and interrupts (D2/D3) free for sensors.
-
-Links: [Arduino Store](https://store.arduino.cc/products/arduino-ethernet-shield-2), [Mouser BE](https://www.mouser.be/), [Amazon](https://www.amazon.com/s?k=W5500+ethernet+shield+arduino)
-
-### Connecting Sensors at 2–3 m Distance
-
-#### I2C Sensors (BME280) — via Qwiic
-
-Standard Qwiic (JST SH 4-pin) cables max out at 500 mm. For 2–3 m runs, I2C needs signal conditioning:
-
-| Approach | Product | How it works | Price |
-|----------|---------|-------------|-------|
-| **Active I2C extender (recommended)** | Adafruit LTC4311 (#4756) | Single board — boosts I2C drive strength with active pull-ups. STEMMA QT on both sides for daisy-chaining. Proven at 3 m (phone wire, 400 kHz) and up to 30 m (Cat5, 100 kHz). Only **one** board needed (not a pair). | ~€10 |
-| **Differential I2C** | SparkFun PCA9615 Breakout (×2, one at each end) | Converts I2C to differential signaling over Cat5/RJ45 cable — reliable up to 20 m. No Adafruit equivalent. Overkill for 2–3 m but necessary beyond ~5 m. | ~€7 each |
-| **Lower bus speed** | Software config (`Wire.setClock(10000)`) | Drop I2C clock from 100 kHz to 10 kHz to tolerate capacitance on long cables — no extra hardware, but slower | Free |
-
-Links: [Adafruit LTC4311](https://www.adafruit.com/product/4756), [SparkFun PCA9615](https://www.sparkfun.com/products/14589)
-
-**Qwiic daisy-chain from Arduino:** Since the Ethernet shield sits on top of the Uno R4, use a **Qwiic adapter cable with breadboard jumpers** (SparkFun PRT-14425 or Adafruit 4209) to tap the I2C lines from the shield's pass-through headers. The full chain:
-
-```
-Arduino A4/A5 ──► Qwiic Adapter Cable ──► LTC4311 (STEMMA QT in/out) ──► long cable (2–3 m, through wall) ──► BME280
-    (indoor)          (indoor)                (indoor)                        cable gland              (outdoor, in
-                                                                              at wall                  Stevenson screen)
-```
-
-All connections are solderless Qwiic/STEMMA QT plug-and-play. For the 2–3 m segment, use a standard 4-wire cable (or Cat5 using 4 of 8 wires) with JST SH connectors crimped or soldered at each end.
-
-#### Weather Sensors (Rain, Wind, Vane) — via RJ11
-
-The **SparkFun Weather Meter Kit** (SEN-15901) ships with RJ11 cables that are 3–5 m long — already sufficient for a 2–3 m run. To connect the RJ11 plugs to Arduino pins, use breakout boards:
-
-| Product | Purpose | Price |
-|---------|---------|-------|
-| **SparkFun RJ11 Breakout** (BOB-14021) | Breaks out the RJ11 wires to screw terminals or header pins — one per sensor pair | ~€2 each |
-| **SparkFun Weather Meter Kit** (SEN-15901) | Anemometer + wind vane + rain gauge with RJ11 cables | ~€80 |
-
-The rain gauge and anemometer connect to D2 (INT0) and D3 (INT1) for interrupt-based pulse counting. The wind vane connects to A0 for analog reading (voltage divider via internal resistor ladder).
+The Raspberry Pi 3B+ runs `hostapd` to create a local Wi-Fi network (SSID: `weather-hub`). The ESP32-C3 connects to this network and publishes MQTT messages to the Mosquitto broker running on the Pi. The ESP32-C3 receives an IP in the 192.168.4.x range via `dnsmasq` DHCP.
 
 ### Component List
 
-| # | Component | Purpose | Price (approx.) |
-|---|-----------|---------|-----------------|
-| 1 | Arduino Uno R4 Minima | MCU — no WiFi needed (Ethernet instead) | ~€20 |
-| 2 | W5500 Ethernet Shield (clone) | Wired network to Pi hub | ~€10 |
-| 3 | BME280 Qwiic breakout (Adafruit 2652 or SparkFun SEN-15440) | Temperature, humidity, pressure sensor | ~€15 |
-| 4 | SparkFun Weather Meter Kit (SEN-15901) | Rain gauge, anemometer, wind vane with RJ11 cables | ~€80 |
-| 5 | SparkFun RJ11 Breakout (BOB-14021) ×2 | Connect weather sensor RJ11 plugs to Arduino pins | ~€4 |
-| 6 | Qwiic adapter cable — JST SH to jumper (PRT-14425) | Connect Qwiic BME280 to Arduino I2C headers | ~€2 |
-| 7 | Adafruit LTC4311 I2C Extender (#4756) | Active I2C pull-up for reliable 2–3 m Qwiic cable run. STEMMA QT connectors. Single board. | ~€10 |
-| 8 | Cat5e Ethernet cable (5–10 m) | Arduino to RJ45 hub | ~€5 |
-| 9 | 10 kΩ resistor | Pull-down for wind vane voltage divider | ~€0.10 |
-| 10 | Cable glands (IP68, 3–5 mm) ×4 | Weatherproof wall pass-throughs for sensor cables | ~€5 |
-| | | **Total** | **~€151** |
-
-### Indoor Installation (Closed Wooden Shelter)
-
-The Arduino and electronics are installed **inside a room of a closed wooden shelter** (garden cabin, shed, workshop). The room provides natural protection from weather — no IP-rated enclosure is needed for the board. All sensors are mounted **outside**, with cables routed through the wall.
-
-| Concern | Detail |
-|---------|--------|
-| **Arduino placement** | Mount on a shelf, DIN rail, or directly on the wall inside the room. Keep away from heat sources (radiators, direct window sun) to avoid warming the board unnecessarily |
-| **Cable pass-through** | Drill holes through the exterior wall for RJ11 (sensors), Qwiic/Cat5 (BME280), and Cat5 (Ethernet to Pi hub). Use IP68 cable glands to seal each hole against rain and drafts |
-| **BME280 placement** | Must be mounted **outside** in a Stevenson screen — the closed room's temperature and humidity do not reflect outdoor conditions. See [outdoor weatherproofing](#outdoor-weatherproofing-bme280) below for conformal coating and alternative sensors |
-| **Weather sensors** | Mount rain gauge, anemometer, and wind vane on a mast or post 2–3 m from the wall, in an open area free from obstructions |
-| **Ethernet cable** | Route the Cat5 cable from the Arduino through the wall (or existing conduit) to the Pi hub indoors, or to another building |
-| **Power** | USB-C from an indoor outlet (simplest), or any of the power options from section 5 |
-| **Moisture** | Even indoors, unheated wooden shelters can be damp — consider a small silica gel pack near the Arduino in humid climates |
-
-### Wiring Diagram (SVG)
-
-See the full-color wiring diagram: [arduino-ethernet-wiring.svg](arduino-ethernet-wiring.svg)
-
-### Architecture Diagram
-
-```
-  Closed Wooden Shelter (indoor room)             OUTSIDE (2–3 m from wall)
- ┌────────────────────────────────────┐
- │                                    │
- │  Arduino Uno R4 Minima             │
- │  ┌──────────────────────┐          │      Qwiic + PCA9615       ┌────────────────┐
- │  │                      │          │    (I2C over Cat5, 2–3 m)  │ BME280         │
- │  │  W5500 Ethernet      │  A4/A5 ──┼──────────────────────────► │ (Qwiic)        │
- │  │  Shield (stacked)    │          │                            │ Temp/Hum/Press │
- │  │                      │          │                            │ in Stevenson   │
- │  └──┬───────────────────┘          │                            │ screen         │
- │     │                              │                            └────────────────┘
- │     │  D2 ─────────────────────────┼──── RJ11, 2–3 m ────────► Rain Gauge
- │     │  D3 ─────────────────────────┼──── RJ11, 2–3 m ────────► Anemometer
- │     │  A0 ─────────────────────────┼──── RJ11, 2–3 m ────────► Wind Vane
- │     │                              │      (cable glands
- │     │  RJ45 (Ethernet)             │       at wall)
- │     │                              │
- │  USB-C ← power (indoor outlet)    │
- │                                    │
- │  ┌──────────────────┐              │
- │  │ RJ45 Ethernet    │              │     Weather sensors mounted
- │  │ Hub / Switch     │              │     on mast/post in open area:
- │  │ 10/100 Mbps      │              │
- │  │ ┌──┐┌──┐┌──┐┌──┐│              │     ┌──────────┐ ┌──────────┐ ┌──────────┐
- │  │ │P1││P2││P3││P4││              │     │Rain Gauge│ │Anemometer│ │Wind Vane │
- │  │ └──┘└──┘└──┘└──┘│              │     │(tipping  │ │(reed     │ │(resistor │
- │  └───┬──┬───────────┘              │     │ bucket)  │ │ switch)  │ │ ladder)  │
- │      │  │                          │     └──────────┘ └──────────┘ └──────────┘
- │      │  └──► to indoor network     │
- │      │      (Pi, router, etc.)     │
- └──────┼─────────────────────────────┘
-        │
-     Arduino
-     Ethernet
-     (Cat5e)
-
-Pin mapping:
-  D2  (INT0)  ← Rain gauge (pulse interrupt)
-  D3  (INT1)  ← Anemometer (pulse interrupt)
-  A0          ← Wind vane (analog, 14-bit ADC + 10 kΩ pull-down)
-  A4  (SDA)   ← BME280 via Qwiic / PCA9615
-  A5  (SCL)   ← BME280 via Qwiic / PCA9615
-  D10–D13     ← W5500 Ethernet Shield (SPI)
-```
-
-### Shelter Wall Cross-Section
-
-```
-      INSIDE (room)                    OUTSIDE
- ┌───────────────────┐  wall  ┌──────────────────────────────────────┐
- │                   │ ┌────┐ │                                      │
- │  ┌─────────────┐  │ │    │ │   ┌──────────┐                      │
- │  │ Arduino     │  │ │    │ │   │ BME280 in│  2–3 m    ┌────────┐ │
- │  │ + Ethernet  │──┼─┤gland├─┼──►│ Stevenson│           │ mast   │ │
- │  │ shield      │  │ │    │ │   │ screen   │           │ with   │ │
- │  └─────────────┘  │ │    │ │   └──────────┘           │ rain/  │ │
- │        │          │ │    │ │                           │ wind/  │ │
- │     USB-C power   │ ├────┤ │   RJ11 cables ──────────►│ vane   │ │
- │     (from outlet) │ │gland│ │   (rain, wind, vane)     │        │ │
- │                   │ │    │ │                           └────────┘ │
- │  Cat5 to Pi ◄─────┼─┤gland├─┘                                    │
- │                   │ └────┘                                        │
- └───────────────────┘        └──────────────────────────────────────┘
-    cable glands (IP68) seal each wall penetration
-```
-
-### Outdoor Weatherproofing (BME280)
-
-The BME280 chip is rated for -40 to +85 °C and 0-100% RH, but the breakout board (PCB, traces, pads) has **no weatherproofing**. In a Stevenson screen, the board is sheltered from direct rain but still exposed to ambient humidity, condensation, and freeze-thaw cycles.
-
-**The #1 failure mode is condensation + freeze cycles** — the humidity sensor saturates, reads 100% permanently, and pressure drifts. Reported lifespan outdoors: 1-3 years depending on climate.
-
-#### Protection: Conformal Coating
-
-Apply a silicone conformal coating spray to the entire breakout board, but **mask the BME280 sensor port** (the small metal-lid component) with tape before spraying. This protects traces and pads from corrosion while keeping the humidity measurement functional.
-
-| Product | Type | Availability | Notes |
-|---------|------|-------------|-------|
-| **MG Chemicals 422B** | Silicone conformal spray | Worldwide (Mouser, Digikey) | Flexible, moisture-resistant, widely recommended for weather station PCBs |
-| **Kontakt Chemie Plastik 70** | Acrylic conformal spray | EU (Conrad, Reichelt) | Good alternative for European suppliers |
-
-Additional tips:
-- **Mount the sensor pointing down** to prevent rain pooling on the sensor port
-- **Ensure multiple ventilation openings** in the Stevenson screen — sealed boxes trap moisture and cause faster drift
-- **Budget for periodic replacement** (~€15/board every 1-3 years)
-
-#### Alternative: Adafruit SHT31-D + BMP280
-
-For harsher climates (frequent frost, coastal salt air, prolonged high humidity), consider replacing the BME280 with a pair of sensors purpose-built for outdoor use:
-
-| Sensor | Measures | Outdoor Advantage | STEMMA QT | Price |
-|--------|----------|------------------|-----------|-------|
-| **Adafruit SHT31-D** (#2857) | Temperature + Humidity | Built-in **PTFE membrane filter** (blocks liquid water, passes vapor) + **on-board heater** to burn off condensation | Yes | ~$14 |
-| **BMP280** (Adafruit #2651) | Pressure only | No humidity sensor to degrade; pressure measurement is inherently robust | Yes | ~$10 |
-
-The SHT31-D + BMP280 pair costs ~$24 (vs ~$15 for one BME280) but lasts significantly longer outdoors. Both have STEMMA QT connectors and work with the same Qwiic daisy-chain (LTC4311 → long cable → sensors).
-
-**Trade-off:** Two boards instead of one, slightly higher cost, two I2C addresses to read in code. But no conformal coating needed and much longer outdoor lifespan.
+| # | Component | Purpose | Price (approx.) | Buy |
+|---|-----------|---------|-----------------|-----|
+| 1 | ESP32-C3 DevKIT (30 pins) | MCU with built-in Wi-Fi, breadboard-friendly headers | ~€5 | [AliExpress](https://www.aliexpress.com/), [Amazon FR](https://www.amazon.fr/) |
+| 1b | SparkFun Qwiic adapter cable (PRT-14425) | Adds JST SH (STEMMA QT) connector to GPIO8/9 | ~€2 | [Kiwi Electronics](https://www.kiwi-electronics.com/), [SparkFun](https://www.sparkfun.com/products/14425) |
+| 2 | Adafruit BME280 (#2652) | Temperature, humidity, pressure sensor with STEMMA QT | ~€15 | [MCHobby](https://shop.mchobby.be/en/breakout/684-bme280-temphumiditypressure-sensor-i2c-spi-stemmaqtqwiic--3232100006843-adafruit.html) |
+| 3 | SparkFun Weather Meter Kit (SEN-15901) | Rain gauge, anemometer, wind vane with RJ11 cables | ~€80 | [Kiwi Electronics](https://www.kiwi-electronics.com/en/weather-meters-2931) |
+| 4 | SparkFun RJ11 Breakout (BOB-14021) | Breaks out RJ11 wires to header pins (includes 2 PCBs) | ~€2 | [Kiwi Electronics](https://www.kiwi-electronics.com/en/sparkfun-rj11-breakout-2925) |
+| 5 | SparkFun RJ11 6-Pin Connector (PRT-00132) ×2 | Through-hole RJ11 sockets — solder onto each breakout PCB | ~€4 | [Kiwi Electronics](https://www.kiwi-electronics.com/en/brand-sparkfun-electronics/rj11-6-pin-connector-2926) |
+| 6 | STEMMA QT cable 100 mm (Adafruit #4210) ×2 | Qwiic adapter → LTC4311, and pigtails for Cat5 splices | ~€3 | [Adafruit](https://www.adafruit.com/product/4210), [MCHobby](https://shop.mchobby.be) |
+| 7 | Adafruit LTC4311 I2C Extender (#4756) | Active I2C pull-up for reliable 3–4 m Cat5 cable run | ~€10 | [MCHobby](https://shop.mchobby.be/en/breakout/2058-extension-terminaison-bus-i2c-ltc4311-3232100020580-adafruit.html) |
+| 8 | 4-pos screw terminal blocks ×2 | Splice STEMMA QT pigtails to Cat5 wires (indoor + outdoor) | ~€2 | [Gotron](https://www.gotron.be) |
+| 9 | 10 kΩ resistor | Pull-down for wind vane voltage divider | ~€0.10 | [Gotron](https://www.gotron.be) |
+| 10 | Cat5e cable (3–4 m + PoE run) | I2C signal to BME280 + PoE power delivery | ~€5 | [Gotron](https://www.gotron.be) |
+| 11 | PoE switch (5-port, 802.3af) | Sources PoE power for ESP32 and Pi | ~€35 | [Amazon FR](https://www.amazon.fr/), [Alternate BE](https://www.alternate.be/) |
+| 12 | PoE splitter (5V USB-C output) | Extracts 5V from Ethernet cable at ESP32 end | ~€10 | [Amazon FR](https://www.amazon.fr/), [UCTRONICS](https://www.uctronics.com/) |
+| 13 | Cable glands (IP68, 3–5 mm) ×3 | Weatherproof wall pass-throughs for sensor cables | ~€4 | [Gotron](https://www.gotron.be/kabelwartel-zwart-pg7.html) |
+| | | **Total (with PoE)** | **~€172** | |
+| | | **Total (without PoE, USB power)** | **~€122** | |
 
 ### References
 
-**Ethernet Shield:**
-- [Arduino Ethernet Shield 2 Documentation](https://docs.arduino.cc/retired/shields/arduino-ethernet-shield-2/) — official wiring, pinout, and library reference
-- [W5500 Datasheet (WIZnet)](https://www.wiznet.io/product-item/w5500/) — chip specs and SPI interface details
-- [Arduino Ethernet Library Reference](https://www.arduino.cc/reference/en/libraries/ethernet/) — API docs for `Ethernet`, `EthernetClient`, `EthernetServer`
+**ESP32-C3:**
+- [Espressif ESP32-C3 Product Page](https://www.espressif.com/en/products/socs/esp32-c3) — official specs, features, and technical documents
+- [ESP32-C3-DevKitC-02 Getting Started](https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/hw-reference/esp32c3/user-guide-devkitc-02.html) — official development board guide with pinout diagram
+- [Arduino-ESP32 Documentation](https://docs.espressif.com/projects/arduino-esp32/en/latest/) — Arduino framework for all ESP32 variants including C3
+- [ESP32-C3 Arduino GPIO Reference](https://docs.espressif.com/projects/arduino-esp32/en/latest/api/gpio.html) — GPIO, ADC, I2C, and interrupt configuration
+- [Random Nerd Tutorials — Getting Started with ESP32](https://randomnerdtutorials.com/getting-started-with-esp32/) — beginner-friendly tutorials for ESP32 boards
 
-**I2C over Long Cables:**
-- [Adafruit LTC4311 Guide](https://learn.adafruit.com/adafruit-ltc4311-i2c-extender-active-terminator) — active I2C extender with STEMMA QT; single board, proven at 3 m (400 kHz) and up to 30 m (100 kHz)
-- [SparkFun PCA9615 Hookup Guide](https://learn.sparkfun.com/tutorials/qwiic-differential-i2c-bus-extender-pca9615-hookup-guide) — differential I2C for cable runs beyond ~5 m (requires a pair of boards)
-- [I2C Bus Specification (NXP)](https://www.nxp.com/docs/en/user-guide/UM10204.pdf) — electrical limits, capacitance budgets, and maximum cable length
+**Books & Courses:**
+- [ESP32-C3 Wireless Adventure (Espressif, free)](https://github.com/niceBoy0929/book-esp32c3-iot-projects) — official Espressif book covering IoT development with ESP32-C3 from basics to cloud integration (Wi-Fi, BLE, ESP RainMaker, OTA). Covers both ESP-IDF and Arduino. Highly regarded by the community.
+- [Learn ESP32 with Arduino IDE (Random Nerd Tutorials)](https://randomnerdtutorials.com/learn-esp32-with-arduino-ide/) — paid ebook/course by Sara & Rui Santos. Covers 60+ projects including weather stations, MQTT, deep sleep, web servers. The most popular hands-on ESP32 resource.
 
-**Qwiic / STEMMA QT Ecosystem:**
-- [SparkFun Qwiic System Overview](https://www.sparkfun.com/qwiic) — connector pinout, daisy-chaining, and compatible boards
-- [Adafruit STEMMA QT Guide](https://learn.adafruit.com/introducing-adafruit-stemma-qt) — Adafruit's compatible I2C connector system
+**MQTT on ESP32:**
+- [PubSubClient Library (Nick O'Leary)](https://github.com/knolleary/pubsubclient) — lightweight MQTT client for Arduino and ESP32
+- [ESP32 MQTT Publish/Subscribe Tutorial](https://randomnerdtutorials.com/esp32-mqtt-publish-subscribe-arduino-ide/) — step-by-step MQTT setup with ESP32
+
+**BME280 on ESP32:**
+- [ESP32 BME280 Weather Station Tutorial](https://randomnerdtutorials.com/esp32-bme280-arduino-ide-pressure-temperature-humidity/) — wiring and code for ESP32 + BME280
+
+**PoE:**
+- [Raspberry Pi PoE+ HAT](https://www.raspberrypi.com/products/poe-plus-hat/) — official PoE HAT for Pi 3B+/4 (802.3af/at input, 5V/5A output)
+- [TP-Link TL-SG1005P](https://www.tp-link.com/en/business-networking/poe-switch/tl-sg1005p/) — 5-port Gigabit PoE switch (4 PoE ports, 56W total budget)
+- [UCTRONICS PoE Splitter](https://www.uctronics.com/) — compact 802.3af/at PoE splitter with 5V USB-C output for microcontrollers
 
 **Weather Sensors & RJ11:**
 - [SparkFun Weather Meter Kit Hookup Guide](https://learn.sparkfun.com/tutorials/weather-meter-hookup-guide/all) — wiring, calibration, and RJ11 pinout for rain/wind/vane sensors
-- [SparkFun RJ11 Breakout Guide](https://learn.sparkfun.com/tutorials/rj11-breakout-hookup-guide) — connecting RJ11 plugs to breadboard/Arduino pins
+- [SparkFun RJ11 Breakout Hookup Guide](https://learn.sparkfun.com/tutorials/rj11-breakout-hookup-guide) — connecting RJ11 plugs to breadboard or MCU pins
+- [SparkFun MicroClimate Kit Guide](https://learn.sparkfun.com/tutorials/microclimate-kit-experiment-guide) — complete weather station experiment guide
+- [Lextronic Weather Station Kit](https://www.lextronic.fr/station-meteo-girouette-anemometre-pluviometre-2640.html) — anemometer + wind vane + rain gauge kit (French reseller)
 
-**Sensors Outdoor Weatherproofing & Alternatives:**
-
-3D-printable Stevenson screens with internal sensor mount (for BME280/SHT31 — rain gauge and wind sensors are mounted separately):
-
-[3D-Printable Stevenson Screen (Thingiverse)](https://www.thingiverse.com/search?q=stevenson+screen&type=things) — compact louvered enclosures for outdoor temperature/humidity sensors
- 
-| Design | Platform | Sensor Mount | Outdoor Tested | Link |
-|--------|----------|-------------|----------------|------|
-| **Stevenson Screen** (ImaRH 3D) | MakerWorld | BME280 internal mount, waterproof-tested | Several months | [makerworld.com/model/1922952](https://makerworld.com/en/models/1922952-stevenson-screen-for-weather-station) |
-| **ESP32 + BME280 Stevenson Screen** (mariusbach) | Thingiverse | BME280 PCB holder + pipe clamp | 12+ months (cold/rain) | [thingiverse.com/thing:4459925](https://www.thingiverse.com/thing:4459925) |
-| **Radiation Shield** (MakerMeik) | Thingiverse + Printables | BME280/DHT, 6mm cable holes, stackable | 12+ months | [thingiverse.com/thing:3793535](https://www.thingiverse.com/thing:3793535) |
-| **Radiation Shield for SHT31** (SanglierLab) | Thingiverse | SHT31 specific, PVC pipe mount | Yes | [thingiverse.com/thing:4120452](https://www.thingiverse.com/thing:4120452) |
-
-Print in **ASA or PETG** (UV-resistant) in **white**. PLA works short-term but may warp above ~50 °C in direct sun.
-
-Forum discussion:
-- [MySensors Forum — BME280 Outdoor Use](https://forum.mysensors.org/topic/4917/bme280-how-to-use-it-outdoors) — RTV silicone, PTFE tape, ventilation tips; 1+ year outdoor report
-
-Silicone coating:
-- [MG Chemicals 422B Silicone Conformal Coating](https://www.mgchemicals.com/products/conformal-coatings/silicone-conformal-coating-422b/) — recommended spray coating for weather station PCBs
-
-Alternative sensors:
-- [Adafruit SHT31-D (#2857)](https://www.adafruit.com/product/2857) — outdoor-rated alternative with PTFE membrane + heater (STEMMA QT)
-- [Adafruit BMP280 (#2651)](https://www.adafruit.com/product/2651) — pressure-only companion to SHT31-D (STEMMA QT)
-
-**Arduino Uno R4 Minima:**
-- [Arduino Uno R4 Minima Documentation](https://docs.arduino.cc/hardware/uno-r4-minima/) — pinout, specs, shield compatibility
-- [Arduino Uno R4 Shield Compatibility Guide](https://docs.arduino.cc/tutorials/uno-r4-minima/shield-guide/) — which R3 shields work with R4
+**Suppliers:**
+- [DigiKey BE](https://www.digikey.be/), [Gotron](https://www.gotron.be), [Antratek](https://www.antratek.be) — electronics components (Belgium)
+- [MCHobby](https://shop.mchobby.be/fr/) — Adafruit / SparkFun reseller (Belgium, French-speaking)

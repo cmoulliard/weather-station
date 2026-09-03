@@ -17,10 +17,23 @@ Build a complete weather station using a Raspberry Pi, environmental sensors, an
 - BME280 wiring & Python:
     - Sensor plugged on Pi: https://randomnerdtutorials.com/raspberry-pi-bme280-python/
 - ESP32 Board:
-    - ESPHome & hardware + blog/tuto: https://esphome.io/components/esp32/
-    - https://www.haraldkreuzer.net/en/news/esp32-weather-station-weather-forecast-wireless-sensors-and-air-quality-measurement
-    - https://www.instructables.com/DIY-Weather-Station-With-ESP32/
-    - https://www.makerguides.com/fr/simple-esp32-internet-weather-station-fr/
+    - Tutorials: 
+      - https://randomnerdtutorials.com/ & https://randomnerdtutorials.com/getting-started-with-esp32/
+      - https://michiel.vanderwulp.be/domotica/Modules/ESP32-and-Shield/
+    - HowTo guides:
+      - https://www.haraldkreuzer.net/en/news/esp32-weather-station-weather-forecast-wireless-sensors-and-air-quality-measurement
+      - https://www.instructables.com/DIY-Weather-Station-With-ESP32/
+      - https://www.makerguides.com/fr/simple-esp32-internet-weather-station-fr/
+    - ESP32-C3 specific:
+      - Getting started: https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/hw-reference/esp32c3/user-guide-devkitc-02.html
+      - Arduino framework for ESP32: https://docs.espressif.com/projects/arduino-esp32/en/latest/
+      - ESP32 + BME280: https://randomnerdtutorials.com/esp32-bme280-arduino-ide-pressure-temperature-humidity/
+      - ESP32 + MQTT: https://randomnerdtutorials.com/esp32-mqtt-publish-subscribe-arduino-ide/
+    - IDE - DevTools - HowTo connect/code/install:
+      - https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/get-started/index.html#installation 
+    - Books:
+      - [ESP32-C3 Wireless Adventure (Espressif, free)](https://github.com/niceBoy0929/book-esp32c3-iot-projects) — official Espressif book, IoT from basics to cloud
+      - [Learn ESP32 with Arduino IDE (Random Nerd Tutorials)](https://randomnerdtutorials.com/learn-esp32-with-arduino-ide/) — 60+ hands-on projects
 
 - Suppliers:
       - [Kubii](https://www.kubii.com/fr/)
@@ -28,8 +41,12 @@ Build a complete weather station using a Raspberry Pi, environmental sensors, an
       - [SOS Solutions](https://www.sossolutions.nl/) (Netherlands),
       - [Mouser Belgium](https://www.mouser.be/),
       - ESP32:
-        - https://www.gotronic.fr/cat-cartes-esp32.htm
+        - - [GoTronic](https://www.gotronic.fr/cat-cartes-esp32.htm),
         - Carte ESP32 française: https://www.upesy.fr/
+      - PoE:
+        - [Raspberry Pi PoE+ HAT](https://www.raspberrypi.com/products/poe-plus-hat/)
+        - [TP-Link TL-SG1005P PoE switch](https://www.tp-link.com/en/business-networking/poe-switch/tl-sg1005p/)
+        - [UCTRONICS PoE splitters](https://www.uctronics.com/)
       - [Weather components bc-robotics](https://bc-robotics.com/?product_cat=&s=weather&post_type=product)
       - [Sparkfun meter kit - rain gauge, wind vane, anemometer](https://thepihut.com/products/sparkfun-weather-meter-kit)
 
@@ -286,4 +303,5 @@ Useful options: `--exit` (terminate on I/O or database errors), `--loop-on-init`
 | **Full control, minimal footprint** | Raspberry Pi 4/5 + BME280 + RJ11 kit + Quarkus native app + built-in Carbon dashboard |
 | **Best drag-and-drop dashboards** | Quarkus or WeeWX + Node-RED Dashboard 2.0 |
 | **Quickest to get running** | Raspberry Pi 4/5 + Pimoroni Weather HAT + WeeWX |
+| **Lowest cost, lowest power** | ESP32-C3 + BME280 + RJ11 kit + Pi 3B+ hotspot + Quarkus app |
 | **Best analytics dashboards** | Either option + InfluxDB + Grafana |
