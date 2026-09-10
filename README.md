@@ -1,8 +1,14 @@
-# Raspberry Pi Weather Station Guide
+# Weather Station Howto Guide
 
-Build a complete weather station using a Raspberry Pi, environmental sensors, and software to collect and publish data to Weather Underground or OpenWeatherMap.
+Build a complete weather station using a single board computer (SBC), environmental sensors, and software to collect and publish data to Weather Underground or OpenWeatherMap.
 
 ## References
+
+TODO: To be reviewed and sorted:
+- https://www.hackster.io/leonardocavagnis/iot-weather-station-with-seeed-studio-237aa6
+- https://github.com/cerevisis/ESP32-Weather-Station
+- https://antonin-lfv.github.io/assets/pdf/Station_meteo_intelligente.pdf
+- https://www.makerguides.com/simple-esp32-internet-weather-station/
 
 ### Tutorials
 
@@ -21,8 +27,7 @@ Build a complete weather station using a Raspberry Pi, environmental sensors, an
       - https://randomnerdtutorials.com/ & https://randomnerdtutorials.com/getting-started-with-esp32/
       - https://michiel.vanderwulp.be/domotica/Modules/ESP32-and-Shield/
     - HowTo guides:
-      - https://www.haraldkreuzer.net/en/news/esp32-weather-station-weather-forecast-wireless-sensors-and-air-quality-measurement
-      - https://www.instructables.com/DIY-Weather-Station-With-ESP32/
+      - https://www.instructables.com/DIY-Weather-Station-With-ESP32/ & video: https://www.youtube.com/watch?v=LJszEpV9P0M
       - https://www.makerguides.com/fr/simple-esp32-internet-weather-station-fr/
     - ESP32-C3 specific:
       - Getting started: https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/hw-reference/esp32c3/user-guide-devkitc-02.html

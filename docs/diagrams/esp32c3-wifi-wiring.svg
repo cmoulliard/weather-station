@@ -13,20 +13,19 @@
   <rect width="1400" height="920" rx="12" fill="#f8fafc"/>
 
   <!-- Title -->
-  <text x="700" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#0f172a">ESP32-C3 WiFi Sensor Node — Wiring Diagram</text>
+  <text x="700" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#0f172a">ESP32 WiFi Sensor Node — Wiring Diagram</text>
   <text x="700" y="58" text-anchor="middle" font-size="13" fill="#64748b">Indoor installation (shelter) with outdoor sensors — Wi-Fi to Pi 3B+ hub</text>
 
   <!-- ===== PI 3B+ HUB (top-left corner) ===== -->
   <g transform="translate(30, 76)" filter="url(#shadow)">
-    <rect width="260" height="120" rx="8" fill="#166534" stroke="#14532d" stroke-width="2"/>
+    <rect width="260" height="110" rx="8" fill="#166534" stroke="#14532d" stroke-width="2"/>
     <text x="130" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#ecfdf5">Raspberry Pi 3B+</text>
     <text x="130" y="38" text-anchor="middle" font-size="10" fill="#bbf7d0">(hub / server — separate location)</text>
     <line x1="20" y1="48" x2="240" y2="48" stroke="#15803d" stroke-width="1"/>
     <g font-size="9" fill="#86efac">
       <text x="20" y="66">Wi-Fi Hotspot (hostapd)</text>
       <text x="20" y="82">Mosquitto MQTT Broker</text>
-      <text x="20" y="98">Quarkus App + InfluxDB3</text>
-      <text x="20" y="114">PoE HAT (optional)</text>
+      <text x="20" y="98">Quarkus App (optional)</text>
     </g>
   </g>
 
@@ -78,31 +77,49 @@
   <circle cx="665" cy="744" r="7" fill="#1f2937"/>
   <text x="665" y="775" text-anchor="middle" font-size="9" fill="#374151" font-weight="600">Cable Gland</text>
 
-  <!-- ===== POE SPLITTER ===== -->
+  <!-- ===== SOLAR + LIPO POWER ===== -->
+  <!-- Solar Panel -->
   <g transform="translate(40, 255)" filter="url(#shadow-sm)">
-    <rect width="200" height="60" rx="6" fill="#1e40af" stroke="#1e3a8a" stroke-width="1.5"/>
-    <text x="100" y="18" text-anchor="middle" font-size="10" font-weight="700" fill="#dbeafe">PoE Splitter</text>
-    <text x="100" y="32" text-anchor="middle" font-size="8" fill="#93c5fd">802.3af → 5V USB-C out</text>
-    <!-- Input: Cat5e from PoE switch -->
-    <rect x="5" y="38" width="60" height="14" rx="3" fill="#d4d4d8" stroke="#a1a1aa" stroke-width="1"/>
-    <text x="35" y="49" text-anchor="middle" font-size="6" fill="#27272a" font-weight="600">RJ45 IN</text>
-    <!-- Output: 5V USB-C -->
-    <rect x="135" y="38" width="55" height="14" rx="3" fill="#fbbf24" stroke="#d97706" stroke-width="1"/>
-    <text x="162" y="49" text-anchor="middle" font-size="6" fill="#78350f" font-weight="600">5V USB-C</text>
+    <rect width="95" height="60" rx="6" fill="#059669" stroke="#047857" stroke-width="1.5"/>
+    <text x="48" y="18" text-anchor="middle" font-size="10" font-weight="700" fill="#ecfdf5">Solar Panel</text>
+    <text x="48" y="32" text-anchor="middle" font-size="8" fill="#a7f3d0">5V, 1W</text>
+    <!-- Solar cell grid lines -->
+    <g stroke="#047857" stroke-width="0.5" opacity="0.5">
+      <line x1="10" y1="38" x2="85" y2="38"/>
+      <line x1="10" y1="44" x2="85" y2="44"/>
+      <line x1="10" y1="50" x2="85" y2="50"/>
+      <line x1="32" y1="34" x2="32" y2="55"/>
+      <line x1="63" y1="34" x2="63" y2="55"/>
+    </g>
   </g>
 
-  <!-- Cat5e cable coming from left edge to PoE Splitter -->
-  <line x1="0" y1="295" x2="40" y2="295" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
-  <text x="5" y="286" font-size="7" fill="#1d4ed8" font-weight="600">Cat5e from</text>
-  <text x="5" y="296" font-size="7" fill="#3b82f6">PoE Switch</text>
+  <!-- TP4056 Charger -->
+  <g transform="translate(150, 258)" filter="url(#shadow-sm)">
+    <rect width="85" height="38" rx="4" fill="#7c3aed" stroke="#6d28d9" stroke-width="1"/>
+    <text x="42" y="16" text-anchor="middle" font-size="9" font-weight="600" fill="#ede9fe">TP4056</text>
+    <text x="42" y="28" text-anchor="middle" font-size="7" fill="#c4b5fd">Charge controller</text>
+  </g>
 
-  <!-- Power cable from PoE Splitter to ESP32 USB-C -->
-  <path d="M 240,293 L 260,293 L 260,273 L 300,273" stroke="#f59e0b" stroke-width="2.5" fill="none"/>
-  <text x="265" y="268" font-size="7" fill="#b45309" font-weight="600">5V</text>
+  <!-- LiPo Battery -->
+  <g transform="translate(150, 302)" filter="url(#shadow-sm)">
+    <rect width="85" height="28" rx="4" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
+    <rect x="83" y="7" width="6" height="12" rx="1" fill="#d97706"/>
+    <text x="42" y="19" text-anchor="middle" font-size="8" font-weight="600" fill="#78350f">LiPo 3.7V</text>
+  </g>
 
-  <!-- ===== ESP32-C3 DEVKIT (30 pins) ===== -->
+  <!-- Arrow: Solar → TP4056 -->
+  <line x1="135" y1="282" x2="150" y2="277" stroke="#059669" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Arrow: TP4056 ↔ LiPo -->
+  <line x1="192" y1="296" x2="192" y2="302" stroke="#7c3aed" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Power cable from TP4056/LiPo to ESP32 -->
+  <path d="M 235,277 L 260,277 L 260,273 L 300,273" stroke="#f59e0b" stroke-width="2.5" fill="none"/>
+  <text x="265" y="268" font-size="7" fill="#b45309" font-weight="600">3.3V</text>
+
+  <!-- ===== ESP32 DEVKIT ===== -->
   <g transform="translate(300, 260)" filter="url(#shadow)">
-    <!-- PCB — 30-pin DevKIT form factor -->
+    <!-- PCB -->
     <rect width="130" height="200" rx="6" fill="#ea580c" stroke="#c2410c" stroke-width="2"/>
     <use href="#mount-hole" x="10" y="10"/>
     <use href="#mount-hole" x="120" y="10"/>
@@ -118,13 +135,13 @@
     <path d="M 111,6 L 111,14 L 117,14 L 117,22 L 111,22 L 111,30" stroke="#fed7aa" stroke-width="1.5" fill="none"/>
     <text x="111" y="42" text-anchor="middle" font-size="5" fill="#fed7aa">ANT</text>
 
-    <!-- ESP32-C3 chip -->
+    <!-- ESP32 chip -->
     <rect x="20" y="60" width="90" height="65" rx="3" fill="#9a3412"/>
-    <text x="65" y="82" text-anchor="middle" font-size="10" fill="#fed7aa" font-weight="600">ESP32-C3</text>
-    <text x="65" y="95" text-anchor="middle" font-size="8" fill="#fdba74">RISC-V 160 MHz</text>
-    <text x="65" y="108" text-anchor="middle" font-size="7" fill="#fdba74">Wi-Fi + BLE 5.0</text>
+    <text x="65" y="82" text-anchor="middle" font-size="11" fill="#fed7aa" font-weight="600">ESP32</text>
+    <text x="65" y="95" text-anchor="middle" font-size="8" fill="#fdba74">Wi-Fi + BLE</text>
+    <text x="65" y="108" text-anchor="middle" font-size="7" fill="#fdba74">Board TBD</text>
 
-    <!-- Qwiic adapter cable (PRT-14425) — soldered to GPIO8/9 -->
+    <!-- Qwiic adapter cable (PRT-14425) — soldered to SDA/SCL -->
     <rect x="30" y="140" width="70" height="22" rx="4" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
     <text x="65" y="155" text-anchor="middle" font-size="6" fill="#78350f" font-weight="700">Qwiic Adapter</text>
     <text x="65" y="172" text-anchor="middle" font-size="6" fill="#fed7aa">(PRT-14425)</text>
@@ -138,32 +155,30 @@
     <g font-size="6" fill="#fde68a" font-weight="600" text-anchor="end">
       <text x="22" y="38">3V3</text>
       <text x="22" y="52">GND</text>
-      <text x="22" y="66">GPIO4</text>
-      <text x="22" y="100">GPIO5</text>
-      <text x="22" y="114">GPIO6</text>
-      <text x="22" y="128">GPIO7</text>
+      <text x="22" y="66">ADC</text>
+      <text x="22" y="100">GPIO</text>
+      <text x="22" y="114">GPIO</text>
     </g>
     <g font-size="5" fill="#fdba74" text-anchor="end">
-      <text x="22" y="73">ADC1</text>
-      <text x="22" y="107">INT</text>
-      <text x="22" y="121">INT</text>
+      <text x="22" y="73">Vane</text>
+      <text x="22" y="107">Rain</text>
+      <text x="22" y="121">Anemo</text>
     </g>
 
     <!-- Pin labels — right side -->
     <g font-size="6" fill="#fde68a" font-weight="600">
       <text x="108" y="38" text-anchor="end">5V</text>
       <text x="108" y="52" text-anchor="end">GND</text>
-      <text x="108" y="100" text-anchor="end">GPIO8</text>
-      <text x="108" y="114" text-anchor="end">GPIO9</text>
-      <text x="108" y="128" text-anchor="end">GPIO10</text>
+      <text x="108" y="100" text-anchor="end">SDA</text>
+      <text x="108" y="114" text-anchor="end">SCL</text>
     </g>
     <g font-size="5" fill="#fdba74">
-      <text x="108" y="107" text-anchor="end">SDA</text>
-      <text x="108" y="121" text-anchor="end">SCL</text>
+      <text x="108" y="107" text-anchor="end">I2C</text>
+      <text x="108" y="121" text-anchor="end">I2C</text>
     </g>
 
     <!-- Board label -->
-    <text x="65" y="190" text-anchor="middle" font-size="8" font-weight="700" fill="#e0f2fe">ESP32-C3 DevKIT</text>
+    <text x="65" y="190" text-anchor="middle" font-size="8" font-weight="700" fill="#e0f2fe">ESP32 DevKIT</text>
   </g>
 
   <!-- Step ① label on DevKIT Qwiic adapter -->
@@ -178,7 +193,7 @@
   <g transform="translate(40, 480)">
     <rect width="590" height="26" rx="4" fill="#fef3c7" stroke="#f59e0b" stroke-width="1" opacity="0.8"/>
     <text x="295" y="12" text-anchor="middle" font-size="8" font-weight="700" fill="#92400e">STEMMA QT Chain:</text>
-    <text x="295" y="23" text-anchor="middle" font-size="7" font-weight="600" fill="#b45309">DevKIT → Qwiic adapter → 100mm cable → LTC4311 → splice → Cat5 3–4 m → splice → 100mm cable → BME280</text>
+    <text x="295" y="23" text-anchor="middle" font-size="7" font-weight="600" fill="#b45309">DevKIT → Qwiic adapter → 100mm cable → LTC4311 → splice → Cat5 3–4 m → splice → BME280 → LTR390</text>
   </g>
 
   <!-- ===== STEP ② : STEMMA QT CABLE 100mm (Qwiic adapter → LTC4311) ===== -->
@@ -351,6 +366,35 @@
     <text x="105" y="225" text-anchor="middle" font-size="7" fill="#b45309" font-weight="600">STEMMA QT cable entry</text>
   </g>
 
+  <!-- ===== OUTDOOR: LTR390-UV SENSOR ===== -->
+  <g transform="translate(1200, 290)" filter="url(#shadow)">
+    <rect width="155" height="100" rx="8" fill="#fef9c3" stroke="#facc15" stroke-width="1.5"/>
+    <!-- UV rays icon -->
+    <g transform="translate(30,15)">
+      <circle cx="25" cy="20" r="12" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+      <g stroke="#f59e0b" stroke-width="2" stroke-linecap="round">
+        <line x1="25" y1="0" x2="25" y2="5"/>
+        <line x1="25" y1="35" x2="25" y2="40"/>
+        <line x1="5" y1="20" x2="10" y2="20"/>
+        <line x1="40" y1="20" x2="45" y2="20"/>
+        <line x1="11" y1="6" x2="14" y2="9"/>
+        <line x1="36" y1="31" x2="39" y2="34"/>
+        <line x1="39" y1="6" x2="36" y2="9"/>
+        <line x1="14" y1="31" x2="11" y2="34"/>
+      </g>
+    </g>
+    <text x="78" y="74" text-anchor="middle" font-size="10" font-weight="600" fill="#854d0e">LTR390-UV</text>
+    <text x="78" y="86" text-anchor="middle" font-size="7" fill="#a16207">UV Index — sky-facing</text>
+    <text x="78" y="96" text-anchor="middle" font-size="7" fill="#a16207">STEMMA QT daisy-chain</text>
+    <!-- STEMMA QT connector -->
+    <rect x="5" y="40" width="18" height="10" rx="2" fill="#fbbf24" stroke="#d97706" stroke-width="1"/>
+    <text x="14" y="62" text-anchor="middle" font-size="5" fill="#a16207">STEMMA QT</text>
+  </g>
+
+  <!-- STEMMA QT cable: BME280 → LTR390 -->
+  <path d="M 1160,380 Q 1180,360 1200,340" stroke="#f59e0b" stroke-width="2.5" fill="none" stroke-dasharray="5,3"/>
+  <text x="1190" y="375" font-size="7" fill="#b45309" font-weight="600">I2C</text>
+
   <!-- ===== RJ11 BREAKOUT BOARDS ===== -->
   <!-- Breakout #1: Rain + Anemometer -->
   <g transform="translate(100, 660)" filter="url(#shadow-sm)">
@@ -363,12 +407,12 @@
     <text x="52" y="46" text-anchor="middle" font-size="5" fill="#fecaca">RJ11</text>
     <rect x="130" y="18" width="45" height="20" rx="2" fill="#1e293b"/>
     <g font-size="6" fill="#fecaca">
-      <text x="135" y="30">GP5</text>
-      <text x="152" y="30">GP6</text>
+      <text x="135" y="30">Rain</text>
+      <text x="152" y="30">Anm</text>
       <text x="165" y="30">GND</text>
     </g>
     <text x="95" y="14" text-anchor="middle" font-size="9" font-weight="600" fill="#fef2f2">RJ11 Breakout + Connectors</text>
-    <text x="95" y="55" text-anchor="middle" font-size="7" fill="#fca5a5">BOB-14021 + PRT-00132 — Rain (GPIO5) + Anemo (GPIO6)</text>
+    <text x="95" y="55" text-anchor="middle" font-size="7" fill="#fca5a5">BOB-14021 + PRT-00132 — Rain (GPIO) + Anemo (GPIO)</text>
     <text x="95" y="66" text-anchor="middle" font-size="7" fill="#fca5a5">jumper wires → DevKIT headers</text>
   </g>
 
@@ -380,7 +424,7 @@
     <text x="22" y="46" text-anchor="middle" font-size="5" fill="#fecaca">RJ11</text>
     <rect x="130" y="18" width="45" height="20" rx="2" fill="#1e293b"/>
     <g font-size="6" fill="#fecaca">
-      <text x="135" y="30">GP4</text>
+      <text x="135" y="30">ADC</text>
       <text x="155" y="30">GND</text>
     </g>
     <g transform="translate(85,30)">
@@ -389,16 +433,16 @@
     </g>
     <text x="102" y="48" text-anchor="middle" font-size="6" fill="#fca5a5">10 kΩ pull-down</text>
     <text x="95" y="14" text-anchor="middle" font-size="9" font-weight="600" fill="#fef2f2">RJ11 Breakout + Connector</text>
-    <text x="95" y="60" text-anchor="middle" font-size="7" fill="#fca5a5">BOB-14021 + PRT-00132 — Vane (GPIO4, analog)</text>
+    <text x="95" y="60" text-anchor="middle" font-size="7" fill="#fca5a5">BOB-14021 + PRT-00132 — Vane (ADC, analog)</text>
   </g>
 
-  <!-- Cable: Breakout #1 to DevKIT GPIO5/GPIO6 -->
+  <!-- Cable: Breakout #1 to DevKIT GPIO -->
   <path d="M 210,660 L 330,460 L 330,415" stroke="#ef4444" stroke-width="2" fill="none" stroke-dasharray="5,3"/>
-  <text x="280" y="530" font-size="7" fill="#dc2626" font-weight="600">GPIO5, GPIO6</text>
+  <text x="280" y="530" font-size="7" fill="#dc2626" font-weight="600">Rain, Anemo GPIO</text>
 
-  <!-- Cable: Breakout #2 to DevKIT GPIO4 -->
+  <!-- Cable: Breakout #2 to DevKIT ADC -->
   <path d="M 210,790 L 310,460 L 310,380" stroke="#ef4444" stroke-width="2" fill="none" stroke-dasharray="5,3"/>
-  <text x="240" y="630" font-size="7" fill="#dc2626" font-weight="600">GPIO4</text>
+  <text x="240" y="630" font-size="7" fill="#dc2626" font-weight="600">Vane ADC</text>
 
   <!-- ===== RJ11 CABLES THROUGH WALL ===== -->
   <!-- RJ11: rain+anemo -->
@@ -424,7 +468,7 @@
     <rect x="105" y="40" width="30" height="18" rx="3" fill="#d4d4d8" stroke="#a1a1aa" stroke-width="1"/>
     <text x="120" y="72" text-anchor="middle" font-size="7" fill="#166534">RJ11</text>
     <text x="78" y="104" text-anchor="middle" font-size="10" font-weight="600" fill="#166534">Rain Gauge</text>
-    <text x="78" y="115" text-anchor="middle" font-size="7" fill="#15803d">Tipping bucket → GPIO5 (INT)</text>
+    <text x="78" y="115" text-anchor="middle" font-size="7" fill="#15803d">Tipping bucket → GPIO (INT)</text>
   </g>
 
   <!-- ===== OUTDOOR: ANEMOMETER ===== -->
@@ -441,7 +485,7 @@
     <rect x="105" y="40" width="30" height="18" rx="3" fill="#d4d4d8" stroke="#a1a1aa" stroke-width="1"/>
     <text x="120" y="72" text-anchor="middle" font-size="7" fill="#166534">RJ11</text>
     <text x="78" y="104" text-anchor="middle" font-size="10" font-weight="600" fill="#166534">Anemometer</text>
-    <text x="78" y="115" text-anchor="middle" font-size="7" fill="#15803d">Reed switch → GPIO6 (INT)</text>
+    <text x="78" y="115" text-anchor="middle" font-size="7" fill="#15803d">Reed switch → GPIO (INT)</text>
   </g>
 
   <!-- RJ11 cables from wall to rain/anemo -->
@@ -464,7 +508,7 @@
     <rect x="120" y="40" width="30" height="18" rx="3" fill="#d4d4d8" stroke="#a1a1aa" stroke-width="1"/>
     <text x="135" y="72" text-anchor="middle" font-size="7" fill="#166534">RJ11</text>
     <text x="88" y="108" text-anchor="middle" font-size="10" font-weight="600" fill="#166534">Wind Vane</text>
-    <text x="88" y="120" text-anchor="middle" font-size="7" fill="#15803d">Resistor ladder → GPIO4 (analog)</text>
+    <text x="88" y="120" text-anchor="middle" font-size="7" fill="#15803d">Resistor ladder → ADC (analog)</text>
     <text x="88" y="131" text-anchor="middle" font-size="7" fill="#15803d">+ 10 kΩ pull-down</text>
   </g>
 
@@ -482,21 +526,21 @@
     <rect width="620" height="42" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
     <text x="15" y="16" font-size="9" font-weight="600" fill="#334155">LEGEND:</text>
     <line x1="15" y1="30" x2="35" y2="30" stroke="#2563eb" stroke-width="4"/>
-    <text x="40" y="34" font-size="8" fill="#334155">Cat5 (I2C + PoE)</text>
-    <line x1="145" y1="30" x2="165" y2="30" stroke="#7c3aed" stroke-width="3"/>
-    <text x="170" y="34" font-size="8" fill="#334155">LTC4311 (I2C extender)</text>
-    <line x1="305" y1="30" x2="325" y2="30" stroke="#f59e0b" stroke-width="2.5"/>
-    <text x="330" y="34" font-size="8" fill="#334155">STEMMA QT (I2C)</text>
-    <line x1="430" y1="30" x2="450" y2="30" stroke="#78716c" stroke-width="3"/>
-    <text x="455" y="34" font-size="8" fill="#334155">RJ11 (sensors)</text>
-    <line x1="530" y1="30" x2="550" y2="30" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,3"/>
-    <text x="555" y="34" font-size="8" fill="#334155">Jumper wire</text>
+    <text x="40" y="34" font-size="8" fill="#334155">Cat5 (I2C signal)</text>
+    <line x1="155" y1="30" x2="175" y2="30" stroke="#7c3aed" stroke-width="3"/>
+    <text x="180" y="34" font-size="8" fill="#334155">LTC4311 (I2C extender)</text>
+    <line x1="315" y1="30" x2="335" y2="30" stroke="#f59e0b" stroke-width="2.5"/>
+    <text x="340" y="34" font-size="8" fill="#334155">STEMMA QT (I2C)</text>
+    <line x1="440" y1="30" x2="460" y2="30" stroke="#78716c" stroke-width="3"/>
+    <text x="465" y="34" font-size="8" fill="#334155">RJ11 (sensors)</text>
+    <line x1="540" y1="30" x2="560" y2="30" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,3"/>
+    <text x="565" y="34" font-size="8" fill="#334155">Jumper wire</text>
   </g>
 
   <!-- ===== PIN MAPPING TABLE ===== -->
   <g transform="translate(670, 865)">
     <rect width="710" height="42" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
     <text x="15" y="16" font-size="9" font-weight="600" fill="#334155">CONNECTIONS:</text>
-    <text x="15" y="34" font-size="8" fill="#475569">GPIO4 (ADC1) ← Vane  |  GPIO5 (INT) ← Rain  |  GPIO6 (INT) ← Anemo  |  GPIO8/9 → Qwiic → LTC4311 → Cat5 3–4m → BME280  |  Wi-Fi → Pi 3B+</text>
+    <text x="15" y="34" font-size="8" fill="#475569">ADC ← Vane  |  GPIO (INT) ← Rain  |  GPIO (INT) ← Anemo  |  SDA/SCL → Qwiic → LTC4311 → Cat5 → BME280 → LTR390  |  Wi-Fi → Pi 3B+</text>
   </g>
 </svg>
