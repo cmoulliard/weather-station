@@ -10,6 +10,15 @@ TODO: To be reviewed and sorted:
 - https://antonin-lfv.github.io/assets/pdf/Station_meteo_intelligente.pdf
 - https://www.makerguides.com/simple-esp32-internet-weather-station/
 
+Printables:
+- https://www.printables.com/model/61709-weather-station-one-part-1-the-central-station
+- https://www.printables.com/model/61719-weather-station-one-part-2-the-base-station
+- https://www.printables.com/model/61766-weather-station-one-part-3-the-temperature-humidit
+- https://www.printables.com/model/61720-weather-station-one-part-4-the-rain-gauge
+- https://www.printables.com/model/61764-weather-station-one-part-5-the-wind-vane-and-anemo/files
+- https://www.printables.com/model/61859-weather-station-one-part-7-optional-battery-pack
+- https://www.printables.com/model/109429-weather-station-one-part-9-the-solar-panel-mount
+
 ### Tutorials
 
 - Pi vs ESP32: https://www.raspberrypi-france.fr/station-meteo-diy-comparatif-et-tutoriel/
