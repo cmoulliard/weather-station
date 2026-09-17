@@ -19,7 +19,7 @@ Printables:
 - https://www.printables.com/model/61859-weather-station-one-part-7-optional-battery-pack
 - https://www.printables.com/model/109429-weather-station-one-part-9-the-solar-panel-mount
 
-### Tutorials
+## Tutorials
 
 - Pi vs ESP32: https://www.raspberrypi-france.fr/station-meteo-diy-comparatif-et-tutoriel/
 - Pi:
@@ -55,12 +55,8 @@ Printables:
       - [SOS Solutions](https://www.sossolutions.nl/) (Netherlands),
       - [Mouser Belgium](https://www.mouser.be/),
       - ESP32:
-        - - [GoTronic](https://www.gotronic.fr/cat-cartes-esp32.htm),
+        - [GoTronic](https://www.gotronic.fr/cat-cartes-esp32.htm),
         - Carte ESP32 française: https://www.upesy.fr/
-      - PoE:
-        - [Raspberry Pi PoE+ HAT](https://www.raspberrypi.com/products/poe-plus-hat/)
-        - [TP-Link TL-SG1005P PoE switch](https://www.tp-link.com/en/business-networking/poe-switch/tl-sg1005p/)
-        - [UCTRONICS PoE splitters](https://www.uctronics.com/)
       - [Weather components bc-robotics](https://bc-robotics.com/?product_cat=&s=weather&post_type=product)
       - [Sparkfun meter kit - rain gauge, wind vane, anemometer](https://thepihut.com/products/sparkfun-weather-meter-kit)
 
@@ -92,7 +88,7 @@ See the full hardware selection guide, wiring diagrams, and Raspberry Pi configu
 
 ## Software Options
 
-Two approaches are available: a **Quarkus native application** (Java, lightweight binary) or **WeeWX** (Python, batteries-included).
+Two approaches are available: a **Quarkus application** (Java, lightweight binary) or **WeeWX** (Python).
 
 ### Feature Comparison
 
@@ -111,7 +107,7 @@ Two approaches are available: a **Quarkus native application** (Java, lightweigh
 
 ### Option A: Quarkus Native Application (Java)
 
-A custom Java application built with Quarkus and compiled to a native executable using GraalVM. This approach gives you full control over the data pipeline with minimal resource usage (~30 MB RAM, sub-second startup).
+A custom Java application built with Quarkus. This approach gives you full control over the data pipeline with minimal resource usage (~30 MB RAM, sub-second startup).
 
 **Stack:** Pi4J (sensors) + Quarkus Scheduler + REST Client (weather APIs) + SmallRye Reactive Messaging (MQTT) + InfluxDB.
 
