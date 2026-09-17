@@ -32,25 +32,8 @@ cargo binstall espflash
 # Install the cross-compiler
 uv tool install mpy-cross
 ```
-### Option A - Install the MicroPython Tools plugin on PyCharm
 
-Download PyCharm (Community or Professional) from https://www.jetbrains.com/pycharm/. Then add the MicroPython plugin:
-
-1. Open **Settings → Plugins → Marketplace**
-2. Search **"MicroPython"** (by JetBrains) and install it
-3. Restart PyCharm
-4. Open **Settings → Languages & Frameworks → MicroPython**
-5. Check **"Enable MicroPython support"**
-6. Set device type to **ESP32** and select the serial port
-
-#### Connect to the board
-
-1. Open the **MicroPython** tool window (**View → Tool Windows → MicroPython**)
-2. The REPL connects automatically if the port is configured. Otherwise, click on the `connect` button
-3. To upload a file: right-click on the py file and select: **Upload to Micropython device**
-4. Next, to execute code using `REPL`, right-click on the py file and select:  **Execute file in REPL**
-
-### Option B - Use MicroPython remote tool - mpremote
+### Option A - Use MicroPython remote tool - mpremote
 
 We can copy the Python file(s) from the local project to the microcontroller using the command:
 ```shell
@@ -74,6 +57,24 @@ To open Python `REPL`
 ```shell
 mpremote connect /dev/cu.usbmodem101
 ```
+
+### Option B - Install the MicroPython Tools plugin on PyCharm
+
+Download PyCharm (Community or Professional) from https://www.jetbrains.com/pycharm/. Then add the MicroPython plugin:
+
+1. Open **Settings → Plugins → Marketplace**
+2. Search **"MicroPython"** (by JetBrains) and install it
+3. Restart PyCharm
+4. Open **Settings → Languages & Frameworks → MicroPython**
+5. Check **"Enable MicroPython support"**
+6. Set device type to **ESP32** and select the serial port
+
+#### Connect to the board
+
+1. Open the **MicroPython** tool window (**View → Tool Windows → MicroPython**)
+2. The REPL connects automatically if the port is configured. Otherwise, click on the `connect` button
+3. To upload a file: right-click on the py file and select: **Upload to Micropython device**
+4. Next, to execute code using `REPL`, right-click on the py file and select:  **Execute file in REPL**
 
 ### Say Hello using REPL
 
