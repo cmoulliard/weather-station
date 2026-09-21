@@ -5,8 +5,7 @@ FYI: [MicroPython](https://micropython.org/) is a lean and efficient implementat
 MicroPython documentation for esp32: https://docs.micropython.org/en/latest/esp32/quickref.html
 
 > **NOTE**
-> A [pyboard](https://store.micropython.org/product/PYBLITEv1.0H) is available and is packaged for demo purposes as 3 different colors: [gold](https://store.micropython.org/product/KIT-START1N), [red](https://store.micropython.org/product/KIT-START1R), [purple](https://store.micropython.org/product/KIT-START1P) where
-you can plug a USB-C cable, microSD card and use the 24 GPIO.
+> A [pyboard](https://store.micropython.org/product/PYBLITEv1.0H) is available and is packaged for demo purposes as 3 different colors: [gold](https://store.micropython.org/product/KIT-START1N), [red](https://store.micropython.org/product/KIT-START1R), [purple](https://store.micropython.org/product/KIT-START1P) where you can plug a USB-C cable, microSD card and use the 24 GPIO.
 
 ### Prerequisite
 
@@ -112,4 +111,4 @@ while True:
     led.value(1)   # LED OFF
     time.sleep(2)
 ```
-Next, run it using `REPL` as explained before.
+Next, run it using `REPL` as explained before and verify that the board led (color blue) is blinking.
