@@ -40,6 +40,10 @@ cargo binstall espflash
 uv tool install mpy-cross // Cross-compiler able to pre-compile python files into bytecode (= mpy files)
 ```
 
+## How to interact with the board and MicroPython
+
+There are two options available to interact with the board depending on if you prefer to use a terminal and execute commands - option A or to use an IDE as IntelliJ, PyCharm, VS Code and plugins.
+
 ### Option A - Use MicroPython remote tool - mpremote
 
 We can copy the Python file(s) from the local project to the microcontroller using the command:
@@ -76,7 +80,7 @@ Download PyCharm (Community or Professional) from https://www.jetbrains.com/pych
 5. Check **"Enable MicroPython support"**
 6. Set device type to **ESP32** and select the serial port
 
-#### Connect to the board
+To connect to the board and execute a script using `REPL`, execute the following commands:
 
 1. Open the **MicroPython** tool window (**View → Tool Windows → MicroPython**)
 2. The REPL connects automatically if the port is configured. Otherwise, click on the `connect` button
