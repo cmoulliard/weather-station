@@ -53,6 +53,37 @@ To figure out the device to use to connect to, execute this command:
 /dev/cu.debug-console None 0000:0000 None None
 /dev/cu.usbmodem101 18:8B:0E:93:18:88 303a:1001 Espressif USB JTAG/serial debug unit
 ```
+You can use the following command to automatically be connected to the board
+```shell
+mpremote connect auto
+Connected to MicroPython at /dev/cu.usbmodem101
+Use Ctrl-] or Ctrl-x to exit this shell
+...
+
+// Next you can execute the commands without the need to use the connect paramter
+mpremote ls
+>>> help('modules')
+__main__          btree             io                ssl
+_asyncio          builtins          json              struct
+_boot             cmath             machine           sys
+_espnow           collections       machine           time
+_onewire          cryptolib         math              tls
+_thread           deflate           micropython       uasyncio
+_webrepl          dht               mip/__init__      uctypes
+aioespnow         ds18x20           neopixel          umqtt/robust
+apa106            errno             network           umqtt/simple
+array             esp               ntptime           upysh
+asyncio/__init__  esp32             onewire           urequests
+asyncio/core      espnow            os                vfs
+asyncio/event     flashbdev         platform          webrepl
+asyncio/funcs     framebuf          random            webrepl_setup
+asyncio/lock      gc                re                websocket
+asyncio/stream    hashlib           requests/__init__
+binascii          heapq             select
+bluetooth         inisetup          socket
+Plus any modules on the filesystem
+...
+```
 
 We can copy the Python file(s) from the local project to the microcontroller using the command:
 ```shell
