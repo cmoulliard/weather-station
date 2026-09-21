@@ -4,7 +4,11 @@ import time
 led = Pin(3, Pin.OUT)
 
 while True:
-    led.value(1)  # LED ON
-    time.sleep(1)
-    led.value(0)  # LED OFF
-    time.sleep(1)
+    print("Change led value from 0 to 1 - ON ...")
+    led.value(1)
+    print("Sleep 3s ...")
+    time.sleep(3)
+    print("Change led value from 1 to 0 - OFF ...")
+    led.value(0)
+    print("Sleep 3s ...")
+    time.sleep(3)

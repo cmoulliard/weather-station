@@ -235,10 +235,10 @@ while True:
 ```
   ESP32-C3 Super Mini
 
-  GPIO3 ──── 220Ω ──── LED(+) ──── GND        (same as Step 2)
+  GPIO3 ──── 220Ω ──── LED(+) ──── GND
 
   GPIO1 ──── Button pin 1
-              Button pin 2 ──── GND             (button pulls to ground)
+             Button pin 2 ──────── GND  (button pulls to ground)
 ```
 
 Step by step:

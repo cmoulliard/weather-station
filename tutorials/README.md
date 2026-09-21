@@ -137,3 +137,64 @@ def check_button():
 print("Waiting for to press the button...")
 check_button()
 ```
+
+### Red Led loop
+
+```
+  ESP32-C3 Super Mini
+
+  GPIO3 (+) ────> 220Ω (red - red - black - black - brown) ────> Long pin (+) - LED - Small pin (-) ────> GND
+```
+
+Schema: <img src="svg/led.svg" alt="led-button" style="width:50%; height:auto;">
+
+Code:
+```python
+from machine import Pin
+import time
+
+led = Pin(3, Pin.OUT)
+
+while True:
+    print("Change led value from 0 to 1 - ON ...")
+    led.value(1)
+    print("Sleep 3s ...")
+    time.sleep(3)
+    print("Change led value from 1 to 0 - OFF ...")
+    led.value(0)
+    print("Sleep 3s ...")
+    time.sleep(3)
+```
+
+
+### Led and push button
+
+
+TODO: To be reviewed !!
+
+```
+  ESP32-C3 Super Mini
+
+  GPIO7 ──── 220Ω ──── LED(+) ──── GND
+
+  GPIO3 ──── Button pin 1
+             Button pin 2 ──────── GND  (button pulls to ground)
+```
+
+Code:
+
+```python
+from machine import Pin
+import time
+
+led = Pin(7, Pin.OUT)
+button = Pin(3, Pin.IN, Pin.PULL_UP)
+
+while True:
+    if button.value() == 0:
+        led.value(1)
+        print("Button pressed — LED ON")
+    else:
+        led.value(0)
+    time.sleep_ms(50)
+```
