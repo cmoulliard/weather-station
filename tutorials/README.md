@@ -17,7 +17,7 @@ To interact with the board connected using the USB-C cable to a laptop, it is ne
 
 - esp32-C3 super mini plus with MicroPython [firmware](https://micropython.org/download/ESP32_GENERIC_C3/) installed
 - usb-c cable
-- breadboard and electronic kit
+- breadboard and [electronic kit](https://github.com/Freenove/Freenove_Ultimate_Starter_Kit_for_Raspberry_Pi/blob/master/List_Ultimate_RPi_Kit.jpg)
 
 Verify if the following tools: `uv` or `cargo-binstall` are well installed first
 ```bash
