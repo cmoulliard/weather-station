@@ -115,7 +115,7 @@ Next, run it using `REPL` as explained before and verify that the board led (col
 
 ### Push button
 
-Schema: <img src="svg/push-button.svg" alt="push-button" style="width:35%; height:auto;">
+Schema: <img src="svg/push-button.svg" alt="push-button" style="width:50%; height:auto;">
 
 Code:
 
