@@ -16,11 +16,6 @@
     </style>
   </defs>
 
-  <!-- Import the esp32-c3 board -->
-  <svg viewBox="0 0 1024 1024">
-    <use href="./esp32-c3-super-mini.svg"/>
-  </svg>
-
   <!-- Title -->
   <text x="310" y="30" text-anchor="middle" class="title">Press Button Circuit</text>
   <text x="310" y="48" text-anchor="middle" class="subtitle">ESP32-C3 Super Mini — GPIO3 with internal pull-up</text>
