@@ -15,7 +15,7 @@ To design on a breadboard your circuits, refer to the following image to connect
 
 To interact with the board connected using the USB-C cable to a laptop, it is needed to install some tools on your machine able to copy the files, execute them or when this is need to flash a new firmware, etc.
 
-- esp32-C3 super mini plus with MicroPython [firmware](https://micropython.org/download/ESP32_GENERIC_C3/) installed
+- [esp32-C3 super mini plus](https://www.tinytronics.nl/en/development-boards/microcontroller-boards/with-wi-fi/esp32-c3-supermini-plus-development-board-with-soldered-headers) with MicroPython [firmware](https://micropython.org/download/ESP32_GENERIC_C3/) installed
 - usb-c cable
 - breadboard and [electronic kit](https://github.com/Freenove/Freenove_Ultimate_Starter_Kit_for_Raspberry_Pi/blob/master/List_Ultimate_RPi_Kit.jpg)
 
@@ -46,27 +46,35 @@ There are two options available to interact with the board depending on if you p
 
 ### Option A - Use MicroPython remote tool - mpremote
 
+To figure out the device to use to connect to, execute this command:
+```shell
+❯ mpremote connect list
+/dev/cu.Bluetooth-Incoming-Port None 0000:0000 None None
+/dev/cu.debug-console None 0000:0000 None None
+/dev/cu.usbmodem101 18:8B:0E:93:18:88 303a:1001 Espressif USB JTAG/serial debug unit
+```
+
 We can copy the Python file(s) from the local project to the microcontroller using the command:
 ```shell
-mpremote cp blink.py :blink.py
+mpremote connect /dev/cu.<DEVICE> cp blink.py :blink.py
 ```
 and next launch it using
 ```shell
-mpremote run blink.py
+mpremote connect /dev/cu.<DEVICE> run blink.py
 ```
 If you want to both upload and run in one go:
 ```shell
-mpremote connect /dev/cu.usbmodem101 cp main.py :main.py + run main.py
+mpremote connect /dev/cu.<DEVICE> cp main.py :main.py + run main.py
 ```
 
 To copy all the `*.py` files to the board:
 ```bash
-for f in *.py; mpremote connect /dev/cu.usbmodem101 cp $f :$f; end
+for f in *.py; mpremote connect /dev/cu.<DEVICE> cp $f :$f; end
 ```
 
 To open Python `REPL`
 ```shell
-mpremote connect /dev/cu.usbmodem101
+mpremote connect /dev/cu.<DEVICE>
 ```
 
 ### Option B - Install the MicroPython Tools plugin on PyCharm
