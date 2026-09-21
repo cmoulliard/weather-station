@@ -1,4 +1,4 @@
-## How to Guide to use Micropython with esp32-c3 super mini plus 
+# How to Guide to use Micropython with esp32-c3 super mini plus 
 
 FYI: [MicroPython](https://micropython.org/) is a lean and efficient implementation of the Python 3 programming language that includes a small subset of the Python standard library and is optimized to run on microcontrollers (esp32-c3, etc.) and in constrained environments.
 
@@ -11,7 +11,7 @@ To design on a breadboard your circuits, refer to the following image to connect
 
 <img src="images/esp32-c3-super-mini-front.png" alt="push-button" style="width:50%; height:auto;">
 
-### Prerequisite
+## Prerequisite
 
 To interact with the board connected using the USB-C cable to a laptop, it is needed to install some tools on your machine able to copy the files, execute them or when this is need to flash a new firmware, etc.
 
@@ -83,7 +83,7 @@ Download PyCharm (Community or Professional) from https://www.jetbrains.com/pych
 3. To upload a file: right-click on the py file and select: **Upload to Micropython device**
 4. Next, to execute code using `REPL`, right-click on the py file and select:  **Execute file in REPL**
 
-### Say Hello using REPL
+## Say Hello using REPL
 
 - Connect to the board and launch REPL. 
 - Type next the following code:
