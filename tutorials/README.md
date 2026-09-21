@@ -1,36 +1,34 @@
 ## How to Guide to use Micropython
 
-FYI: [MicroPython](https://micropython.org/) is a lean and efficient implementation of the Python 3 programming language that includes a small subset of the Python standard library and
-is optimised to run on microcontrollers (esp32-c3, etc.) and in constrained environments.
-
-A [pyboard](https://store.micropython.org/product/PYBLITEv1.0H) is available and is packaged for demo purposes as 3 different colors: [gold](https://store.micropython.org/product/KIT-START1N), [red](https://store.micropython.org/product/KIT-START1R), [purple](https://store.micropython.org/product/KIT-START1P) where
-you can plug a USB-C cable, microSD card and use the 24 GPIO.
+FYI: [MicroPython](https://micropython.org/) is a lean and efficient implementation of the Python 3 programming language that includes a small subset of the Python standard library and is optimized to run on microcontrollers (esp32-c3, etc.) and in constrained environments.
 
 MicroPython documentation for esp32: https://docs.micropython.org/en/latest/esp32/quickref.html
 
+> **NOTE**
+> A [pyboard](https://store.micropython.org/product/PYBLITEv1.0H) is available and is packaged for demo purposes as 3 different colors: [gold](https://store.micropython.org/product/KIT-START1N), [red](https://store.micropython.org/product/KIT-START1R), [purple](https://store.micropython.org/product/KIT-START1P) where
+you can plug a USB-C cable, microSD card and use the 24 GPIO.
+
 ### Prerequisite
 
-Verify if the `uv` or `cargo-binstall` are well installed first
+Verify if the following tools: `uv` or `cargo-binstall` are well installed first
 ```bash
 brew install uv // Python package and project manager, written in Rust
 curl https://sh.rustup.rs -sSf | sh // Rust & Package manager
 brew install cargo-binstall // Too to install Rust binaries
 ```
-Create first a python virtual environment within the project where you will develop the code
+Next, create first a python virtual environment within the project where you will develop the code
 ```bash
 uv venv
 source .venv/bin/activate.fish
 ```
 and install the tools:
 ```shell
-uv tool install esptool
 uv tool install mpremote
 
+# Optional
+uv tool install esptool
 cargo binstall espflash
-
-// Optional (native compiler)
-# Install the cross-compiler
-uv tool install mpy-cross
+uv tool install mpy-cross // Cross-compiler able to pre-compile python files into bytecode (= mpy files)
 ```
 
 ### Option A - Use MicroPython remote tool - mpremote
