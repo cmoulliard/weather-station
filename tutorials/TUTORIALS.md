@@ -165,6 +165,7 @@ Or using `mpremote` from your computer:
 
 ```bash
 mpremote mip install umqtt.simple
+mpremote mip install aioble # For Bluetooth BLE
 ```
 
 ## Project structure — modular code
