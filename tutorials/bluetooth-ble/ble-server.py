@@ -10,7 +10,7 @@ from machine import Pin
 from random import randint
 
 # Init LED
-led = Pin(2, Pin.OUT)
+led = Pin(3, Pin.OUT)
 led.value(0)
 
 # Init random value
