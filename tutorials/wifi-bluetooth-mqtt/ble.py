@@ -21,7 +21,7 @@ def advertise(ble, name="ESP32C3-MQTT"):
     # Complete local name
     name_bytes = name.encode()
     payload += struct.pack("BB", len(name_bytes) + 1, 0x09) + name_bytes
-    ble.gap_advertise(100_000, adv_data=payload)
+    ble.gap_advertise(20_000, adv_data=payload)
     print(f"BLE advertising as '{name}' ...")
 
 
@@ -29,7 +29,9 @@ def start_peripheral(interval=5):
     """Start BLE peripheral that notifies connected centrals with messages."""
     ble = bluetooth.BLE()
     ble.active(True)
-    time.sleep(1)
+    ble.config(gap_name="ESP32C3-MQTT")
+    ble.config(mtu=256)
+    time.sleep(2)
 
     # Register GATT service
     service = (
@@ -37,6 +39,8 @@ def start_peripheral(interval=5):
         ((_CHAR_UUID, _FLAG_READ | _FLAG_NOTIFY),),
     )
     ((char_handle,),) = ble.gatts_register_services((service,))
+    ble.gatts_set_buffer(char_handle, 256)
+    ble.gatts_write(char_handle, b"ready")
 
     connected = False
     conn_handle = None

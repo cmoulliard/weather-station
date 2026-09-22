@@ -115,7 +115,7 @@ The Wi-Fi and BLE tutorials below both use a Raspberry Pi 3B+ as the infrastruct
 - Raspberry Pi 3B+ with Raspberry Pi OS
 - Ethernet cable (for internet access while the Pi acts as a Wi-Fi hotspot)
 
-### Set up the Wi-Fi hotspot (2.4 GHz)
+### Set up the Wi-Fi hotspot (2.4 GHz) on Pi
 
 ```shell
 sudo nmcli device wifi hotspot ifname wlan0 ssid MonReseauPi password MonMotDePasse123
