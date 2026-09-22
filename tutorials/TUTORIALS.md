@@ -106,17 +106,53 @@ while True:
     time.sleep_ms(50)
 ```
 
-## Wi-Fi & MQTT
+## Raspberry Pi 3B+ — Shared setup
 
-This tutorial connects the ESP32-C3 to a Wi-Fi network and publishes messages to an MQTT broker. No breadboard circuit needed — just the ESP32-C3 plugged into USB.
+The Wi-Fi and BLE tutorials below both use a Raspberry Pi 3B+ as the infrastructure (Wi-Fi hotspot, MQTT broker, BLE gateway). Set it up once here.
 
-### Prerequisites
+### What you need
 
-- A Wi-Fi network on the **2.4 GHz** band (the ESP32-C3 does not support 5 GHz)
-- An MQTT broker (e.g., Mosquitto running on a Raspberry Pi 3B+)
-- The `umqtt.simple` MicroPython library installed on the board
+- Raspberry Pi 3B+ with Raspberry Pi OS
+- Ethernet cable (for internet access while the Pi acts as a Wi-Fi hotspot)
 
-### Installing umqtt.simple (optional)
+### Set up the Wi-Fi hotspot (2.4 GHz)
+
+```shell
+sudo nmcli device wifi hotspot ifname wlan0 ssid MonReseauPi password MonMotDePasse123
+# Force 2.4 GHz (band bg) as ESP32-C3 does not support 5 GHz (band a)
+# Set the channel to "1" to avoid to conflict with another WiFi network
+sudo nmcli connection modify Hotspot 802-11-wireless.band bg 802-11-wireless.channel 1
+sudo nmcli connection down Hotspot && sudo nmcli connection up Hotspot
+```
+
+Verify it is active:
+
+```shell
+sudo nmcli connection show --active
+NAME                UUID                                  TYPE      DEVICE
+Hotspot             7b638336-3c1e-4665-a065-083367329e56  wifi      wlan0
+Wired connection 1  4ac25893-4dd6-34ad-963d-ccc0aa6bc95d  ethernet  eth0
+lo                  f7071334-c471-4d92-a811-88248f0c4f2b  loopback  lo
+```
+
+### Install and configure Mosquitto
+
+```shell
+sudo apt-get update
+sudo apt install -y mosquitto mosquitto-clients
+sudo systemctl enable mosquitto.service
+```
+
+Verify the broker is running:
+
+```shell
+sudo systemctl status mosquitto.service
+● mosquitto.service - Mosquitto MQTT Broker
+     Loaded: loaded (/usr/lib/systemd/system/mosquitto.service; enabled; preset: enabled)
+     Active: active (running) since ...
+```
+
+### Installing umqtt.simple on the ESP32
 
 Connect to the board's REPL and run:
 
@@ -131,162 +167,168 @@ Or using `mpremote` from your computer:
 mpremote mip install umqtt.simple
 ```
 
-### Raspberry Pi 3B+ — Wi-Fi hotspot & Mosquitto broker
+## Project structure — modular code
 
-<!-- TODO: Detail the steps to set up the Pi 3B+ as a Wi-Fi access point and MQTT broker -->
+The Wi-Fi and BLE tutorials share a modular codebase under `wifi-bluetooth-mqtt/`. This avoids duplicating the MQTT logic across transports.
 
-#### What you need
-
-- Raspberry Pi 3B+ with Raspberry Pi OS
-- Ethernet cable (for internet access while the Pi acts as a Wi-Fi hotspot)
-
-#### Set up the Wi-Fi hotspot (2.4 GHz)
-
-```shell
-sudo nmcli device wifi hotspot ifname wlan0 ssid MonReseauPi password MonMotDePasse123
-# Force 2.4 GHz (band bg) — the ESP32-C3 does not support 5 GHz (band a)
-sudo nmcli connection modify Hotspot 802-11-wireless.band bg 802-11-wireless.channel 6
-sudo nmcli connection down Hotspot && sudo nmcli connection up Hotspot
+```
+wifi-bluetooth-mqtt/
+├── config.py            # Shared settings (SSID, password, broker IP, topic)
+├── wifi.py              # Wi-Fi DHCP connection module
+├── mqtt_client.py       # MQTT connect + publish loop (transport-agnostic)
+├── ble.py               # BLE peripheral module (runs on ESP32)
+├── main_wifi.py         # Entry point: Wi-Fi + MQTT
+├── main_bluetooth.py    # Entry point: BLE peripheral
+└── pi_ble_gateway.py    # BLE-to-MQTT gateway (runs on Pi)
 ```
 
-#### Install and configure Mosquitto
+### Copying files to the board
 
-```shell
-sudo apt-get update
-sudo apt install -y mosquitto mosquitto-clients
-sudo systemctl enable mosquitto.service
+MicroPython imports modules from the board's root filesystem. Copy all `.py` files flat to the board:
+
+```bash
+for f in wifi-bluetooth-mqtt/*.py
+    mpremote connect /dev/cu.usbmodem101 cp $f :(basename $f)
+end
 ```
 
-#### Verify the broker is running
+### Shared configuration — `config.py`
 
-```shell
-sudo systemctl status mosquitto.service
-● mosquitto.service - Mosquitto MQTT Broker
-     Loaded: loaded (/usr/lib/systemd/system/mosquitto.service; enabled; preset: enabled)
-     Active: active (running) since Sun 2026-09-20 15:06:40 CEST; 1 day 3h ago
- Invocation: 46c5bc7607fa4aa5821d68be8d6cd9dc
-       Docs: man:mosquitto.conf(5)
-...       
-```
-
-### Configuration for MicroPython
-
-Edit the script constants to match your network:
+Edit this file to match your network before copying to the board:
 
 ```python
-SSID = "MonReseauPi"           # Your Wi-Fi network name
-PASSWORD = "MonMotDePasse123"   # Your Wi-Fi password
-MQTT_BROKER = "10.42.0.1"      # IP of the Pi running Mosquitto
-TOPIC = "esp32c3/test"          # MQTT topic to publish to
-```
-
-### Code (MicroPython)
-
-```python
-import network
-import time
-from umqtt.simple import MQTTClient
-
-# 1. Configuration: Wi-Fi & MQTT
+# Shared configuration
 SSID = "MonReseauPi"
 PASSWORD = "MonMotDePasse123"
 
 # IP address of the Pi 3B+ running the MQTT Broker and HotSpot
 MQTT_BROKER = "10.42.0.1"
 TOPIC = "esp32c3/test"
+CLIENT_ID = "ESP32C3_Client"
 
-# 2. Wi-Fi connection
-wlan = network.WLAN(network.STA_IF)
+# Static IP config — set to None for DHCP (ESP32-C3 L2 link only works with DHCP)
+STATIC_IP = None
+```
 
-# Reset the interface to clear any stale state
-wlan.active(False)
-time.sleep(1)
-wlan.active(True)
-time.sleep(1)
+### Shared MQTT module — `mqtt_client.py`
 
-print("List the SSI Wifi networks available ...")
-for ap in wlan.scan():
-    print(f'  SSID={ap[0]}  ch={ap[2]}  rssi={ap[3]}')
+This module is used by Wi-Fi directly (ESP32 publishes to the broker). For BLE, the gateway on the Pi handles MQTT instead.
 
-# Disconnect if previously connected
-if wlan.isconnected():
-    wlan.disconnect()
+```python
+from umqtt.simple import MQTTClient
+import time
+
+
+def publish_loop(broker, topic, client_id="ESP32C3_Client"):
+    """Connect to MQTT broker and publish messages in a loop."""
+    print("Connecting to MQTT broker ...")
+    client = MQTTClient(client_id=client_id, server=broker)
+
+    try:
+        client.connect()
+        print("MQTT connected to the local server !")
+
+        counter = 0
+        while True:
+            message = f"Hello local MQTT ! Message numero {counter}"
+            print("Send :", message)
+            client.publish(topic, message)
+            counter += 1
+            time.sleep(5)
+
+    except Exception as e:
+        print("MQTT connection error:", e)
+```
+
+## Wi-Fi & MQTT
+
+This tutorial connects the ESP32-C3 to a Wi-Fi network and publishes messages directly to the MQTT broker. No breadboard circuit needed — just the ESP32-C3 plugged into USB.
+
+```
+ESP32-C3  ──Wi-Fi──>  Pi (Mosquitto broker)
+```
+
+### Wi-Fi module — `wifi.py`
+
+```python
+import network
+import time
+
+
+def connect(ssid, password, timeout=90):
+    """Connect to Wi-Fi via DHCP. Returns the WLAN interface."""
+    wlan = network.WLAN(network.STA_IF)
+
+    wlan.active(False)
+    time.sleep(1)
+    wlan.active(True)
     time.sleep(1)
 
-print(f"Connecting to Wi-Fi '{SSID}' ...")
-try:
-    wlan.connect(SSID, PASSWORD)
-except OSError as e:
-    print(f"Wi-Fi connect error: {e}")
-    print(f"  wlan status : {wlan.status()}")
-    print(f"  wlan active : {wlan.active()}")
-    print(f"  wlan config : {wlan.config('mac')}")
-    raise
+    print("List the SSI Wifi networks available ...")
+    for ap in wlan.scan():
+        print(f'  SSID={ap[0]}  ch={ap[2]}  rssi={ap[3]}')
 
-status_names = {
-    0: "STAT_IDLE",
-    1: "STAT_CONNECTING",
-    2: "STAT_WRONG_PASSWORD",
-    3: "STAT_NO_AP_FOUND",
-    -1: "STAT_ASSOC_FAIL",
-    -2: "STAT_BEACON_TIMEOUT",
-    -3: "STAT_HANDSHAKE_TIMEOUT",
-    200: "ESP_IDF_ASSOCIATING",
-    201: "ESP_IDF_WAITING_AUTH — AP not responding (check SSID, password, 2.4GHz band)",
-    202: "ESP_IDF_GOT_IP_PENDING",
-    1000: "STAT_GOT_IP",
-    1001: "STAT_GOT_IP",
-}
+    if wlan.isconnected():
+        wlan.disconnect()
+        time.sleep(1)
 
-timeout = 20
-start = time.time()
-while True:
-    status = wlan.status()
-    ip = wlan.ifconfig()[0]
-    if (wlan.isconnected() or status in (1000, 1001)) and ip != "0.0.0.0":
-        break
-    elapsed = time.time() - start
-    if elapsed > timeout:
-        name = status_names.get(status, "UNKNOWN")
-        raise RuntimeError(f"Wi-Fi timeout after {timeout}s — status: {status} ({name}), IP: {ip}")
-    print(f"  waiting... ({int(elapsed)}s, status={status}, ip={ip})")
-    time.sleep(2)
-print("Wi-Fi connected ! IP :", wlan.ifconfig())
+    print(f"Connecting to Wi-Fi '{ssid}' ...")
+    try:
+        wlan.connect(ssid, password)
+    except OSError as e:
+        print(f"Wi-Fi connect error: {e}")
+        raise
 
-# 3. Broker MQTT connection
-print("Connecting to MQTT broker ...")
-client = MQTTClient(client_id="ESP32C3_Client", server=MQTT_BROKER)
+    start = time.time()
+    while not wlan.isconnected():
+        elapsed = time.time() - start
+        if elapsed > timeout:
+            raise RuntimeError(f"Wi-Fi timeout after {timeout}s — status: {wlan.status()}")
+        print(f"  waiting... ({int(elapsed)}s, status={wlan.status()})")
+        time.sleep(2)
 
-try:
-    client.connect()
-    print("MQTT connected to the local server !")
+    print("Wi-Fi connected ! IP :", wlan.ifconfig())
+    return wlan
+```
 
-    # 4. Loop to send data
-    counter = 0
-    while True:
-        message = f"Hello local MQTT ! Message numero {counter}"
-        print("Send :", message)
+> **Note:** The timeout is set to 90 seconds because the ESP32-C3's DHCP client can take up to 60 seconds to obtain an IP address from the Pi's hotspot.
 
-        client.publish(TOPIC, message)
+### Entry point — `main_wifi.py`
 
-        counter += 1
-        time.sleep(5)
+```python
+from config import SSID, PASSWORD, MQTT_BROKER, TOPIC, CLIENT_ID
+from wifi import connect
+from mqtt_client import publish_loop
 
-except Exception as e:
-    print("MQTT connection error:", e)
+connect(SSID, PASSWORD)
+publish_loop(MQTT_BROKER, TOPIC, CLIENT_ID)
+```
+
+### Running
+
+Copy the files to the board and run:
+
+```bash
+# Copy all modules to the board
+for f in wifi-bluetooth-mqtt/*.py
+    mpremote connect /dev/cu.usbmodem101 cp $f :(basename $f)
+end
+
+# Reset the board and run
+mpremote connect /dev/cu.usbmodem101 reset
+mpremote connect /dev/cu.usbmodem101 run wifi-bluetooth-mqtt/main_wifi.py
 ```
 
 ### What you should see
 
-
 ```shell
-mpremote run wifi-mqtt.py 
-...
 List the SSI Wifi networks available ...
-  SSID=b'MonReseauPi'  ch=6  rssi=-45
+  SSID=b'MonReseauPi'  ch=1  rssi=-71
 Connecting to Wi-Fi 'MonReseauPi' ...
-  waiting... (0s, status=1)
-Wi-Fi connected ! IP : ('10.42.0.42', '255.255.255.0', '10.42.0.1', '10.42.0.1')
+  waiting... (0s, status=1001)
+  waiting... (2s, status=1001)
+  ...
+Wi-Fi connected ! IP : ('10.42.0.50', '255.255.255.0', '10.42.0.1', '10.42.0.1')
 Connecting to MQTT broker ...
 MQTT connected to the local server !
 Send : Hello local MQTT ! Message numero 0
@@ -304,6 +346,7 @@ mosquitto_sub -t "esp32c3/test"
 | Problem | Fix |
 |---------|-----|
 | Wi-Fi timeout with status 201 | The AP is not responding — check that SSID and password are correct, and that the network is 2.4 GHz (not 5 GHz) |
+| Wi-Fi timeout with status 202 | `ESP_IDF_GOT_IP_PENDING` — DHCP is slow. Restart the hotspot on the Pi: `sudo nmcli connection down Hotspot && sudo nmcli connection up Hotspot` |
 | Wi-Fi timeout with status 3 | `STAT_NO_AP_FOUND` — the network is not visible. Check that the hotspot is running and within range |
 | Wi-Fi timeout with status 2 | `STAT_WRONG_PASSWORD` — double-check the password string |
 | `ImportError: no module named 'umqtt'` | Install the library: `import mip; mip.install("umqtt.simple")` |
@@ -316,5 +359,274 @@ mosquitto_sub -t "esp32c3/test"
 - **`wlan.scan()`** lists nearby access points with signal strength (RSSI)
 - **`wlan.status()`** returns numeric codes useful for debugging connection failures
 - The ESP32-C3 only supports **2.4 GHz** Wi-Fi — 5 GHz networks are invisible to it
+- The ESP32-C3's DHCP client can be slow (up to 60s) — use a generous timeout
 - **`umqtt.simple`** is a lightweight MQTT client for MicroPython — `publish(topic, message)` sends data to the broker
 - MQTT uses a **publish/subscribe** pattern: the ESP32 publishes, and any subscriber listening on the same topic receives the messages
+
+## BLE & MQTT
+
+This tutorial uses Bluetooth Low Energy (BLE) to send data from the ESP32-C3 to a Raspberry Pi, which acts as a gateway to the MQTT broker. Unlike Wi-Fi, the ESP32 does not connect to the broker directly — the Pi bridges BLE to MQTT.
+
+```
+ESP32-C3 (BLE peripheral)  ──BLE──>  Pi (BLE gateway)  ──MQTT──>  Mosquitto broker
+```
+
+### Prerequisites
+
+- Completed the [Raspberry Pi shared setup](#raspberry-pi-3b--shared-setup) (Mosquitto must be running)
+- The Pi's Bluetooth must be enabled (it is by default on Raspberry Pi OS)
+- Python packages on the Pi: `bleak` and `paho-mqtt`
+
+### Pi setup — install BLE gateway dependencies
+
+```bash
+pip3 install --break-system-packages bleak paho-mqtt
+```
+
+Or using a virtual environment:
+
+```bash
+python3 -m venv ~/ble-gateway
+source ~/ble-gateway/bin/activate
+pip install bleak paho-mqtt
+```
+
+### BLE peripheral module — `ble.py` (runs on ESP32)
+
+The ESP32 acts as a BLE peripheral: it registers a GATT service with a notifiable characteristic, advertises itself as `ESP32C3-MQTT`, and sends messages to any connected central (the Pi).
+
+```python
+import bluetooth
+import struct
+import time
+
+# Custom BLE service and characteristic UUIDs
+_SERVICE_UUID = bluetooth.UUID("12345678-1234-1234-1234-123456789abc")
+_CHAR_UUID = bluetooth.UUID("12345678-1234-1234-1234-123456789abd")
+
+_FLAG_READ = const(0x0002)
+_FLAG_NOTIFY = const(0x0010)
+
+_IRQ_CENTRAL_CONNECT = const(1)
+_IRQ_CENTRAL_DISCONNECT = const(2)
+
+
+def advertise(ble, name="ESP32C3-MQTT"):
+    """Start BLE advertising with the given name."""
+    payload = bytearray()
+    # Flags: general discoverable + BR/EDR not supported
+    payload += struct.pack("BBB", 2, 0x01, 0x06)
+    # Complete local name
+    name_bytes = name.encode()
+    payload += struct.pack("BB", len(name_bytes) + 1, 0x09) + name_bytes
+    ble.gap_advertise(100_000, adv_data=payload)
+    print(f"BLE advertising as '{name}' ...")
+
+
+def start_peripheral(interval=5):
+    """Start BLE peripheral that notifies connected centrals with messages."""
+    ble = bluetooth.BLE()
+    ble.active(True)
+    time.sleep(1)
+
+    # Register GATT service
+    service = (
+        _SERVICE_UUID,
+        ((_CHAR_UUID, _FLAG_READ | _FLAG_NOTIFY),),
+    )
+    ((char_handle,),) = ble.gatts_register_services((service,))
+
+    connected = False
+    conn_handle = None
+
+    def on_event(event, data):
+        nonlocal connected, conn_handle
+        if event == _IRQ_CENTRAL_CONNECT:
+            conn_handle = data[0]
+            connected = True
+            print(f"BLE central connected (handle={conn_handle})")
+        elif event == _IRQ_CENTRAL_DISCONNECT:
+            connected = False
+            conn_handle = None
+            print("BLE central disconnected")
+            advertise(ble)
+
+    ble.irq(on_event)
+    advertise(ble)
+
+    print("Waiting for BLE central to connect ...")
+    counter = 0
+    while True:
+        if connected:
+            message = f"Hello BLE MQTT ! Message numero {counter}"
+            print("Send :", message)
+            ble.gatts_write(char_handle, message.encode())
+            ble.gatts_notify(conn_handle, char_handle)
+            counter += 1
+        time.sleep(interval)
+```
+
+### Entry point — `main_bluetooth.py` (runs on ESP32)
+
+```python
+from ble import start_peripheral
+
+start_peripheral(interval=5)
+```
+
+### BLE-to-MQTT gateway — `pi_ble_gateway.py` (runs on Pi)
+
+This Python script runs on the Pi. It scans for the ESP32 by name, connects via BLE, subscribes to GATT notifications, and publishes each received message to the Mosquitto broker.
+
+```python
+#!/usr/bin/env python3
+import asyncio
+from bleak import BleakClient, BleakScanner
+import paho.mqtt.client as mqtt
+
+DEVICE_NAME = "ESP32C3-MQTT"
+CHAR_UUID = "12345678-1234-1234-1234-123456789abd"
+
+MQTT_BROKER = "127.0.0.1"
+MQTT_TOPIC = "esp32c3/test"
+
+BLE_CONNECT_TIMEOUT = 30.0
+BLE_CONNECT_RETRIES = 3
+
+
+async def main():
+    # Scan for the ESP32-C3
+    print(f"Scanning for BLE device '{DEVICE_NAME}' ...")
+    device = None
+    while device is None:
+        devices = await BleakScanner.discover(timeout=5.0)
+        for d in devices:
+            if d.name and DEVICE_NAME in d.name:
+                device = d
+                break
+        if device is None:
+            print("  not found, retrying ...")
+
+    print(f"Found {device.name} ({device.address})")
+
+    # Connect to MQTT broker
+    mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id="Pi_BLE_Gateway")
+    mqtt_client.connect(MQTT_BROKER, 1883)
+    mqtt_client.loop_start()
+    print(f"MQTT connected to {MQTT_BROKER}")
+
+    # Connect to BLE peripheral with retries
+    def on_notify(sender, data):
+        message = data.decode()
+        print(f"BLE -> MQTT: {message}")
+        mqtt_client.publish(MQTT_TOPIC, message)
+
+    client = BleakClient(device.address, timeout=BLE_CONNECT_TIMEOUT)
+    for attempt in range(1, BLE_CONNECT_RETRIES + 1):
+        try:
+            print(f"BLE connecting (attempt {attempt}/{BLE_CONNECT_RETRIES}, timeout={BLE_CONNECT_TIMEOUT}s) ...")
+            await client.connect()
+            print(f"BLE connected to {device.name}")
+            break
+        except (TimeoutError, asyncio.TimeoutError) as e:
+            print(f"  connection timeout: {e}")
+            if attempt == BLE_CONNECT_RETRIES:
+                raise RuntimeError(f"Failed to connect after {BLE_CONNECT_RETRIES} attempts")
+            await asyncio.sleep(2)
+
+    try:
+        await client.start_notify(CHAR_UUID, on_notify)
+        print("Listening for BLE notifications (Ctrl+C to stop) ...")
+        while True:
+            await asyncio.sleep(1)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        await client.stop_notify(CHAR_UUID)
+        await client.disconnect()
+        mqtt_client.loop_stop()
+        mqtt_client.disconnect()
+        print("Gateway stopped")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### Running
+
+**Step 1 — Copy the gateway script to the Pi:**
+
+```bash
+scp wifi-bluetooth-mqtt/pi_ble_gateway.py dabou@pi3-wifi:~/
+```
+
+**Step 2 — Copy files to the ESP32 and start the BLE peripheral:**
+
+```bash
+# Copy modules to the board
+for f in wifi-bluetooth-mqtt/*.py
+    mpremote connect /dev/cu.usbmodem101 cp $f :(basename $f)
+end
+
+# Reset and run
+mpremote connect /dev/cu.usbmodem101 reset
+mpremote connect /dev/cu.usbmodem101 run wifi-bluetooth-mqtt/main_bluetooth.py
+```
+
+**Step 3 — Start the gateway on the Pi:**
+
+```bash
+python3 ~/pi_ble_gateway.py
+```
+
+**Step 4 — Verify messages arrive via MQTT (on a second Pi terminal):**
+
+```bash
+mosquitto_sub -t "esp32c3/test"
+```
+
+### What you should see
+
+On the ESP32 (your computer):
+
+```
+BLE advertising as 'ESP32C3-MQTT' ...
+Waiting for BLE central to connect ...
+BLE central connected (handle=1)
+Send : Hello BLE MQTT ! Message numero 0
+Send : Hello BLE MQTT ! Message numero 1
+```
+
+On the Pi (gateway):
+
+```
+Scanning for BLE device 'ESP32C3-MQTT' ...
+Found ESP32C3-MQTT (18:8B:0E:93:18:8A)
+MQTT connected to 127.0.0.1
+BLE connecting (attempt 1/3, timeout=30.0s) ...
+BLE connected to ESP32C3-MQTT
+Listening for BLE notifications (Ctrl+C to stop) ...
+BLE -> MQTT: Hello BLE MQTT ! Message numero 0
+BLE -> MQTT: Hello BLE MQTT ! Message numero 1
+```
+
+### Troubleshooting
+
+| Problem | Fix |
+|---------|-----|
+| `ModuleNotFoundError: No module named 'bleak'` | Install on Pi: `pip3 install --break-system-packages bleak paho-mqtt` |
+| `AttributeError: 'module' object has no attribute 'BLE'` | A file named `bluetooth.py` on the board is shadowing the built-in module. Delete it: `mpremote exec "import os; os.remove('bluetooth.py')"` and reset |
+| BLE device not found | Make sure `main_bluetooth.py` is running on the ESP32 before starting the gateway |
+| BLE connection timeout | Retry — the first connection can be slow. The gateway retries 3 times with a 30s timeout |
+| MQTT connection refused on Pi | Check Mosquitto is running: `systemctl status mosquitto` |
+
+### What you learned
+
+- The ESP32-C3 supports **BLE** (Bluetooth Low Energy), not classic Bluetooth
+- **BLE peripheral** — the ESP32 advertises a GATT service and sends data via notifications
+- **BLE central** — the Pi connects to the peripheral and reads notifications
+- Unlike Wi-Fi, BLE cannot talk to the MQTT broker directly — a **gateway** on the Pi bridges BLE to MQTT
+- **`bleak`** is a Python BLE library for the Pi that works with BlueZ (the Linux Bluetooth stack)
+- **`paho-mqtt`** is a Python MQTT client used by the gateway to publish messages to Mosquitto
+- The same MQTT topic (`esp32c3/test`) is used by both transports, so subscribers see messages regardless of how they were sent
