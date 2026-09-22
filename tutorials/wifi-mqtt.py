@@ -39,29 +39,33 @@ except OSError as e:
     print(f"  wlan config : {wlan.config('mac')}")
     raise
 
+status_names = {
+    0: "STAT_IDLE",
+    1: "STAT_CONNECTING",
+    2: "STAT_WRONG_PASSWORD",
+    3: "STAT_NO_AP_FOUND",
+    -1: "STAT_ASSOC_FAIL",
+    -2: "STAT_BEACON_TIMEOUT",
+    -3: "STAT_HANDSHAKE_TIMEOUT",
+    200: "ESP_IDF_ASSOCIATING",
+    201: "ESP_IDF_WAITING_AUTH — AP not responding (check SSID, password, 2.4GHz band)",
+    202: "ESP_IDF_GOT_IP_PENDING",
+    1000: "STAT_GOT_IP",
+    1001: "STAT_GOT_IP",
+}
+
 timeout = 20
 start = time.time()
-while not wlan.isconnected():
+while True:
+    status = wlan.status()
+    ip = wlan.ifconfig()[0]
+    if (wlan.isconnected() or status in (1000, 1001)) and ip != "0.0.0.0":
+        break
     elapsed = time.time() - start
     if elapsed > timeout:
-        status = wlan.status()
-        status_names = {
-            0: "STAT_IDLE",
-            1: "STAT_CONNECTING",
-            2: "STAT_WRONG_PASSWORD",
-            3: "STAT_NO_AP_FOUND",
-            -1: "STAT_ASSOC_FAIL",
-            -2: "STAT_BEACON_TIMEOUT",
-            -3: "STAT_HANDSHAKE_TIMEOUT",
-            200: "ESP_IDF_ASSOCIATING",
-            201: "ESP_IDF_WAITING_AUTH — AP not responding (check SSID, password, 2.4GHz band)",
-            202: "ESP_IDF_GOT_IP_PENDING",
-            1000: "STAT_GOT_IP",
-            1001: "STAT_GOT_IP",
-        }
         name = status_names.get(status, "UNKNOWN")
-        raise RuntimeError(f"Wi-Fi timeout after {timeout}s — status: {status} ({name})")
-    print(f"  waiting... ({int(elapsed)}s, status={wlan.status()})")
+        raise RuntimeError(f"Wi-Fi timeout after {timeout}s — status: {status} ({name}), IP: {ip}")
+    print(f"  waiting... ({int(elapsed)}s, status={status}, ip={ip})")
     time.sleep(2)
 print("Wi-Fi connected ! IP :", wlan.ifconfig())
 
@@ -82,7 +86,7 @@ try:
         client.publish(TOPIC, message)
 
         counter += 1
-        time.sleep(5) # Wait 5s
+        time.sleep(5)
 
 except Exception as e:
     print("MQTT connection error:", e)
