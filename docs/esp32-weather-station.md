@@ -22,6 +22,8 @@
 
 ### ESP32
 
+![firebeetle-v2-solar-panels](https://www.haraldkreuzer.net/application/files/6017/1905/6635/Firebeetle_2_ESP32_C6_PXL_20240622_094806785.jpg)
+
 | Category | Recommended Product Reference | Key Specifications / Details | Tinytronics Link |
 | --- | --- | --- | --- |
 | **Microcontroller** | **DFRobot FireBeetle 2 ESP32-C6** - https://www.dfrobot.com/product-2771.html | RISC-V 160MHz, BLE 5.3 + Wi-Fi 6, onboard solar MPPT charge controller & JST-PH battery jack. | [View ESP32-C6 Boards](https://www.tinytronics.nl/en/development-boards/microcontroller-boards/with-wi-fi/dfrobot-firebeetle-2-esp32-c6-development-board-seperate-headers) |
