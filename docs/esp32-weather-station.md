@@ -25,17 +25,18 @@
 | Category | Recommended Product Reference | Key Specifications / Details | Tinytronics Link |
 | --- | --- | --- | --- |
 | **Microcontroller** | **DFRobot FireBeetle 2 ESP32-C6** - https://www.dfrobot.com/product-2771.html | RISC-V 160MHz, BLE 5.3 + Wi-Fi 6, onboard solar MPPT charge controller & JST-PH battery jack. | [View ESP32-C6 Boards](https://www.tinytronics.nl/en/development-boards/microcontroller-boards/with-wi-fi/dfrobot-firebeetle-2-esp32-c6-development-board-seperate-headers) |
-| **Rechargeable Battery** | **LiPo Battery 3.7V (1200mAh – 2000mAh)** | Single-cell 3.7V Lithium-Polymer battery with standard **JST-PH 2.0mm** connector. | [TinyTronics](https://www.tinytronics.nl/en/power/batteries/li-po/pkcell-li-po-battery-3.7v-2000mah-jst-ph-lp803860) |
-| **Solar Panel** | **Mini Solar Panel 5V or 6V (1W – 2W)** | Monocrystalline / Polycrystalline panel outputting 5V–6V DC (approx. 150mA–300mA in sun). | [TinyTronics](https://www.tinytronics.nl/en/power/solar-energy/solar-panels) |
-| **Battery Connector** | **JST-PH 2.0mm 2-Pin Cable** | Plug extension/lead for solar panel or custom battery connections. | [TinyTronics](https://tinytronics.nl/shop/en/cables/jst/jst-2.0mm-connector-with-cable-ph2.0-2-pins) |
-| **Sensor Wiring** | **Dupont Female-to-Female Jumper Wires** | 10cm or 20cm wires to connect the BME280 sensor to the FireBeetle I2C pins (`SDA` / `SCL`). | [TinyTronics](https://www.tinytronics.nl/en/cables-and-connectors/cables-and-adapters/prototyping-wires/dupont-compatible-and-jumper/dupont-jumper-wire-female-female-10cm-10-wires) |
+| **Rechargeable Battery** | **Li-Ion Battery 3.6V (3350mAh – 6700mAh)** | Panasonic 18650 Li-ion Battery - 3350mAh - 6.7A | [TinyTronics](https://www.tinytronics.nl/en/power/batteries/18650/panasonic-18650-li-ion-battery-3350mah-6.7a-ncr18650b) |
 | **18650 Battery Holder** | **1x 18650 Battery Holder** (leaf spring contacts, wires per cell) | Holds one 18650 Li-Ion cell. Bare wires — solder a JST-PH cable for plug connection. | [TinyTronics](https://www.tinytronics.nl/en/power/battery-holders-and-clips/18650/1x-18650-battery-holder-leaf-spring-contacts-wires-per-cell) |
 | **18650 Battery Module** | **LilyGO TTGO T-Bat** (CN3065 solar charger) | 18650 holder with solar panel input, DC-DC converter, stable output voltage. €5.50. | [TinyTronics](https://www.tinytronics.nl/en/power/power-banks-and-battery-modules/lilygo-ttgo-t-bat-with-18650-battery-holder-cn3065) |
+| **Rechargeable Battery** | **Li-Polymer Battery 3.7V (1200mAh – 2000mAh)** | Single-cell 3.7V Lithium-Polymer battery with standard **JST-PH 2.0mm** connector. | [TinyTronics](https://www.tinytronics.nl/en/power/batteries/li-po/pkcell-li-po-battery-3.7v-2000mah-jst-ph-lp803860) |
+| **Solar Panel** | **Mini Solar Panel 5V or 6V (1W – 2W)** | Monocrystalline / Polycrystalline panel outputting 5V–6V DC (approx. 150mA–300mA in sun). | [TinyTronics](https://www.tinytronics.nl/en/power/solar-energy/solar-panels) |
 
 **Optional**
 
 | Category | Recommended Product Reference | Key Specifications / Details | Tinytronics Link |
 | --- | --- | --- | --- |
+| **Battery Connector** | **JST-PH 2.0mm 2-Pin Cable** | Plug extension/lead for solar panel or custom battery connections. | [TinyTronics](https://tinytronics.nl/shop/en/cables/jst/jst-2.0mm-connector-with-cable-ph2.0-2-pins) |
+| **Sensor Wiring** | **Dupont Female-to-Female Jumper Wires** | 10cm or 20cm wires to connect the BME280 sensor to the FireBeetle I2C pins (`SDA` / `SCL`). | [TinyTronics](https://www.tinytronics.nl/en/cables-and-connectors/cables-and-adapters/prototyping-wires/dupont-compatible-and-jumper/dupont-jumper-wire-female-female-10cm-10-wires) |
 | **Crimping Tool** | **SN-2549 Crimping Tool** (28-18AWG, 0.1-1.0mm²) | Crimps JST-XH and Dupont connectors. Steel jaws with plastic handle. | [TinyTronics](https://www.tinytronics.nl/en/tools-and-mounting/tools/pliers-and-cutters/crimping-tools/sn-2549-crimping-tool-28-18awg-0.1-1.0mm2) |
 | **JST-PH Connector Set** | **JST-PH Compatible Crimp Connector and Housing Set** | Crimp pins + housings (2.0mm pitch) for making custom JST-PH cables. | [TinyTronics](https://www.tinytronics.nl/en/cables-and-connectors/connectors/jst-compatible/jst-ph-compatible-crimp-connector-and-housing-set) |
 | **Multimeter** | **UNI-T UT133B Multimeter** | Compact handheld multimeter with test probes included. €20.25. | [TinyTronics](https://www.tinytronics.nl/en/tools-and-mounting/tools/measuring/lcr-and-multimeters/uni-t-ut133b-multimeter) |
