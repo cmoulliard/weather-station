@@ -1,4 +1,4 @@
-# Weather Station Howto Guide
+# Weather Station How to Guide
 
 Build a complete weather station using a single board computer (SBC), environmental sensors, and software to collect and publish data to Weather Underground or OpenWeatherMap.
 

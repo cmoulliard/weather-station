@@ -20,43 +20,6 @@
 | **Wind Speed** | **Anemometer** (part of weather meter kit) | Reed switch, 1 pulse per rotation → GPIO interrupt. Speed = pulses/sec × 2.4 km/h. RJ11 connector. | [SparkFun SEN-15901](https://www.sparkfun.com/products/15901) |
 | **Wind Direction** | **Wind Vane** (part of weather meter kit) | Resistor ladder producing variable voltage → ADC analog read. 16 directions. RJ11 connector. Requires 10 kΩ pull-down resistor. | [SparkFun SEN-15901](https://www.sparkfun.com/products/15901) |
 
-TODO: Review the following content and integrate it with the previous table
-
-**Temperature, Humidity & Pressure:**
-
-| Sensor | Measures | Accuracy | Price (approx.) | Links                                                                                                                                                                                                         |
-|--------|----------|----------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **BME280** (I2C/SPI) | Temperature (-40 to +85 °C), Humidity (0-100% RH), Pressure (300-1100 hPa) | ±1.0 °C, ±3% RH, ±1 hPa | ~€15 (breakout board) | [Adafruit](https://www.adafruit.com/product/2652), [Mouser BE](https://www.mouser.be/fr/c/?q=BME280), [TME](https://www.tme.eu/be/fr/details/df-sen0335/capteurs-environnementaux/dfrobot/sen0335/), [Kiwi](https://www.kiwi-electronics.com/en/bme280-sensor-board-with-i2c-and-spi-for-temperature-humidity-and-pressure-stemma-qt-2112?search=BME280) |
-| **BME680** (I2C/SPI) | Same as BME280 + VOC gas (air quality) | ±1.0 °C, ±3% RH, ±1 hPa | ~€19 (breakout board) | [Adafruit](https://www.adafruit.com/product/3660), [Mouser BE](https://www.mouser.be/), [TME](https://www.tme.eu/)                                                                                            |
-
-The BME280 is the go-to choice for weather stations. The BME680 adds a metal oxide VOC gas sensor (48h burn-in required) -- useful if indoor air quality matters. Both are available as STEMMA QT / Qwiic breakout boards for solderless I2C wiring.
-
-**UV:**
-
-| Sensor | Measures | Accuracy | Price (approx.) | Links |
-|--------|----------|----------|-----------------|-------|
-| **LTR390-UV** (I2C) | UV Index (UVI), raw UVS counts, ambient light (ALS) | ±1 UVI | ~€8 (breakout board) | [Adafruit](https://www.adafruit.com/product/4831), [MCHobby](https://shop.mchobby.be) |
-| **VEML6075** (I2C) | UVA, UVB irradiance | ±1 UVI (calculated) | ~€7 (breakout board) | [Adafruit](https://www.adafruit.com/product/3964), [Mouser BE](https://www.mouser.be) |
-
-The LTR390-UV is the recommended choice — available as a STEMMA QT breakout from Adafruit (#4831), it connects directly to the I2C chain alongside the BME280 and provides a calibrated UV Index reading. Unlike the BME280 (shaded in a Stevenson screen), the UV sensor must be mounted with a clear view of the sky.
-
-**Wind & Rain:**
-
-| Sensor | Function | Interface | Price (approx.) | Links |
-|--------|----------|-----------|-----------------|-------|
-| **Rain gauge** (tipping bucket) | Precipitation measurement | Reed switch pulse → GPIO | Part of kit (~€160) | [The Pi Hut](https://thepihut.com/products/weather-station-kit-with-anemometer-wind-vane-rain-bucket), [DFRobot](https://www.dfrobot.com/) |
-| **Anemometer** | Wind speed (rotation pulses/sec) | Reed switch pulse → GPIO | Part of kit | Same kit |
-| **Wind vane** | Wind direction (resistor network) | Analog → ADC (ESP32 built-in) | Part of kit | Same kit |
-
-These are typically sold as a single **RJ11 Weather Sensor Kit** (anemometer + wind vane + rain bucket + mounting mast). DFRobot, Pimoroni, and SparkFun all sell compatible kits.
-
-**Ready-Made Options**
-
-| Product | Includes | Price (approx.) | Links |
-|---------|----------|-----------------|-------|
-| ~~**Pimoroni Weather HAT**~~ | ~~BME280, LTR-559 light sensor, 1.54" LCD, RJ11 connectors for wind/rain kits~~ | ~~£30 (HAT only)~~ | ~~[Pimoroni](https://shop.pimoroni.com/)~~ |
-| **SparkFun MicroMod Weather Carrier Board** | RJ11 wind/rain connectors, Qwiic I2C sensor ports | ~$45 | [SparkFun](https://www.sparkfun.com/catalogsearch/result/?q=weather), [Mouser BE](https://www.mouser.be/fr/ProductDetail/DFRobot/SEN0186?qs=kE1vTINknaUaWz5cQFgJUA%3D%3D) |
-
 ### ESP32
 
 | Category | Recommended Product Reference | Key Specifications / Details | Tinytronics Link |
