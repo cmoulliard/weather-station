@@ -31,20 +31,12 @@
 | **Sensor Wiring** | **Dupont Female-to-Female Jumper Wires** | 10cm or 20cm wires to connect the BME280 sensor to the FireBeetle I2C pins (`SDA` / `SCL`). | [TinyTronics](https://www.tinytronics.nl/en/cables-and-connectors/cables-and-adapters/prototyping-wires/dupont-compatible-and-jumper/dupont-jumper-wire-female-female-10cm-10-wires) |
 | **18650 Battery Holder** | **1x 18650 Battery Holder** (leaf spring contacts, wires per cell) | Holds one 18650 Li-Ion cell. Bare wires — solder a JST-PH cable for plug connection. | [TinyTronics](https://www.tinytronics.nl/en/power/battery-holders-and-clips/18650/1x-18650-battery-holder-leaf-spring-contacts-wires-per-cell) |
 | **18650 Battery Module** | **LilyGO TTGO T-Bat** (CN3065 solar charger) | 18650 holder with solar panel input, DC-DC converter, stable output voltage. €5.50. | [TinyTronics](https://www.tinytronics.nl/en/power/power-banks-and-battery-modules/lilygo-ttgo-t-bat-with-18650-battery-holder-cn3065) |
+
+**Optional**
+
 | **Crimping Tool** | **SN-2549 Crimping Tool** (28-18AWG, 0.1-1.0mm²) | Crimps JST-XH and Dupont connectors. Steel jaws with plastic handle. | [TinyTronics](https://www.tinytronics.nl/en/tools-and-mounting/tools/pliers-and-cutters/crimping-tools/sn-2549-crimping-tool-28-18awg-0.1-1.0mm2) |
 | **JST-PH Connector Set** | **JST-PH Compatible Crimp Connector and Housing Set** | Crimp pins + housings (2.0mm pitch) for making custom JST-PH cables. | [TinyTronics](https://www.tinytronics.nl/en/cables-and-connectors/connectors/jst-compatible/jst-ph-compatible-crimp-connector-and-housing-set) |
 | **Multimeter** | **UNI-T UT133B Multimeter** | Compact handheld multimeter with test probes included. €20.25. | [TinyTronics](https://www.tinytronics.nl/en/tools-and-mounting/tools/measuring/lcr-and-multimeters/uni-t-ut133b-multimeter) |
-| | **Subtotal** | **~€62.52** | |
-| | **Shipping to Belgium** (PostNL) | **~€7** | |
-| | **TinyTronics total** | **~€69** | |
-
----
-
-#### Additional Ordering Guidelines
-
-1. **JST Cable Polarity:** Check the pinout before connecting the battery. Tinytronics standard JST-PH cables typically follow **Red = Positive (+)** and **Black = Ground (-)**, which matches the polarity marking printed next to the JST port on DFRobot FireBeetle boards.
-2. **Solar Wiring:** The solar panel wires solder directly to the **`VIN` (+)** and **`GND` (-)** header pins on the FireBeetle board.
-3. **Alternative Board (XIAO ESP32-C6):** If the FireBeetle 2 is out of stock, the [Seeed Studio XIAO ESP32-C6](https://www.tinytronics.nl/en/development-boards/microcontroller-boards/with-wi-fi/seeed-studio-xiao-esp32-c6) can be used instead by soldering a 5V solar panel to its 5V/GND pads and connecting the battery to the pads on the underside.
 
 ### Pico 2 WH
 
@@ -60,8 +52,6 @@
 | | **Subtotal** | **~€42.27** | |
 | | **Shipping to Belgium** (PostNL) | **~€7** | |
 | | **TinyTronics total** | **~€49** | |
-
-
 
 
 ## References
