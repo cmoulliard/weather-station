@@ -1,4 +1,4 @@
-# How to Guide to use Micropython with esp32-c3 super mini plus 
+# How to Guide to use MicroPython with esp32-c3 super mini plus 
 
 FYI: [MicroPython](https://micropython.org/) is a lean and efficient implementation of the Python 3 programming language that includes a small subset of the Python standard library and is optimized to run on microcontrollers (esp32-c3, etc.) and in constrained environments.
 
@@ -279,3 +279,34 @@ done
 mpremote connect $PORT reset
 ```
 
+
+
+## References
+
+- Pi vs ESP32: https://www.raspberrypi-france.fr/station-meteo-diy-comparatif-et-tutoriel/
+- Pi:
+   - With [Adafruit HAT Pi](https://www.adafruit.com/product/2310) + sensors:
+      - archived project but really helpful: https://projects.raspberrypi.org/en/projects/build-your-own-weather-station/0
+      - Another interesting project: https://core-electronics.com.au/projects/diy-weather-station-raspberry-pi/
+   - With Weather board:
+      - Standard: https://thepihut.com/products/weather-board-for-raspberry-pi with BME280 & soldiers: https://thepihut.com/products/weather-hat-pro-assembled-for-raspberry-pi
+      - Tuto: part [1](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-1/), [2](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-2/) & [3](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-3/)
+- BME280 wiring & Python:
+   - Sensor plugged on Pi: https://randomnerdtutorials.com/raspberry-pi-bme280-python/
+- ESP32 Board:
+   - Tutorials:
+      - https://randomnerdtutorials.com/ & https://randomnerdtutorials.com/getting-started-with-esp32/
+      - https://michiel.vanderwulp.be/domotica/Modules/ESP32-and-Shield/
+   - HowTo guides:
+      - https://www.instructables.com/DIY-Weather-Station-With-ESP32/ & video: https://www.youtube.com/watch?v=LJszEpV9P0M
+      - https://www.makerguides.com/fr/simple-esp32-internet-weather-station-fr/
+   - ESP32-C3 specific:
+      - Getting started: https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/hw-reference/esp32c3/user-guide-devkitc-02.html
+      - Arduino framework for ESP32: https://docs.espressif.com/projects/arduino-esp32/en/latest/
+      - ESP32 + BME280: https://randomnerdtutorials.com/esp32-bme280-arduino-ide-pressure-temperature-humidity/
+      - ESP32 + MQTT: https://randomnerdtutorials.com/esp32-mqtt-publish-subscribe-arduino-ide/
+   - IDE - DevTools - HowTo connect/code/install:
+      - https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/get-started/index.html#installation
+   - Books:
+      - [ESP32-C3 Wireless Adventure (Espressif, free)](https://github.com/niceBoy0929/book-esp32c3-iot-projects) — official Espressif book, IoT from basics to cloud
+      - [Learn ESP32 with Arduino IDE (Random Nerd Tutorials)](https://randomnerdtutorials.com/learn-esp32-with-arduino-ide/) — 60+ hands-on projects

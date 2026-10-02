@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BLE Dashboard — Weather Station</title>
+
+    <!-- IBM Carbon Design System (CDN) -->
+    <link rel="stylesheet" href="https://unpkg.com/@carbon/styles@1.68.0/css/styles.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/@carbon/charts@1.27.18/dist/styles.min.css">
+    <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/tag/v2/latest/ui-shell.min.js"></script>
+    <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/tag/v2/latest/tile.min.js"></script>
+    <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/tag/v2/latest/toggle.min.js"></script>
+    <script src="https://unpkg.com/@carbon/charts@1.27.18/dist/umd/bundle.umd.cjs"></script>
+
+    <link rel="stylesheet" href="/app.css">
+    <link rel="stylesheet" href="/ble.css">
+</head>
+<body class="cds-theme-zone-g10">
+
+    <!-- Carbon UI Shell Header -->
+    <cds-header aria-label="Weather Station">
+        <cds-header-name href="/" prefix="Pi">
+            Weather Station
+        </cds-header-name>
+        <cds-header-nav menu-bar-label="Navigation">
+            <cds-header-nav-item href="/">Weather</cds-header-nav-item>
+            <cds-header-nav-item href="/ble.html" active>BLE Sensor</cds-header-nav-item>
+        </cds-header-nav>
+    </cds-header>
+
+    <main class="app-content">
+
+        <h2 class="section-heading" style="margin-bottom: 1.5rem">
+            <svg viewBox="0 0 24 24" width="24" height="24" style="vertical-align: middle; margin-right: 0.5rem">
+                <path d="M12 2C9.8 2 8 3.8 8 6v1.5L6.5 9C5.6 10 5 11.4 5 13c0 2.8 2.2 5 5 5h4c2.8 0 5-2.2 5-5 0-1.6-.6-3-1.5-4L16 7.5V6c0-2.2-1.8-4-4-4zm0 2c1.1 0 2 .9 2 2v2l2 2c.6.7 1 1.6 1 2.5 0 1.7-1.3 3-3 3h-4c-1.7 0-3-1.3-3-3 0-.9.4-1.8 1-2.5l2-2V6c0-1.1.9-2 2-2z" fill="#0f62fe"/>
+                <circle cx="12" cy="20" r="2" fill="#0f62fe"/>
+            </svg>
+            ESP32 BLE Sensor
+        </h2>
+
+        <!-- Status + Value + LED control row -->
+        <div class="ble-top-grid">
+            <div class="card">
+                <h3 class="card-heading">Connection</h3>
+                <div class="ble-status-row">
+                    <span id="ble-status-dot" class="ble-dot ble-dot--disabled"></span>
+                    <span id="ble-status-text">Disabled</span>
+                </div>
+                <div id="ble-address" class="ble-address"></div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-heading">Sensor Value</h3>
+                <div class="ble-value-big" id="ble-sensor-value">--</div>
+                <div class="ble-last-update" id="ble-last-update"></div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-heading">LED Control</h3>
+                <div class="ble-led-row">
+                    <button class="ble-led-btn" id="led-on-btn" onclick="sendLed(1)">ON</button>
+                    <button class="ble-led-btn" id="led-off-btn" onclick="sendLed(0)">OFF</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sensor history chart -->
+        <section class="ble-chart-section">
+            <cds-tile>
+                <h3 class="card-heading">Sensor History</h3>
+                <div id="ble-history-chart" class="ble-chart-container"></div>
+            </cds-tile>
+        </section>
+
+        <!-- Event log -->
+        <section class="ble-log-section">
+            <cds-tile>
+                <h3 class="card-heading">Event Log</h3>
+                <div id="ble-log" class="ble-log"></div>
+            </cds-tile>
+        </section>
+
+    </main>
+
+    <script src="/ble.js"></script>
+</body>
+</html>

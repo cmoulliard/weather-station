@@ -23,7 +23,17 @@
         <!-- InfluxDB -->
         <influxdb-client.version>1.10.0</influxdb-client.version>
         <protobuf-java.version>4.33.4</protobuf-java.version>
+        <!-- BLE (blessed-bluez via JitPack) -->
+        <blessed-bluez.version>0.65</blessed-bluez.version>
+        <dbus-java.version>4.3.2</dbus-java.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
     <dependencyManagement>
         <dependencies>
@@ -72,6 +82,24 @@
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
             <version>${protobuf-java.version}</version>
+        </dependency>
+
+        <!-- WebSockets (for BLE real-time streaming) -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-websockets-next</artifactId>
+        </dependency>
+
+        <!-- BLE: blessed-bluez (Linux/BlueZ only) -->
+        <dependency>
+            <groupId>com.github.weliem.blessed-bluez</groupId>
+            <artifactId>blessed</artifactId>
+            <version>${blessed-bluez.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.hypfvieh</groupId>
+            <artifactId>dbus-java-transport-native-unixsocket</artifactId>
+            <version>${dbus-java.version}</version>
         </dependency>
 
         <!-- Test -->

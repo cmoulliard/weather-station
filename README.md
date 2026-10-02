@@ -2,65 +2,15 @@
 
 Build a complete weather station using a single board computer (SBC), environmental sensors, and software to collect and publish data to Weather Underground or OpenWeatherMap.
 
-## References
+## Hardware & Wiring
 
-TODO: To be reviewed and sorted:
-- https://www.hackster.io/leonardocavagnis/iot-weather-station-with-seeed-studio-237aa6
-- https://github.com/cerevisis/ESP32-Weather-Station
-- https://antonin-lfv.github.io/assets/pdf/Station_meteo_intelligente.pdf
-- https://www.makerguides.com/simple-esp32-internet-weather-station/
+### Weather station 
 
-Printables:
-- https://www.printables.com/model/61709-weather-station-one-part-1-the-central-station
-- https://www.printables.com/model/61719-weather-station-one-part-2-the-base-station
-- https://www.printables.com/model/61766-weather-station-one-part-3-the-temperature-humidit
-- https://www.printables.com/model/61720-weather-station-one-part-4-the-rain-gauge
-- https://www.printables.com/model/61764-weather-station-one-part-5-the-wind-vane-and-anemo/files
-- https://www.printables.com/model/61859-weather-station-one-part-7-optional-battery-pack
-- https://www.printables.com/model/109429-weather-station-one-part-9-the-solar-panel-mount
+See [esp32-weather-station.md](docs/esp32-weather-station.md)
 
-## Tutorials
+### Pi main station
 
-- Pi vs ESP32: https://www.raspberrypi-france.fr/station-meteo-diy-comparatif-et-tutoriel/
-- Pi:
-    - With [Adafruit HAT Pi](https://www.adafruit.com/product/2310) + sensors:
-      - archived project but really helpful: https://projects.raspberrypi.org/en/projects/build-your-own-weather-station/0
-      - Another interesting project: https://core-electronics.com.au/projects/diy-weather-station-raspberry-pi/
-    - With Weather board:
-        - Standard: https://thepihut.com/products/weather-board-for-raspberry-pi with BME280 & soldiers: https://thepihut.com/products/weather-hat-pro-assembled-for-raspberry-pi
-        - Tuto: part [1](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-1/), [2](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-2/) & [3](https://bc-robotics.com/tutorials/raspberry-pi-weather-station-part-3/)
-- BME280 wiring & Python:
-    - Sensor plugged on Pi: https://randomnerdtutorials.com/raspberry-pi-bme280-python/
-- ESP32 Board:
-    - Tutorials: 
-      - https://randomnerdtutorials.com/ & https://randomnerdtutorials.com/getting-started-with-esp32/
-      - https://michiel.vanderwulp.be/domotica/Modules/ESP32-and-Shield/
-    - HowTo guides:
-      - https://www.instructables.com/DIY-Weather-Station-With-ESP32/ & video: https://www.youtube.com/watch?v=LJszEpV9P0M
-      - https://www.makerguides.com/fr/simple-esp32-internet-weather-station-fr/
-    - ESP32-C3 specific:
-      - Getting started: https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/hw-reference/esp32c3/user-guide-devkitc-02.html
-      - Arduino framework for ESP32: https://docs.espressif.com/projects/arduino-esp32/en/latest/
-      - ESP32 + BME280: https://randomnerdtutorials.com/esp32-bme280-arduino-ide-pressure-temperature-humidity/
-      - ESP32 + MQTT: https://randomnerdtutorials.com/esp32-mqtt-publish-subscribe-arduino-ide/
-    - IDE - DevTools - HowTo connect/code/install:
-      - https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/get-started/index.html#installation 
-    - Books:
-      - [ESP32-C3 Wireless Adventure (Espressif, free)](https://github.com/niceBoy0929/book-esp32c3-iot-projects) — official Espressif book, IoT from basics to cloud
-      - [Learn ESP32 with Arduino IDE (Random Nerd Tutorials)](https://randomnerdtutorials.com/learn-esp32-with-arduino-ide/) — 60+ hands-on projects
-
-- Suppliers:
-      - [Kubii](https://www.kubii.com/fr/)
-      - [Kiwi Electronics](https://www.kiwi-electronics.com/) (Netherlands, ships to BE), 
-      - [SOS Solutions](https://www.sossolutions.nl/) (Netherlands),
-      - [Mouser Belgium](https://www.mouser.be/),
-      - ESP32:
-        - [GoTronic](https://www.gotronic.fr/cat-cartes-esp32.htm),
-        - Carte ESP32 française: https://www.upesy.fr/
-      - [Weather components bc-robotics](https://bc-robotics.com/?product_cat=&s=weather&post_type=product)
-      - [Sparkfun meter kit - rain gauge, wind vane, anemometer](https://thepihut.com/products/sparkfun-weather-meter-kit)
-
-- Forum: https://forums.raspberrypi.com/viewforum.php?f=112&sid=e893b51c323da761164dc232a929f962
+TODO
 
 ### Software & Data
 
@@ -81,10 +31,6 @@ Printables:
 | Quarkus + IBM Carbon Design dashboard tutorial | https://www.the-main-thread.com/p/quarkus-carbon-design-system-dashboard-tutorial |
 | IBM Carbon Design System | https://carbondesignsystem.com/ |
 | Carbon Charts (D3-based, 26 chart types) | https://github.com/carbon-design-system/carbon-charts |
-
-## Hardware & Wiring
-
-See the full hardware selection guide, wiring diagrams, and Raspberry Pi configuration instructions in [docs/hardware-setup.md](docs/hardware-setup.md).
 
 ## Software Options
 
@@ -305,13 +251,3 @@ weewxd --config /etc/weewx/weewx.conf
 ```
 
 Useful options: `--exit` (terminate on I/O or database errors), `--loop-on-init` (retry device initialization at startup).
-
-## Recommendation Summary
-
-| Goal | Recommended Setup |
-|------|-------------------|
-| **Full control, minimal footprint** | Raspberry Pi 4/5 + BME280 + RJ11 kit + Quarkus native app + built-in Carbon dashboard |
-| **Best drag-and-drop dashboards** | Quarkus or WeeWX + Node-RED Dashboard 2.0 |
-| **Quickest to get running** | Raspberry Pi 4/5 + Pimoroni Weather HAT + WeeWX |
-| **Lowest cost, lowest power** | ESP32-C3 + BME280 + RJ11 kit + Pi 3B+ hotspot + Quarkus app |
-| **Best analytics dashboards** | Either option + InfluxDB + Grafana |

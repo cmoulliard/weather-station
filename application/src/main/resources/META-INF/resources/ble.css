@@ -1,0 +1,137 @@
+/* BLE Dashboard styles — extends app.css base */
+
+.ble-top-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.card {
+    background: var(--cds-layer, #f4f4f4);
+    border: 1px solid var(--cds-border-subtle, #e0e0e0);
+    border-radius: 4px;
+    padding: 1.25rem;
+}
+
+.card-heading {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--cds-text-secondary, #525252);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.75rem 0;
+}
+
+/* Connection status */
+.ble-status-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.ble-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.ble-dot--disabled     { background: #8d8d8d; }
+.ble-dot--scanning     { background: #f1c21b; animation: ble-pulse 1s infinite; }
+.ble-dot--connecting   { background: #f1c21b; animation: ble-pulse 0.5s infinite; }
+.ble-dot--connected    { background: #24a148; }
+.ble-dot--disconnected { background: #da1e28; }
+.ble-dot--not_found    { background: #da1e28; }
+.ble-dot--error        { background: #da1e28; }
+
+@keyframes ble-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.ble-address {
+    color: var(--cds-text-secondary, #525252);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    font-family: monospace;
+}
+
+/* Sensor value */
+.ble-value-big {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #0f62fe;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+}
+
+.ble-last-update {
+    color: var(--cds-text-secondary, #525252);
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+/* LED control */
+.ble-led-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.ble-led-btn {
+    padding: 0.5rem 1.5rem;
+    border: 1px solid var(--cds-border-strong, #8d8d8d);
+    border-radius: 4px;
+    background: var(--cds-field, #fff);
+    color: var(--cds-text-primary, #161616);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.ble-led-btn:hover {
+    background: var(--cds-layer-hover, #e8e8e8);
+}
+
+.ble-led-btn--active {
+    border-color: #0f62fe;
+    background: #e0e8ff;
+    color: #0f62fe;
+    font-weight: 600;
+}
+
+/* Chart */
+.ble-chart-section {
+    margin-bottom: 1.5rem;
+}
+
+.ble-chart-container {
+    min-height: 300px;
+}
+
+/* Event log */
+.ble-log-section {
+    margin-bottom: 2rem;
+}
+
+.ble-log {
+    max-height: 250px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: var(--cds-text-secondary, #525252);
+    line-height: 1.7;
+}
+
+.ble-log-entry {
+    border-bottom: 1px solid var(--cds-border-subtle, #e0e0e0);
+    padding: 2px 0;
+}
+
+.ble-log-entry:last-child {
+    border-bottom: none;
+}
