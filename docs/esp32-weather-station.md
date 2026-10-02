@@ -34,6 +34,8 @@
 
 **Optional**
 
+| Category | Recommended Product Reference | Key Specifications / Details | Tinytronics Link |
+| --- | --- | --- | --- |
 | **Crimping Tool** | **SN-2549 Crimping Tool** (28-18AWG, 0.1-1.0mm²) | Crimps JST-XH and Dupont connectors. Steel jaws with plastic handle. | [TinyTronics](https://www.tinytronics.nl/en/tools-and-mounting/tools/pliers-and-cutters/crimping-tools/sn-2549-crimping-tool-28-18awg-0.1-1.0mm2) |
 | **JST-PH Connector Set** | **JST-PH Compatible Crimp Connector and Housing Set** | Crimp pins + housings (2.0mm pitch) for making custom JST-PH cables. | [TinyTronics](https://www.tinytronics.nl/en/cables-and-connectors/connectors/jst-compatible/jst-ph-compatible-crimp-connector-and-housing-set) |
 | **Multimeter** | **UNI-T UT133B Multimeter** | Compact handheld multimeter with test probes included. €20.25. | [TinyTronics](https://www.tinytronics.nl/en/tools-and-mounting/tools/measuring/lcr-and-multimeters/uni-t-ut133b-multimeter) |
