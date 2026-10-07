@@ -41,7 +41,19 @@
 | **Sensor Wiring** | Dupont Female-to-Female Jumper Wires | 10cm or 20cm wires to connect the BME280 sensor to the FireBeetle I2C pins (`SDA` / `SCL`). | [TinyTronics](https://www.tinytronics.nl/en/cables-and-connectors/cables-and-adapters/prototyping-wires/dupont-compatible-and-jumper/dupont-jumper-wire-female-female-10cm-10-wires) |
 | **Crimping Tool** | SN-2549 Crimping Tool (28-18AWG, 0.1-1.0mm²) | Crimps JST-XH and Dupont connectors. Steel jaws with plastic handle. | [TinyTronics](https://www.tinytronics.nl/en/tools-and-mounting/tools/pliers-and-cutters/crimping-tools/sn-2549-crimping-tool-28-18awg-0.1-1.0mm2) |
 | **JST-PH Connector Set** | JST-PH Compatible Crimp Connector and Housing Set | Crimp pins + housings (2.0mm pitch) for making custom JST-PH cables. | [TinyTronics](https://www.tinytronics.nl/en/cables-and-connectors/connectors/jst-compatible/jst-ph-compatible-crimp-connector-and-housing-set) |
-| **Multimeter** | UNI-T UT133B Multimeter | Compact handheld multimeter with test probes included. €20.25. | [TinyTronics](https://www.tinytronics.nl/en/tools-and-mounting/tools/measuring/lcr-and-multimeters/uni-t-ut133b-multimeter) |
+| **Multimeter** | UNI-T UT139A Multimeter | Allow to test too batteries. €40. | [TinyTronics](https://www.tinytronics.nl/en/tools-and-mounting/tools/measuring/lcr-and-multimeters/uni-t-ut139a-multimeter) |
+
+TODO: 
+- Add alligator clips - https://www.tinytronics.nl/en/cables-and-connectors/cables-and-adapters/alligator-clip/goobay-alligator-clip-cable-set-50cm-10-pieces
+- battery with loose wires: https://www.tinytronics.nl/en/power/battery-holders-and-clips/aa/2x-aa-battery-holder-with-loose-wires
+- resistors: https://www.tinytronics.nl/en/components/resistors/resistors/10%CF%89-1m%CF%89-resistor-set
+
+| Élément / Composant | Référence / Spécification Tinytronics | Lien Tinytronics | Usage & Remarques |
+| --- | --- | --- | --- |
+| **Set de résistances CMS 0805** | *1Ω-10MΩ 0805 SMD Resistor Set* | [Résistances CMS 0805](https://www.google.com/search?q=https://www.tinytronics.nl/en/components/resistors/smd-resistors) | Couvre l'ensemble des besoins en résistances CMS 0805 de signal et de polarisation. |
+| **Résistances de puissance / Shunts** | Résistances traversantes (1/4W / 1W) ou CMS 1206/2512 | [Toutes les Résistances](https://www.tinytronics.nl/en/components/resistors) | Nécessaires uniquement pour les valeurs < 1 Ω ou les lignes dissipant plus de 125 mW. |
+| **Set de condensateurs CMS (Optionnel)** | *0805 SMD Capacitor Set* (ex. 10 pF à 10 µF) | [Condensateurs CMS](https://www.tinytronics.nl/en/components/capacitors) | Complément idéal pour le filtrage et le découplage associés aux résistances. |
+| **Accessoires de brasage CMS** | Flux de soudure, tresse à désouder et fil d'étain fin | [Matériel de Soudure](https://www.tinytronics.nl/en/tools-and-mounting/soldering) | Recommandés pour faciliter la manipulation et le brasage des boîtiers 0805. |
 
 ### Pico 2 WH
 
@@ -67,9 +79,8 @@
 |---|---|---|---|---|
 | **L'électronique en pratique : 30 expériences ludiques** | Charles Platt | Eyrolles | 3rd (2022) | [Eyrolles](https://www.eyrolles.com/Informatique/Livre/l-electronique-en-pratique-9782416006999/) |
 | **L'Électronique pour les Nuls** | Cathleen Shamieh | First Interactive | 4th (2024) | [Eyrolles](https://www.eyrolles.com/Sciences/Livre/electronique-pour-les-nuls-4e-edition-9782412102886/) |
-| **Devenez makers : Guide pratique** | Paolo Aliverti | Eyrolles | | [Eyrolles](https://www.eyrolles.com/Informatique/Livre/devenez-maker--9782100762934/) |
 
-**Note**: The list of the electronic components needed is listed [here](make-electronics-components.md)
+**Note**: The list of the electronic components needed is listed [here](book-make-electronics-material.md)
 
 ### Weather station projects
 
