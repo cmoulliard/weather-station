@@ -19,41 +19,25 @@
 | **Rain Gauge** | Tipping Bucket Rain Gauge (part of weather meter kit) | Reed switch pulse per tip → GPIO interrupt. One tip = 0.2794 mm of rain. RJ11 connector. | [SparkFun SEN-15901](https://www.sparkfun.com/products/15901) |
 | **Wind Speed** | Anemometer (part of weather meter kit) | Reed switch, 1 pulse per rotation → GPIO interrupt. Speed = pulses/sec × 2.4 km/h. RJ11 connector. | [SparkFun SEN-15901](https://www.sparkfun.com/products/15901) |
 | **Wind Direction** | Wind Vane (part of weather meter kit) | Resistor ladder producing variable voltage → ADC analog read. 16 directions. RJ11 connector. Requires 10 kΩ pull-down resistor. | [SparkFun SEN-15901](https://www.sparkfun.com/products/15901) |
-
+| **Accelerometer & gyroscope**  | MPU-6050 |  |  [TinyTronics](https://www.tinytronics.nl/en/sensors/acceleration-rotation/mpu-6050-accelerometer-and-gyroscope-3-axis-module-3.3v-5v) - [TinyTronics](https://www.tinytronics.nl/en/sensors/acceleration-rotation/mpu-6500-accelerometer-gyroscope-6dof-module-3.3v-5v) |
+| **Hall effect sensor** | 3144 | magnetic interrupter without contact | [TinyTronics](ttps://www.tinytronics.nl/en/sensors/magnetic-field/3144-hall-effect-switch)  |
+| **Magnetic sensor** | AS5600 | | [TinyTronics](https://www.tinytronics.nl/en/sensors/magnetic-field/as5600-magnetic-angle-sensor-encoder-module)|
+  
 ### ESP32
+
+Firebeetle v2 spec: https://wiki.dfrobot.com/dfr1075/#tech_specs
 
 ![firebeetle-v2-solar-panels](https://www.haraldkreuzer.net/application/files/6017/1905/6635/Firebeetle_2_ESP32_C6_PXL_20240622_094806785.jpg)
 
 | Category | Recommended Product Reference | Key Specifications / Details | Tinytronics Link |
 | --- | --- | --- | --- |
 | **Microcontroller** | DFRobot FireBeetle 2 ESP32-C6 - https://www.dfrobot.com/product-2771.html | RISC-V 160MHz, BLE 5.3 + Wi-Fi 6, onboard solar MPPT charge controller & JST-PH battery jack. | [View ESP32-C6 Boards](https://www.tinytronics.nl/en/development-boards/microcontroller-boards/with-wi-fi/dfrobot-firebeetle-2-esp32-c6-development-board-seperate-headers) |
-| **Rechargeable Battery** | Li-Ion Battery 3.6V (3350mAh – 6700mAh) | Panasonic 18650 Li-ion Battery - 3350mAh - 6.7A | [TinyTronics](https://www.tinytronics.nl/en/power/batteries/18650/panasonic-18650-li-ion-battery-3350mah-6.7a-ncr18650b) |
-| **18650 Battery Holder** | 1x 18650 Battery Holder (leaf spring contacts, wires per cell) | Holds one 18650 Li-Ion cell. Bare wires — solder a JST-PH cable for plug connection. | [TinyTronics](https://www.tinytronics.nl/en/power/battery-holders-and-clips/18650/1x-18650-battery-holder-leaf-spring-contacts-wires-per-cell) |
-| **18650 Battery Module** | LilyGO TTGO T-Bat (CN3065 solar charger) | 18650 holder with solar panel input, DC-DC converter, stable output voltage. €5.50. | [TinyTronics](https://www.tinytronics.nl/en/power/power-banks-and-battery-modules/lilygo-ttgo-t-bat-with-18650-battery-holder-cn3065) |
+| **Rechargeable Battery** | Li-Ion Battery 3.6V | Panasonic 18650 - 3350mAh - 6.7A - 18x65mm - No circuit protection | [TinyTronics](https://www.tinytronics.nl/en/power/batteries/18650/panasonic-18650-li-ion-battery-3350mah-6.7a-ncr18650b) |
+| **Rechargeable Battery** | Li-Ion Battery 3.6V | Keeppower 18650 - 3500mAh - 10A - 19x69mm - built-in protection circuit| [TinyTronics](https://www.tinytronics.nl/en/power/batteries/18650/keeppower-18650-li-ion-battery-3500mah-10a) |
+| **18650 Battery Holder** | 1x 18650 Battery Holder | Holds one 18650 Li-Ion cell. Bare wires — solder a JST-PH cable for plug connection - 22x78mm | [TinyTronics](https://www.tinytronics.nl/en/power/battery-holders-and-clips/18650/1x-18650-battery-holder-leaf-spring-contacts-wires-per-cell) |
+| **18650 Battery Module** | LilyGO TTGO T-Bat (CN3065 solar charger) | 18650 holder with solar panel input, DC-DC converter, stable output voltage - 90L x 21.5W x 27H mm | [TinyTronics](https://www.tinytronics.nl/en/power/power-banks-and-battery-modules/lilygo-ttgo-t-bat-with-18650-battery-holder-cn3065) |
 | **Rechargeable Battery** | Li-Polymer Battery 3.7V (1200mAh – 2000mAh) | Single-cell 3.7V Lithium-Polymer battery with standard JST-PH 2.0mm connector. | [TinyTronics](https://www.tinytronics.nl/en/power/batteries/li-po/pkcell-li-po-battery-3.7v-2000mah-jst-ph-lp803860) |
 | **Solar Panel** | Mini Solar Panel 5V or 6V (1W – 2W) | Monocrystalline / Polycrystalline panel outputting 5V–6V DC (approx. 150mA–300mA in sun). | [TinyTronics](https://www.tinytronics.nl/en/power/solar-energy/solar-panels) |
-
-**Optional**
-
-| Category | Recommended Product Reference | Key Specifications / Details | Tinytronics Link |
-| --- | --- | --- | --- |
-| **Battery Connector** | JST-PH 2.0mm 2-Pin Cable | Plug extension/lead for solar panel or custom battery connections. | [TinyTronics](https://tinytronics.nl/shop/en/cables/jst/jst-2.0mm-connector-with-cable-ph2.0-2-pins) |
-| **Sensor Wiring** | Dupont Female-to-Female Jumper Wires | 10cm or 20cm wires to connect the BME280 sensor to the FireBeetle I2C pins (`SDA` / `SCL`). | [TinyTronics](https://www.tinytronics.nl/en/cables-and-connectors/cables-and-adapters/prototyping-wires/dupont-compatible-and-jumper/dupont-jumper-wire-female-female-10cm-10-wires) |
-| **Crimping Tool** | SN-2549 Crimping Tool (28-18AWG, 0.1-1.0mm²) | Crimps JST-XH and Dupont connectors. Steel jaws with plastic handle. | [TinyTronics](https://www.tinytronics.nl/en/tools-and-mounting/tools/pliers-and-cutters/crimping-tools/sn-2549-crimping-tool-28-18awg-0.1-1.0mm2) |
-| **JST-PH Connector Set** | JST-PH Compatible Crimp Connector and Housing Set | Crimp pins + housings (2.0mm pitch) for making custom JST-PH cables. | [TinyTronics](https://www.tinytronics.nl/en/cables-and-connectors/connectors/jst-compatible/jst-ph-compatible-crimp-connector-and-housing-set) |
-| **Multimeter** | UNI-T UT139A Multimeter | Allow to test too batteries. €40. | [TinyTronics](https://www.tinytronics.nl/en/tools-and-mounting/tools/measuring/lcr-and-multimeters/uni-t-ut139a-multimeter) |
-
-TODO: 
-- Add alligator clips - https://www.tinytronics.nl/en/cables-and-connectors/cables-and-adapters/alligator-clip/goobay-alligator-clip-cable-set-50cm-10-pieces
-- battery with loose wires: https://www.tinytronics.nl/en/power/battery-holders-and-clips/aa/2x-aa-battery-holder-with-loose-wires
-- resistors: https://www.tinytronics.nl/en/components/resistors/resistors/10%CF%89-1m%CF%89-resistor-set
-
-| Élément / Composant | Référence / Spécification Tinytronics | Lien Tinytronics | Usage & Remarques |
-| --- | --- | --- | --- |
-| **Set de résistances CMS 0805** | *1Ω-10MΩ 0805 SMD Resistor Set* | [Résistances CMS 0805](https://www.google.com/search?q=https://www.tinytronics.nl/en/components/resistors/smd-resistors) | Couvre l'ensemble des besoins en résistances CMS 0805 de signal et de polarisation. |
-| **Résistances de puissance / Shunts** | Résistances traversantes (1/4W / 1W) ou CMS 1206/2512 | [Toutes les Résistances](https://www.tinytronics.nl/en/components/resistors) | Nécessaires uniquement pour les valeurs < 1 Ω ou les lignes dissipant plus de 125 mW. |
-| **Set de condensateurs CMS (Optionnel)** | *0805 SMD Capacitor Set* (ex. 10 pF à 10 µF) | [Condensateurs CMS](https://www.tinytronics.nl/en/components/capacitors) | Complément idéal pour le filtrage et le découplage associés aux résistances. |
-| **Accessoires de brasage CMS** | Flux de soudure, tresse à désouder et fil d'étain fin | [Matériel de Soudure](https://www.tinytronics.nl/en/tools-and-mounting/soldering) | Recommandés pour faciliter la manipulation et le brasage des boîtiers 0805. |
 
 ### Pico 2 WH
 

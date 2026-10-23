@@ -1,0 +1,467 @@
+<mxfile host="app.diagrams.net" agent="Claude" version="24.0.0">
+  <diagram id="weather-station-arch" name="Weather Station Architecture">
+    <mxGraphModel dx="1422" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ==================== LEGEND ==================== -->
+        <mxCell id="legend-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#CCCCCC;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="30" width="280" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-title" value="&lt;b&gt;Legend:&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="35" width="70" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-comp" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="65" width="20" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-comp-label" value="Electronics components" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1248" y="58" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-power-line" value="" style="endArrow=none;html=1;strokeColor=#FF0000;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1220" y="100" as="sourcePoint" />
+            <mxPoint x="1240" y="100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend-power-label" value="Power" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1248" y="86" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-i2c-line" value="" style="endArrow=none;html=1;strokeColor=#0000FF;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1220" y="128" as="sourcePoint" />
+            <mxPoint x="1240" y="128" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend-i2c-label" value="I2C bus (+ power)" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1248" y="114" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-pulse-line" value="" style="endArrow=none;html=1;strokeColor=#7B2D8B;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1220" y="156" as="sourcePoint" />
+            <mxPoint x="1240" y="156" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend-pulse-label" value="Pulse (+ power)" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1248" y="142" width="120" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== SOLAR PANEL ==================== -->
+        <mxCell id="solar-panel" value="&lt;b&gt;Solar panel&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;strokeWidth=2;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="530" y="40" width="320" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== STEVENSON SCREEN ==================== -->
+        <!-- Roof -->
+        <mxCell id="roof" value="" style="triangle;whiteSpace=wrap;html=1;fillColor=#E0E0E0;strokeColor=#333333;strokeWidth=2;direction=north;" vertex="1" parent="1">
+          <mxGeometry x="440" y="90" width="500" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Screen body (outer) -->
+        <mxCell id="screen-body" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#333333;strokeWidth=2;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="460" y="160" width="460" height="420" as="geometry" />
+        </mxCell>
+
+        <!-- Left louvers group -->
+        <mxCell id="louver-l1" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="430" y="185" as="sourcePoint" /><mxPoint x="475" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-l2" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="425" y="215" as="sourcePoint" /><mxPoint x="475" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-l3" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="420" y="245" as="sourcePoint" /><mxPoint x="475" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-l4" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="418" y="275" as="sourcePoint" /><mxPoint x="475" y="290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-l5" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="416" y="305" as="sourcePoint" /><mxPoint x="475" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-l6" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="416" y="335" as="sourcePoint" /><mxPoint x="475" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-l7" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="416" y="365" as="sourcePoint" /><mxPoint x="475" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-l8" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="416" y="395" as="sourcePoint" /><mxPoint x="475" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-l9" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="418" y="425" as="sourcePoint" /><mxPoint x="475" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-l10" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="420" y="455" as="sourcePoint" /><mxPoint x="475" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-l11" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="425" y="485" as="sourcePoint" /><mxPoint x="475" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-l12" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="430" y="515" as="sourcePoint" /><mxPoint x="475" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-l13" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="438" y="545" as="sourcePoint" /><mxPoint x="475" y="555" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Right louvers group -->
+        <mxCell id="louver-r1" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="905" y="200" as="sourcePoint" /><mxPoint x="950" y="185" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-r2" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="905" y="230" as="sourcePoint" /><mxPoint x="955" y="215" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-r3" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="905" y="260" as="sourcePoint" /><mxPoint x="960" y="245" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-r4" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="905" y="290" as="sourcePoint" /><mxPoint x="962" y="275" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-r5" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="905" y="320" as="sourcePoint" /><mxPoint x="964" y="305" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-r6" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="905" y="350" as="sourcePoint" /><mxPoint x="964" y="335" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-r7" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="905" y="380" as="sourcePoint" /><mxPoint x="964" y="365" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-r8" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="905" y="410" as="sourcePoint" /><mxPoint x="964" y="395" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-r9" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="905" y="440" as="sourcePoint" /><mxPoint x="962" y="425" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-r10" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="905" y="470" as="sourcePoint" /><mxPoint x="960" y="455" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-r11" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="905" y="500" as="sourcePoint" /><mxPoint x="955" y="485" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-r12" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="905" y="530" as="sourcePoint" /><mxPoint x="950" y="515" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="louver-r13" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="905" y="555" as="sourcePoint" /><mxPoint x="942" y="545" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ==================== BME280 ==================== -->
+        <mxCell id="bme280" value="&lt;b&gt;BME280&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="600" y="180" width="120" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== WATERPROOF ENCLOSURE ==================== -->
+        <mxCell id="wp-enclosure" value="Waterproof enclosure" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0F0F0;strokeColor=#999999;strokeWidth=1.5;verticalAlign=bottom;fontSize=11;fontColor=#888888;" vertex="1" parent="1">
+          <mxGeometry x="510" y="250" width="340" height="300" as="geometry" />
+        </mxCell>
+
+        <!-- ESP32 -->
+        <mxCell id="esp32" value="&lt;b&gt;ESP32&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;FireBeetle v2&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="540" y="280" width="130" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- TP4056 BMS -->
+        <mxCell id="tp4056" value="&lt;b&gt;TP4056&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Battery charge&lt;br&gt;regulator (BMS)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="710" y="275" width="120" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- Battery -->
+        <mxCell id="battery" value="&lt;b&gt;Battery&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;&quot;&gt;Li-Ion 18650&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="710" y="400" width="120" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- Legs -->
+        <mxCell id="leg-left" value="" style="endArrow=none;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="580" as="sourcePoint" /><mxPoint x="560" y="640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="leg-right" value="" style="endArrow=none;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="820" y="580" as="sourcePoint" /><mxPoint x="820" y="640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="base" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#333333;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="510" y="640" width="360" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== WIRES INSIDE STEVENSON ==================== -->
+
+        <!-- I2C: BME280 → ESP32 -->
+        <mxCell id="wire-bme-esp" value="" style="endArrow=none;html=1;strokeColor=#0000FF;strokeWidth=2;" edge="1" parent="1" source="bme280" target="esp32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Power: Solar → TP4056 -->
+        <mxCell id="wire-solar-tp" value="" style="endArrow=none;html=1;strokeColor=#FF0000;strokeWidth=2;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="solar-panel" target="tp4056">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Power: TP4056 → Battery -->
+        <mxCell id="wire-tp-bat" value="" style="endArrow=none;html=1;strokeColor=#FF0000;strokeWidth=2;" edge="1" parent="1" source="tp4056" target="battery">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Power: TP4056 → ESP32 -->
+        <mxCell id="wire-tp-esp" value="" style="endArrow=none;html=1;strokeColor=#FF0000;strokeWidth=2;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="tp4056" target="esp32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== ANEMOMETER ==================== -->
+        <mxCell id="anemo-label" value="&lt;b&gt;Anemometer&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="80" y="30" width="110" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Cup 1 (top) -->
+        <mxCell id="cup1" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#E8E8E8;strokeColor=#333333;strokeWidth=2;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="110" y="60" width="50" height="50" as="geometry" />
+        </mxCell>
+        <!-- Cup 2 (bottom-left) -->
+        <mxCell id="cup2" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#E8E8E8;strokeColor=#333333;strokeWidth=2;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="40" y="145" width="50" height="50" as="geometry" />
+        </mxCell>
+        <!-- Cup 3 (bottom-right) -->
+        <mxCell id="cup3" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#E8E8E8;strokeColor=#333333;strokeWidth=2;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="180" y="145" width="50" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Hub -->
+        <mxCell id="hub" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#888888;strokeColor=#333333;strokeWidth=2;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="125" y="130" width="20" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Arms -->
+        <mxCell id="arm1" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="135" y="130" as="sourcePoint" /><mxPoint x="135" y="100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arm2" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="127" y="148" as="sourcePoint" /><mxPoint x="85" y="155" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arm3" value="" style="endArrow=none;html=1;strokeColor=#666666;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="143" y="148" as="sourcePoint" /><mxPoint x="185" y="155" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Shaft -->
+        <mxCell id="shaft" value="" style="endArrow=none;html=1;strokeColor=#555555;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="135" y="150" as="sourcePoint" /><mxPoint x="135" y="295" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Sensor housing -->
+        <mxCell id="sensor-housing" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#333333;strokeWidth=1.5;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="45" y="295" width="180" height="140" as="geometry" />
+        </mxCell>
+
+        <!-- AS5600 -->
+        <mxCell id="as5600" value="&lt;b&gt;Magnetic encoder&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;color:#007BFF;&quot;&gt;AS5600 · I2C · 12-bit&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="310" width="150" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- A3144 (anemometer) -->
+        <mxCell id="a3144-anemo" value="&lt;b&gt;Hall effect sensor&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;color:#7B2D8B;&quot;&gt;A3144 · Pulse · 1/rev&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="375" width="150" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== WIND VANE ==================== -->
+        <mxCell id="vane-label" value="&lt;b&gt;Wind vane&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="85" y="460" width="100" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Vane pointer -->
+        <mxCell id="vane-arrow" value="" style="shape=singleArrow;whiteSpace=wrap;html=1;fillColor=#DDDDDD;strokeColor=#333333;strokeWidth=2;arrowWidth=0.4;arrowSize=0.4;" vertex="1" parent="1">
+          <mxGeometry x="50" y="490" width="170" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== WIRES: ANEMOMETER → STEVENSON ==================== -->
+
+        <!-- I2C from AS5600 to ESP32 (blue) -->
+        <mxCell id="wire-i2c-as5600" value="" style="rounded=1;html=1;strokeColor=#0000FF;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.7;entryDx=0;entryDy=0;endArrow=none;" edge="1" parent="1" source="as5600" target="esp32">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="310" y="330" />
+              <mxPoint x="310" y="600" />
+              <mxPoint x="430" y="600" />
+              <mxPoint x="430" y="326" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Pulse from A3144 to ESP32 (purple) -->
+        <mxCell id="wire-pulse-a3144" value="" style="rounded=1;html=1;strokeColor=#7B2D8B;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;endArrow=none;" edge="1" parent="1" source="a3144-anemo" target="esp32">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="280" y="395" />
+              <mxPoint x="280" y="625" />
+              <mxPoint x="420" y="625" />
+              <mxPoint x="420" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ==================== TIPPING BUCKET RAIN GAUGE ==================== -->
+        <mxCell id="rain-gauge-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8F8F8;strokeColor=#333333;strokeWidth=2;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="180" width="270" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="rain-label" value="&lt;b&gt;Tipping bucket rain gauge&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1055" y="190" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Funnel -->
+        <mxCell id="funnel" value="" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fillColor=#E0E0E0;strokeColor=#333333;strokeWidth=2;direction=south;flipV=1;size=35;" vertex="1" parent="1">
+          <mxGeometry x="1085" y="230" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="funnel-label" value="Funnel" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1145" y="255" width="60" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Rain drops -->
+        <mxCell id="drop1" value="" style="shape=mxgraph.flowchart.delay;whiteSpace=wrap;html=1;fillColor=#90CAF9;strokeColor=#42A5F5;rotation=90;opacity=70;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="215" width="8" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="drop2" value="" style="shape=mxgraph.flowchart.delay;whiteSpace=wrap;html=1;fillColor=#90CAF9;strokeColor=#42A5F5;rotation=90;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="210" width="8" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="drop3" value="" style="shape=mxgraph.flowchart.delay;whiteSpace=wrap;html=1;fillColor=#90CAF9;strokeColor=#42A5F5;rotation=90;opacity=70;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="218" width="8" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="drop4" value="" style="shape=mxgraph.flowchart.delay;whiteSpace=wrap;html=1;fillColor=#90CAF9;strokeColor=#42A5F5;rotation=90;opacity=50;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="212" width="7" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="drop5" value="" style="shape=mxgraph.flowchart.delay;whiteSpace=wrap;html=1;fillColor=#90CAF9;strokeColor=#42A5F5;rotation=90;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="1225" y="214" width="7" height="12" as="geometry" />
+        </mxCell>
+
+        <!-- Pivot triangle -->
+        <mxCell id="pivot" value="" style="triangle;whiteSpace=wrap;html=1;fillColor=#AAAAAA;strokeColor=#333333;direction=north;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="340" width="30" height="25" as="geometry" />
+        </mxCell>
+
+        <!-- Bucket A -->
+        <mxCell id="bucket-a" value="A" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#333333;strokeWidth=1.5;fontSize=11;size=5;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="370" width="70" height="35" as="geometry" />
+        </mxCell>
+        <!-- Bucket B -->
+        <mxCell id="bucket-b" value="B" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#333333;strokeWidth=1.5;fontSize=11;size=5;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="370" width="70" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Seesaw beam -->
+        <mxCell id="seesaw" value="" style="endArrow=none;html=1;strokeColor=#555555;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1090" y="375" as="sourcePoint" /><mxPoint x="1260" y="368" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Magnet -->
+        <mxCell id="magnet" value="N &amp;nbsp; S" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0E0;strokeColor=#DC3545;fontSize=10;fontColor=#C62828;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="415" width="50" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- A3144 (rain gauge) -->
+        <mxCell id="a3144-rain" value="&lt;b&gt;Hall effect sensor&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px;color:#7B2D8B;&quot;&gt;A3144 · Pulse · 1/tip&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="470" width="190" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Dashed line magnet → sensor -->
+        <mxCell id="magnet-sensor" value="" style="endArrow=none;html=1;strokeColor=#999999;strokeWidth=1;dashed=1;dashPattern=4 4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1125" y="435" as="sourcePoint" /><mxPoint x="1125" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Drain label -->
+        <mxCell id="drain" value="&lt;font color=&quot;#42A5F5&quot;&gt;↓ water drains ↓&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1115" y="540" width="120" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Calibration note -->
+        <mxCell id="calibration" value="&lt;font color=&quot;#888888&quot; style=&quot;font-size:10px;&quot;&gt;1 tip = 0.2794 mm rain&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="620" width="130" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== WIRES: RAIN GAUGE → STEVENSON ==================== -->
+
+        <!-- Pulse from rain gauge A3144 to ESP32 (purple) -->
+        <mxCell id="wire-pulse-rain" value="" style="rounded=1;html=1;strokeColor=#7B2D8B;strokeWidth=2;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.3;entryDx=0;entryDy=0;endArrow=none;" edge="1" parent="1" source="a3144-rain" target="esp32">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1010" y="490" />
+              <mxPoint x="1010" y="650" />
+              <mxPoint x="930" y="650" />
+              <mxPoint x="930" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Power/ground bus to rain gauge (blue) -->
+        <mxCell id="wire-bus-rain" value="" style="rounded=1;html=1;strokeColor=#0000FF;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=none;" edge="1" parent="1" source="a3144-rain" target="base">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1175" y="680" />
+              <mxPoint x="690" y="680" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
