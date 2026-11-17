@@ -50,3 +50,6 @@ nb-configuration.xml
 # Node modules
 application/node_modules
 application/target
+
+# Git projects imported
+docs/anniversaire/esp32-escape-game-dabou
