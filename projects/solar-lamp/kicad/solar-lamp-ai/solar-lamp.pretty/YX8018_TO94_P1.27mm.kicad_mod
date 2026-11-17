@@ -1,0 +1,181 @@
+(footprint "YX8018_TO94_P1.27mm"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "YX8018 solar lawn lamp controller, TO-94, native 1.27 mm lead pitch (datasheet Ver2.1 p.10: e=1.270 TYP, e1=3.71-3.91, b=0.36-0.50, C=0.36-0.51, D=4.98-5.28, E=3.45-3.75, theta=45 deg). Pinout per Table 1: 1=LX (power switch drain), 2=GND, 3=CE (solar cell -, enable + charge control), 4=VCC (battery + and solar cell +). Pad 1 is square. Leads are NOT formed - for home etching use YX8018_TO94_Spread2.54mm instead.")
+	(tags "YX8018 QX5252 TO-94 solar LED driver")
+	(property "Reference" "REF**"
+		(at 1.905 -5.2 0)
+		(layer "F.SilkS")
+		(uuid "5b2b2b02-0002-4002-8002-000000000001")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(property "Value" "YX8018"
+		(at 1.905 2.6 0)
+		(layer "F.Fab")
+		(uuid "5b2b2b02-0002-4002-8002-000000000002")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "f5d927d7-f240-4e1c-bbf5-a9c0c9c28f6a")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "54baadc7-5028-4059-a914-dc93da9f48cd")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr through_hole)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -0.76 -3.4)
+		(end -0.06 -4.1)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "5b2b2b02-0002-4002-8002-000000000007")
+	)
+	(fp_line
+		(start -0.76 -1.1)
+		(end -0.76 -3.4)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "5b2b2b02-0002-4002-8002-000000000005")
+	)
+	(fp_line
+		(start -0.76 -1.1)
+		(end 4.57 -1.1)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "5b2b2b02-0002-4002-8002-000000000004")
+	)
+	(fp_line
+		(start -0.06 -4.1)
+		(end 3.87 -4.1)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "5b2b2b02-0002-4002-8002-000000000009")
+	)
+	(fp_line
+		(start 4.57 -3.4)
+		(end 3.87 -4.1)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "5b2b2b02-0002-4002-8002-000000000008")
+	)
+	(fp_line
+		(start 4.57 -1.1)
+		(end 4.57 -3.4)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "5b2b2b02-0002-4002-8002-000000000006")
+	)
+	(fp_poly
+		(pts
+			(xy -1.55 -0.45) (xy -0.95 -0.45) (xy -1.25 0.15)
+		)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill yes)
+		(layer "F.SilkS")
+		(uuid "5b2b2b02-0002-4002-8002-000000000003")
+	)
+	(fp_rect
+		(start -0.66 -4.1)
+		(end 4.47 -0.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "5b2b2b02-0002-4002-8002-00000000000b")
+	)
+	(fp_text user "LX GND CE VCC"
+		(at 1.905 1.55 0)
+		(layer "F.Fab")
+		(uuid "5b2b2b02-0002-4002-8002-00000000000a")
+		(effects
+			(font
+				(size 0.5 0.5)
+				(thickness 0.08)
+			)
+		)
+	)
+	(pad "1" thru_hole rect
+		(at 0 0)
+		(size 1.1 1.5)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "5b2b2b02-0002-4002-8002-00000000000c")
+	)
+	(pad "2" thru_hole oval
+		(at 1.27 0)
+		(size 1.1 1.5)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "5b2b2b02-0002-4002-8002-00000000000d")
+	)
+	(pad "3" thru_hole oval
+		(at 2.54 0)
+		(size 1.1 1.5)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "5b2b2b02-0002-4002-8002-00000000000e")
+	)
+	(pad "4" thru_hole oval
+		(at 3.81 0)
+		(size 1.1 1.5)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "5b2b2b02-0002-4002-8002-00000000000f")
+	)
+	(embedded_fonts no)
+)

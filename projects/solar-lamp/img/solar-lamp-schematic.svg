@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 500" width="760" height="500" font-family="Helvetica, Arial, sans-serif" font-size="13">
+  <rect width="760" height="500" fill="#ffffff"/>
+
+  <g stroke="#222" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- ===== VCC rail: solar + AND battery + are the same node ===== -->
+    <path d="M110,90 H480"/>
+
+    <!-- Inductor sits on the VCC rail; its right end is LX -->
+    <path d="M480,90 a12.5,12.5 0 0 1 25,0 a12.5,12.5 0 0 1 25,0 a12.5,12.5 0 0 1 25,0 a12.5,12.5 0 0 1 25,0"/>
+    <path d="M580,90 H600 V175"/>
+
+    <!-- ===== Battery branch: B+ -> slide switch -> VCC rail ===== -->
+    <path d="M110,242 V190"/>
+    <path d="M110,160 V90"/>
+    <path d="M110,190 L126,162"/>
+    <path d="M95,242 H125 M102,250 H118"/>
+    <path d="M110,250 V340"/>
+
+    <!-- ===== Solar cell: + to VCC rail, - to CE ===== -->
+    <path d="M235,172 V90"/>
+    <path d="M220,172 H250 M227,180 H243"/>
+    <path d="M235,180 V290"/>
+    <!-- light arrows -->
+    <path d="M166,116 L206,146 M196,144 L206,146 L203,136"/>
+    <path d="M166,140 L206,170 M196,168 L206,170 L203,160"/>
+
+    <!-- ===== IC pins ===== -->
+    <path d="M350,175 H310 V90"/>
+    <path d="M350,225 H330 V290 H235"/>
+    <path d="M410,250 V340"/>
+    <path d="M470,175 H600"/>
+
+    <!-- ===== LED on LX, cathode to GND ===== -->
+    <path d="M600,175 V212"/>
+    <path d="M588,232 H612"/>
+    <path d="M600,232 V340"/>
+    <path d="M618,193 L642,178 M632,178 L642,178 L638,187"/>
+    <path d="M618,209 L642,194 M632,194 L642,194 L638,203"/>
+
+    <!-- ===== GND rail ===== -->
+    <path d="M110,340 H600"/>
+    <path d="M280,340 V354 M266,354 H294 M271,360 H289 M276,366 H284"/>
+
+    <!-- IC body -->
+    <rect x="350" y="150" width="120" height="100" fill="#f3f6fa"/>
+  </g>
+
+  <polygon points="588,212 612,212 600,232" fill="#222"/>
+
+  <!-- junction dots -->
+  <g fill="#222">
+    <circle cx="235" cy="90" r="3.5"/>
+    <circle cx="310" cy="90" r="3.5"/>
+    <circle cx="600" cy="175" r="3.5"/>
+    <circle cx="410" cy="340" r="3.5"/>
+    <circle cx="110" cy="190" r="3" fill="#fff" stroke="#222" stroke-width="2"/>
+    <circle cx="110" cy="160" r="3" fill="#fff" stroke="#222" stroke-width="2"/>
+  </g>
+
+  <!-- ===== Labels ===== -->
+  <g fill="#222">
+    <text x="410" y="196" text-anchor="middle" font-weight="bold" font-size="15">YX8018</text>
+    <text x="410" y="212" text-anchor="middle" font-size="11" fill="#555">TO-94</text>
+    <text x="357" y="179" font-size="11">4 VCC</text>
+    <text x="357" y="229" font-size="11">3 CE</text>
+    <text x="463" y="179" font-size="11" text-anchor="end">1 LX</text>
+    <text x="410" y="244" font-size="11" text-anchor="middle">2 GND</text>
+
+    <text x="112" y="72" font-weight="bold" font-size="12" fill="#1a6ead">VCC</text>
+    <text x="142" y="72" font-size="11" fill="#555">— battery + and solar cell + share this rail</text>
+
+    <text x="252" y="218" font-size="12">Solar cell</text>
+    <text x="252" y="233" font-size="11" fill="#555">~2 V</text>
+    <text x="241" y="112" font-weight="bold" font-size="12" fill="#c0392b">S+</text>
+    <text x="241" y="284" font-weight="bold" font-size="12" fill="#c0392b">S−</text>
+    <text x="336" y="262" font-size="11" fill="#1a6ead">CE</text>
+
+    <text x="130" y="182" font-size="12">SW</text>
+    <text x="130" y="196" font-size="11" fill="#555">slide</text>
+    <text x="132" y="248">NiMH 1.2 V</text>
+    <text x="132" y="263" fill="#555">40 mAh</text>
+    <text x="116" y="112" font-weight="bold" font-size="12" fill="#c0392b">B+</text>
+    <text x="116" y="334" font-weight="bold" font-size="12" fill="#c0392b">B−</text>
+
+    <text x="530" y="68" text-anchor="middle">L  470 µH ±10 % (yellow-violet-brown-silver)</text>
+    <text x="610" y="152" font-size="11" fill="#1a6ead">LX</text>
+    <text x="652" y="214">LED 5 mm</text>
+    <text x="652" y="229" fill="#555">white</text>
+
+    <text x="310" y="333" font-size="11" fill="#555">GND</text>
+  </g>
+
+  <!-- ===== Explanatory notes, clear of the circuit ===== -->
+  <g font-size="11.5" fill="#444">
+    <text x="110" y="402" font-weight="bold" fill="#222">Day</text>
+    <text x="156" y="402">a lit panel drags CE below GND → chip off; charge flows</text>
+    <text x="156" y="418">battery − → GND → internal switch → CE → panel −.</text>
+    <text x="110" y="438" font-weight="bold" fill="#222">Night</text>
+    <text x="156" y="438">the internal 37 kΩ pull-up lifts CE toward VCC → the oscillator runs</text>
+    <text x="156" y="454">and L dumps into D1. The LED is the rectifier — there is no diode.</text>
+  </g>
+
+  <text x="690" y="484" text-anchor="end" font-size="10.5" fill="#888">PCB LH7-129 · pinout per YX8018 datasheet Ver2.1, Table 1</text>
+</svg>

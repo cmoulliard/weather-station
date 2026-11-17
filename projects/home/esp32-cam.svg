@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%" style="background-color: #0f172a; font-family: system-ui, -apple-system, sans-serif;">
+    <defs>
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" stroke-width="1"/>
+        </pattern>
+        <filter id="glow-blue" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+    </defs>
+
+    <!-- Background -->
+    <rect width="600" height="520" fill="#0f172a" />
+    <rect width="600" height="520" fill="url(#grid)" />
+
+    <!-- Title -->
+    <text x="300" y="35" text-anchor="middle" fill="#f8fafc" font-size="20" font-weight="700" letter-spacing="0.5">ESP32-CAM + MB Baseboard</text>
+
+    <!-- ===== MB BASEBOARD (bottom layer) ===== -->
+    <g transform="translate(150, 80)">
+        <!-- MB PCB Body -->
+        <rect x="0" y="160" width="300" height="240" rx="10" fill="#1a1a2e" stroke="#6366f1" stroke-width="2"/>
+        <rect x="0" y="160" width="300" height="32" rx="10" fill="#312e81"/>
+        <rect x="0" y="180" width="300" height="12" fill="#312e81"/>
+        <text x="150" y="182" text-anchor="middle" fill="#c7d2fe" font-size="13" font-weight="700" letter-spacing="1">ESP32-CAM-MB BASEBOARD</text>
+
+        <!-- Micro USB Port -->
+        <rect x="120" y="375" width="60" height="22" rx="4" fill="#94a3b8" stroke="#cbd5e1" stroke-width="1.5"/>
+        <rect x="130" y="380" width="40" height="12" rx="2" fill="#64748b"/>
+        <text x="150" y="418" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="600">Micro USB</text>
+
+        <!-- CH340 / CH9102 Chip -->
+        <rect x="55" y="280" width="50" height="30" rx="3" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+        <text x="80" y="299" text-anchor="middle" fill="#94a3b8" font-size="8" font-weight="600">CH340</text>
+
+        <!-- Reset Button (RST) -->
+        <rect x="30" y="330" width="40" height="22" rx="4" fill="#334155" stroke="#64748b" stroke-width="1.5"/>
+        <circle cx="50" cy="341" r="7" fill="#475569" stroke="#94a3b8" stroke-width="1"/>
+        <text x="50" y="370" text-anchor="middle" fill="#cbd5e1" font-size="10" font-weight="600">RST</text>
+
+        <!-- Boot Button (IO0 / FLASH) -->
+        <rect x="230" y="330" width="40" height="22" rx="4" fill="#334155" stroke="#64748b" stroke-width="1.5"/>
+        <circle cx="250" cy="341" r="7" fill="#475569" stroke="#94a3b8" stroke-width="1"/>
+        <text x="250" y="370" text-anchor="middle" fill="#cbd5e1" font-size="10" font-weight="600">IO0</text>
+
+        <!-- Power LED -->
+        <circle cx="270" y="290" r="4" fill="#22c55e" filter="url(#glow-blue)"/>
+        <text x="270" y="305" text-anchor="middle" fill="#86efac" font-size="8" font-weight="600">PWR</text>
+
+        <!-- Socket Headers (left row) -->
+        <g fill="#fbbf24" stroke="#d97706" stroke-width="0.8">
+            <rect x="15" y="196" width="8" height="80" rx="2"/>
+        </g>
+        <text x="12" y="215" text-anchor="end" fill="#fde68a" font-size="8" transform="rotate(-90, 12, 215)">SOCKET</text>
+
+        <!-- Socket Headers (right row) -->
+        <g fill="#fbbf24" stroke="#d97706" stroke-width="0.8">
+            <rect x="277" y="196" width="8" height="80" rx="2"/>
+        </g>
+
+        <!-- ===== ESP32-CAM MODULE (top layer, plugged in) ===== -->
+        <!-- PCB Body -->
+        <rect x="10" y="0" width="280" height="200" rx="8" fill="#064e3b" stroke="#059669" stroke-width="2"/>
+        <text x="150" y="25" text-anchor="middle" fill="#a7f3d0" font-size="14" font-weight="700">ESP32-CAM</text>
+
+        <!-- Antenna -->
+        <rect x="210" y="5" width="75" height="55" rx="4" fill="none" stroke="#facc15" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="248" y="36" text-anchor="middle" fill="#fde68a" font-size="9" font-weight="600">WiFi</text>
+        <text x="248" y="48" text-anchor="middle" fill="#fde68a" font-size="9" font-weight="600">Antenna</text>
+
+        <!-- OV2640 Lens -->
+        <circle cx="120" cy="100" r="38" fill="#0f172a" stroke="#64748b" stroke-width="3"/>
+        <circle cx="120" cy="100" r="25" fill="#1e1b4b" stroke="#38bdf8" stroke-width="2"/>
+        <circle cx="120" cy="100" r="12" fill="#0284c7"/>
+        <circle cx="114" cy="94" r="4" fill="#ffffff" fill-opacity="0.5"/>
+        <text x="120" y="152" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="600">OV2640 Camera</text>
+
+        <!-- Flash LED -->
+        <rect x="230" y="80" width="22" height="22" rx="3" fill="#fef08a" stroke="#ca8a04" stroke-width="1"/>
+        <text x="241" y="118" text-anchor="middle" fill="#fef08a" font-size="9" font-weight="600">Flash</text>
+        <text x="241" y="128" text-anchor="middle" fill="#fef08a" font-size="9" font-weight="600">LED</text>
+
+        <!-- MicroSD Card Slot -->
+        <rect x="30" y="170" width="60" height="20" rx="3" fill="#334155" stroke="#64748b" stroke-width="1"/>
+        <text x="60" y="184" text-anchor="middle" fill="#cbd5e1" font-size="8" font-weight="600">MicroSD</text>
+
+        <!-- Left Pin Header (8 pins) -->
+        <g fill="#a3a3a3">
+            <circle cx="10" cy="50" r="3"/>
+            <circle cx="10" cy="66" r="3"/>
+            <circle cx="10" cy="82" r="3"/>
+            <circle cx="10" cy="98" r="3"/>
+            <circle cx="10" cy="114" r="3"/>
+            <circle cx="10" cy="130" r="3"/>
+            <circle cx="10" cy="146" r="3"/>
+            <circle cx="10" cy="162" r="3"/>
+        </g>
+
+        <!-- Right Pin Header (8 pins) -->
+        <g fill="#a3a3a3">
+            <circle cx="290" cy="50" r="3"/>
+            <circle cx="290" cy="66" r="3"/>
+            <circle cx="290" cy="82" r="3"/>
+            <circle cx="290" cy="98" r="3"/>
+            <circle cx="290" cy="114" r="3"/>
+            <circle cx="290" cy="130" r="3"/>
+            <circle cx="290" cy="146" r="3"/>
+            <circle cx="290" cy="162" r="3"/>
+        </g>
+
+        <!-- Plug-in arrow indicator -->
+        <path d="M -25 120 L -15 110 L -15 130 Z" fill="#6366f1" opacity="0.7"/>
+        <path d="M 325 120 L 315 110 L 315 130 Z" fill="#6366f1" opacity="0.7"/>
+        <text x="-30" y="125" text-anchor="end" fill="#a5b4fc" font-size="9" font-weight="600" transform="rotate(-90, -30, 125)">PLUGGED IN</text>
+        <text x="345" y="125" fill="#a5b4fc" font-size="9" font-weight="600" transform="rotate(90, 345, 125)">PLUGGED IN</text>
+    </g>
+
+    <!-- CALLOUT NOTES -->
+    <!-- USB Note -->
+    <g transform="translate(300, 480)">
+        <text x="0" y="0" text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="600">Connect USB cable to computer for power &amp; programming</text>
+    </g>
+
+    <!-- Legend -->
+    <g transform="translate(60, 440)">
+        <rect x="0" y="0" width="480" height="110" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+        <text x="15" y="20" fill="#94a3b8" font-size="11" font-weight="700">LEGEND</text>
+
+        <!-- Row 1 -->
+        <rect x="15" y="30" width="12" height="8" rx="2" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+        <text x="34" y="38" fill="#e2e8f0" font-size="10" font-weight="600">CH340</text>
+        <text x="80" y="38" fill="#94a3b8" font-size="10">— USB-to-serial chip (converts USB to UART for programming)</text>
+
+        <!-- Row 2 -->
+        <circle cx="21" cy="54" r="4" fill="#22c55e"/>
+        <text x="34" y="58" fill="#e2e8f0" font-size="10" font-weight="600">PWR</text>
+        <text x="64" y="58" fill="#94a3b8" font-size="10">— Power LED (lights up when USB power is connected)</text>
+
+        <!-- Row 3 -->
+        <rect x="15" y="67" width="12" height="8" rx="2" fill="#fbbf24" stroke="#d97706" stroke-width="0.8"/>
+        <text x="34" y="75" fill="#e2e8f0" font-size="10" font-weight="600">SOCKET</text>
+        <text x="82" y="75" fill="#94a3b8" font-size="10">— Pin socket headers (ESP32-CAM plugs into these)</text>
+
+        <!-- Row 4 -->
+        <circle cx="21" cy="91" r="4" fill="#475569" stroke="#94a3b8" stroke-width="1"/>
+        <text x="34" y="95" fill="#e2e8f0" font-size="10" font-weight="600">RST / IO0</text>
+        <text x="98" y="95" fill="#94a3b8" font-size="10">— Reset and Boot buttons (used for flashing firmware)</text>
+    </g>
+
+    <!-- Flash Instructions -->
+    <g transform="translate(60, 560)">
+        <rect x="0" y="0" width="480" height="30" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+        <text x="15" y="18" fill="#94a3b8" font-size="10" font-weight="700">FLASH: </text>
+        <text x="60" y="18" fill="#e2e8f0" font-size="10">Hold IO0 → Press RST → Release IO0 → Upload firmware → Press RST to run</text>
+    </g>
+</svg>

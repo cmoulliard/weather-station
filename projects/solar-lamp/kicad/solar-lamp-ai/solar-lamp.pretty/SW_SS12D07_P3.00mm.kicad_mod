@@ -1,0 +1,89 @@
+(footprint "SW_SS12D07_P3.00mm"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "Slide switch SPDT SS12D07, 3 pins, 3.0 mm pitch. Check your switch!")
+	(property "Reference" "REF**"
+		(at 3 -2.6 0)
+		(layer "F.SilkS")
+		(uuid "fefd01ee-8647-450a-9b17-39b358c2a27a")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "SW_SS12D07_P3.00mm"
+		(at 3 2.6 0)
+		(layer "F.Fab")
+		(uuid "ed7940dd-767c-4d80-915a-4dc76f1a9b50")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "f24ffd65-07b5-49a2-9528-224e704cd1f2")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "843c6762-29d5-4c1d-b0fb-629fb7b547b8")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr through_hole)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_rect
+		(start -1.7 -1.6)
+		(end 7.7 1.6)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "d184b213-9ed0-4269-8025-61bde7cd3b52")
+	)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 2 2)
+		(drill 0.9)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "ea77dcbb-e67c-414d-afad-fc0b46fc3773")
+	)
+	(pad "2" thru_hole circle
+		(at 3 0)
+		(size 2 2)
+		(drill 0.9)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "a1edb4ec-ff70-497f-ad0a-94a4e0930659")
+	)
+	(pad "3" thru_hole circle
+		(at 6 0)
+		(size 2 2)
+		(drill 0.9)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "252961ca-fff5-4d3b-bf6a-974980d59eec")
+	)
+	(embedded_fonts no)
+)

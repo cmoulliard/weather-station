@@ -1,0 +1,101 @@
+(footprint "L_Axial_0307_P10.16mm"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "Axial inductor, body 3 x 7 mm, 10.16 mm pin spacing")
+	(property "Reference" "REF**"
+		(at 5.08 -2.6 0)
+		(layer "F.SilkS")
+		(uuid "0775d308-fe95-4803-99da-2dd90ec277d8")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "L_Axial_0307_P10.16mm"
+		(at 5.08 0 0)
+		(layer "F.Fab")
+		(uuid "6ca957f9-2f0c-452f-9c80-9eb77e802f05")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "175a198f-00c2-4a3e-941d-232d6ae046ce")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "a30b5b37-4193-4ebd-bce5-b6ff84a0c960")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr through_hole)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start 1.1 0)
+		(end 2 0)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "ccccf23c-c9a0-4d83-a1df-fe5e14cc1640")
+	)
+	(fp_line
+		(start 8.16 0)
+		(end 9.06 0)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "c59889e7-b060-4a78-bad4-e480e30098cd")
+	)
+	(fp_rect
+		(start 2 -1.4)
+		(end 8.16 1.4)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "0ea442c0-5a3e-4e0b-a8fd-875ebc98a7df")
+	)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 2 2)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "b32893a1-a5af-480e-84fb-80d359020add")
+	)
+	(pad "2" thru_hole circle
+		(at 10.16 0)
+		(size 2 2)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "62c47181-2a98-46ef-bfc9-b57effae1c23")
+	)
+	(embedded_fonts no)
+)

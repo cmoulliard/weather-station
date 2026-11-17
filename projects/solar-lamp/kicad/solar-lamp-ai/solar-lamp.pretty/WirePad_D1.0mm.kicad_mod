@@ -1,0 +1,63 @@
+(footprint "WirePad_D1.0mm"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "Solder pad for a wire, 2.5 mm pad, 1.0 mm drill")
+	(property "Reference" "REF**"
+		(at 0 -2.2 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "da9f7eaa-c06c-4d62-93c0-f0e8019a68f8")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "WirePad_D1.0mm"
+		(at 0 2.2 0)
+		(layer "F.Fab")
+		(uuid "32982caa-dfec-47ce-8b76-2d00dd5a09fa")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "5ea70400-aa1d-4059-83fa-adfc2d8ac421")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "9d5eeb3c-52e9-4e2b-bcbf-0bc61cea844b")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr through_hole)
+	(duplicate_pad_numbers_are_jumpers no)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 2.5 2.5)
+		(drill 1)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "3b4efc25-ca25-4ee5-9fdb-efd213d1842a")
+	)
+	(embedded_fonts no)
+)

@@ -1,0 +1,92 @@
+(footprint "LED_D5.0mm"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "LED 5 mm, pad 1 = K (cathode), pad 2 = A (anode), 2.54 mm")
+	(property "Reference" "REF**"
+		(at 0 2.9 0)
+		(layer "F.SilkS")
+		(uuid "82d1230b-ae2f-4bec-bd0d-1a2e6a5b6b55")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "LED_D5.0mm"
+		(at 0 -1.27 0)
+		(layer "F.Fab")
+		(uuid "c1e5343b-a8fe-47e8-b6cb-9eed04f23dd7")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "ab6ab832-d630-452e-9964-c32cc2562cc7")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "6cae61c7-40ff-4bbe-877e-30e55297ee7f")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr through_hole)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_circle
+		(center 0 -1.27)
+		(end 2.6 -1.27)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "bcc26573-7dd7-4029-a835-13b7317a8111")
+	)
+	(fp_text user "+"
+		(at -3.4 -2.54 0)
+		(layer "F.SilkS")
+		(uuid "c2e06de8-5c19-48c4-81f3-8dd1e33bd05b")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole rect
+		(at 0 0)
+		(size 1.8 1.8)
+		(drill 0.9)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "756f9ae6-6ade-48b4-9b72-937f51a681a9")
+	)
+	(pad "2" thru_hole circle
+		(at 0 -2.54)
+		(size 1.8 1.8)
+		(drill 0.9)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "97c35b0b-8ef0-4fe8-b2f7-ebc3a396ee6c")
+	)
+	(embedded_fonts no)
+)
