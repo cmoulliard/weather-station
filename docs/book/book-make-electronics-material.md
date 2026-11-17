@@ -4,6 +4,8 @@ Here's the complete material list for **"L'électronique en pratique"** (aka *Ma
 
 ## Metrial available - Freenove 20
 
+Documentation: https://docs.freenove.com/projects/fnk0020/en/latest/ and https://docs.freenove.com/projects/fnk0020/en/latest/
+
 ![freenove-020.jpg](img/freenove-020.jpg)
 
 ## To be integrated
