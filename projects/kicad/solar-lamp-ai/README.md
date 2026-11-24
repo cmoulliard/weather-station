@@ -8,9 +8,9 @@ Checked with KiCad 10.0.8: **ERC 0 errors / 0 warnings, DRC 0 errors, 0 unconnec
 | `solar-lamp.kicad_pro` | Project, open this in KiCad |
 | `solar-lamp.kicad_sch` | Schematic |
 | `solar-lamp.kicad_pcb` | PCB layout |
-| `solar-lamp.kicad_sym`, `solar-lamp.pretty/` | Project symbol & footprint libraries |
+| `solar-lamp.kicad_sym`, `solar-lamp.pretty` | Project symbol & footprint libraries |
 | `solar-lamp-gerbers.zip` | **Ready to upload** to JLCPCB / PCBWay / Aisler |
-| `gerbers/` | Unzipped Gerber + Excellon drill files |
+| `gerbers` | Unzipped Gerber + Excellon drill files |
 
 ## YX8018 pinout
 

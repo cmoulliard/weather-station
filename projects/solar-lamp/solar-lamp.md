@@ -83,12 +83,12 @@ Single-sided board, **38 × 27 mm**, through-hole parts, copper on the bottom.
 
 ### 🏭 Order the PCB online
 
-A KiCad project for this board is in [`kicad/solar-lamp-ai/`](kicad/solar-lamp-ai/README.md). It has a ready-to-upload Gerber zip: [`kicad/solar-lamp-ai/solar-lamp-gerbers.zip`](kicad/solar-lamp-ai/solar-lamp-gerbers.zip).
+A KiCad project for this board is in [`../kicad`](../kicad/solar-lamp-ai/README.md). It has a ready-to-upload Gerber zip: [`../kicad`](../kicad/solar-lamp-ai/solar-lamp-gerbers.zip).
 
 1. Upload `solar-lamp-gerbers.zip` to JLCPCB, PCBWay or Aisler.
 2. Settings: 2 layers, 38 × 27 mm, FR-4, 1.6 mm, HASL, qty 5, no assembly.
 
-The project is verified against KiCad 10.0.8: ERC 0 errors / 0 warnings, DRC 0 errors, 0 unconnected pads. The pinout matches the datasheet; see the project [README](kicad/solar-lamp-ai/README.md) for the one cosmetic DRC warning that KiCad raises for any rotated footprint.
+The project is verified against KiCad 10.0.8: ERC 0 errors / 0 warnings, DRC 0 errors, 0 unconnected pads. The pinout matches the datasheet; see the project [README](../kicad/solar-lamp-ai/README.md) for the one cosmetic DRC warning that KiCad raises for any rotated footprint.
 
 ---
 

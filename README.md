@@ -6,7 +6,7 @@ Build a complete weather station using a single board computer (SBC), environmen
 
 ### Weather station 
 
-See [esp32-weather-station.md](docs/esp32-weather-station.md)
+See [esp32-weather-station.md](projects/weather-station/esp32-weather-station.md)
 
 ### Raspberry Pi main station
 
@@ -14,4 +14,4 @@ TODO
 
 ### Software
 
-[software.md](docs/software.md)
+[software.md](projects/weather-station/software.md)

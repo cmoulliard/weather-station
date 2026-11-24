@@ -107,7 +107,7 @@ influxdb3 create database weather --token $INFLUXDB3_AUTH_TOKEN
 
 ## 5. Configure the Quarkus Application
 
-Edit `application/.env`:
+Edit `../../application/.env`:
 
 ```bash
 # Switch data source to the OpenWeatherMap API
@@ -250,7 +250,7 @@ influxdb3 create token --admin
 influxdb3 create database weather --token <your-token>
 ```
 
-The Quarkus weather station app can run alongside InfluxDB on the same Pi — see the main [README](../README.md) for the systemd service setup for the Quarkus binary.
+The Quarkus weather station app can run alongside InfluxDB on the same Pi — see the main [README](../../README.md) for the systemd service setup for the Quarkus binary.
 
 ## Notes
 

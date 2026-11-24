@@ -28,8 +28,9 @@ def svg_uri(w, h, body):
 def pins_style(w, h, pins):
     return "points=[" + ",".join(f"[{x/w:.5f},{y/h:.5f},0]" for x, y in pins) + "];"
 
-LABEL = ("verticalLabelPosition=bottom;verticalAlign=top;align=center;labelBackgroundColor=none;"
-         "fontSize=11;fontColor=#1d2a3a;spacingTop=-2;")
+# part label under the image: bold, dark, on a white box so it stays readable over holes and wires
+LABEL = ("verticalLabelPosition=bottom;verticalAlign=top;align=center;labelBackgroundColor=#ffffff;"
+         "labelBorderColor=#9aa3ab;fontSize=12;fontStyle=1;fontColor=#111111;spacingTop=1;")
 
 PARTS = []   # dicts: title, w, h, style, value, pins
 
@@ -48,23 +49,26 @@ def pinmark(x, y): return f'<circle cx="{x}" cy="{y}" r="3" fill="#6d6d6d"/>'
 
 # --------------------------------------------------------------------------- breadboard (half size, 30 columns)
 BB_W, BB_H = 640, 400
-BB_ROWS = {"t+": 30, "t-": 50, "a": 90, "b": 110, "c": 130, "d": 150, "e": 170,
-           "f": 230, "g": 250, "h": 270, "i": 290, "j": 310, "b-": 350, "b+": 370}
+LBL = "#111111"            # colour of the row letters / column numbers on the breadboards
+# Real breadboard turned 90° (row 1 on the left): the f–j half is on top (j next to the top rails),
+# the a–e half at the bottom (a next to the bottom rails).
+BB_ROWS = {"t-": 30, "t+": 50, "j": 90, "i": 110, "h": 130, "g": 150, "f": 170,
+           "e": 230, "d": 250, "c": 270, "b": 290, "a": 310, "b-": 350, "b+": 370}
 def bb_x(col): return 10 + P*col          # col 1..30
 def breadboard():
     b = [f'<rect x="1" y="1" width="{BB_W-2}" height="{BB_H-2}" rx="8" fill="#fbfbf8" stroke="#9aa0a6" stroke-width="2"/>',
          f'<rect x="20" y="186" width="{BB_W-40}" height="28" fill="#e4e6e4"/>',
          f'<rect x="20" y="198" width="{BB_W-40}" height="4" fill="#b9bdbb"/>']
-    for y, c in ((19, "#e05a5a"), (61, "#3d8fd6"), (339, "#3d8fd6"), (381, "#e05a5a")):
+    for y, c in ((19, "#3d8fd6"), (61, "#e05a5a"), (339, "#3d8fd6"), (381, "#e05a5a")):
         b.append(f'<rect x="24" y="{y}" width="{BB_W-48}" height="2.5" fill="{c}"/>')
-    for y, s, c in ((30, "+", "#d62728"), (50, "−", "#1f6fd0"), (350, "−", "#1f6fd0"), (370, "+", "#d62728")):
+    for y, s, c in ((30, "−", "#1f6fd0"), (50, "+", "#d62728"), (350, "−", "#1f6fd0"), (370, "+", "#d62728")):
         b.append(T(12, y+4, s, 13, c, "bold")); b.append(T(BB_W-12, y+4, s, 13, c, "bold"))
     for r, y in BB_ROWS.items():
         if len(r) == 1:
-            b.append(T(12, y+3.5, r, 9, "#888")); b.append(T(BB_W-12, y+3.5, r, 9, "#888"))
+            b.append(T(12, y+4.5, r, 13, LBL, "bold")); b.append(T(BB_W-12, y+4.5, r, 13, LBL, "bold"))
     for col in range(1, 31):
         if col == 1 or col % 5 == 0:
-            b.append(T(bb_x(col), 75, str(col), 8, "#888")); b.append(T(bb_x(col), 330, str(col), 8, "#888"))
+            b.append(T(bb_x(col), 76, str(col), 12, LBL, "bold")); b.append(T(bb_x(col), 332, str(col), 12, LBL, "bold"))
         for y in BB_ROWS.values():
             b.append(f'<rect x="{bb_x(col)-5}" y="{y-5}" width="10" height="10" rx="1.5" fill="#d4d6d6"/>'
                      f'<rect x="{bb_x(col)-3}" y="{y-3}" width="6" height="6" fill="#4a4a4a"/>')
@@ -89,13 +93,17 @@ def pad():
     return part("PCB hole / pad (1 connection point)", 20, 20, b, [(10, 10)])
 
 # --------------------------------------------------------------------------- passive parts
-BANDS = {"0": "#111", "1": "#7b4a1e", "2": "#d62728", "3": "#f28e1c", "4": "#f2d21c"}
-def resistor(label, digits, mult):
-    cols = [BANDS[digits[0]], BANDS[digits[1]], BANDS[mult], "#c9a227"]
+BANDS = {"0": "#111111", "1": "#7b4a1e", "2": "#d62728", "3": "#f28e1c", "4": "#f2c200",
+         "5": "#2ca02c", "6": "#1f6fd0", "7": "#8a2be2", "8": "#8a8a8a", "9": "#ffffff"}
+def resistor(label, ohms):
+    """1 % metal-film resistor, 5-band code: 3 digits + multiplier + brown tolerance band (set apart)."""
+    exp, v = 0, ohms
+    while v >= 1000: v //= 10; exp += 1
+    cols = [BANDS[d] for d in f"{v:03d}"] + [BANDS[str(exp)], BANDS["1"]]
     b = [lead(10, 10, 90, 10), pinmark(10, 10), pinmark(90, 10),
-         '<rect x="30" y="3" width="40" height="14" rx="6" fill="#e8c88a" stroke="#8a6a3a" stroke-width="1.2"/>']
-    for i, c in enumerate(cols):
-        b.append(f'<rect x="{36 + i*7 if i < 3 else 61}" y="3.5" width="4" height="13" fill="{c}"/>')
+         '<rect x="30" y="3" width="40" height="14" rx="6" fill="#86b8e8" stroke="#3b6f9e" stroke-width="1.2"/>']
+    for x, c in zip((35, 41, 47, 53, 62), cols):
+        b.append(f'<rect x="{x}" y="3.5" width="3.5" height="13" fill="{c}" stroke="#555" stroke-width="0.3"/>')
     return part(f"Resistor {label} (pins 4 holes apart)", 100, 20, "".join(b), [(10, 10), (90, 10)], label)
 
 def diode(label, body, band, title, band_left=False):
@@ -134,6 +142,20 @@ def push_button():
          "".join(f'<circle cx="{x}" cy="{y}" r="4" fill="#c3b0e0" stroke="#4a2d7a"/>' for x in (10, 50) for y in (10, 70)))
     return part("Push button 6x6 (straddle channel; dashed = always linked, press links left↔right)",
                 60, 80, b, [(10, 10), (50, 10), (10, 70), (50, 70)], "button")
+
+def push_button_12x6():
+    """Push button of the Freenove FNK0020 kit: body 12 x 6 mm (≈ 94 x 47 px). Legs 5 holes apart across the
+    channel (rows d / g) and 2 holes apart along it. Pins on the same side (dashed) are always linked."""
+    b = ('<line x1="10" y1="4" x2="10" y2="116" stroke="#9a9a9a" stroke-width="3"/>'
+         '<line x1="50" y1="4" x2="50" y2="116" stroke="#9a9a9a" stroke-width="3"/>'
+         '<rect x="6.5" y="13" width="47" height="94" rx="4" fill="#3a3a3a" stroke="#111" stroke-width="1.5"/>'
+         '<line x1="12" y1="18" x2="12" y2="102" stroke="#777" stroke-width="1.5" stroke-dasharray="3,3"/>'
+         '<line x1="48" y1="18" x2="48" y2="102" stroke="#777" stroke-width="1.5" stroke-dasharray="3,3"/>'
+         '<rect x="15" y="40" width="30" height="40" rx="5" fill="#151515" stroke="#666" stroke-width="2"/>'
+         '<circle cx="30" cy="60" r="11" fill="#202020" stroke="#555" stroke-width="1.5"/>' +
+         "".join(f'<circle cx="{x}" cy="{y}" r="4" fill="#c3b0e0" stroke="#4a2d7a"/>' for x in (10, 50) for y in (10, 110)))
+    return part("Push button 12x6 mm, Freenove kit (legs rows d / g, 2 holes apart; dashed = always linked)",
+                60, 120, b, [(10, 10), (50, 10), (10, 110), (50, 110)], "button")
 
 def slide_switch():
     b = ('<rect x="2" y="6" width="56" height="20" rx="3" fill="#b8bcc0" stroke="#666"/>'
@@ -193,10 +215,12 @@ def screw_terminal(n):
 
 # --------------------------------------------------------------------------- semis & misc
 def transistor(kind):
-    b = ('<path d="M 4 34 L 4 18 A 26 26 0 0 1 56 18 L 56 34 Z" fill="#1f1f1f" stroke="#000"/>' + T(30, 26, kind, 10, "#ddd", "bold") +
-         "".join(lead(x, 34, x, 50) + pinmark(x, 50) for x in (10, 30, 50)) +
-         T(10, 59, "E", 8, "#333", "bold") + T(30, 59, "B", 8, "#333", "bold") + T(50, 59, "C", 8, "#333", "bold"))
-    return part(f"{kind} transistor TO-92 (E B C, flat face front — check your part)", 60, 60, b, [(10, 50), (30, 50), (50, 50)], kind)
+    # E / B / C: bold dark letters on a white box, same look as the part labels (LABEL)
+    pin_lab = "".join(f'<rect x="{x - 6.5}" y="46" width="13" height="13" fill="#ffffff" stroke="#9aa3ab" stroke-width="1"/>'
+                      + T(x, 56.5, s, 11, "#111111", "bold") for x, s in ((10, "E"), (30, "B"), (50, "C")))
+    b = ('<path d="M 4 30 L 4 16 A 26 26 0 0 1 56 16 L 56 30 Z" fill="#1f1f1f" stroke="#000"/>' + T(30, 24, kind, 10, "#ddd", "bold") +
+         "".join(lead(x, 30, x, 42) + pinmark(x, 42) for x in (10, 30, 50)) + pin_lab)
+    return part(f"{kind} transistor TO-92 (E B C, flat face front — check your part)", 60, 60, b, [(10, 42), (30, 42), (50, 42)], kind)
 
 def potentiometer():
     b = ('<rect x="4" y="6" width="92" height="48" rx="6" fill="#2f74c0" stroke="#174a85"/>'
@@ -250,12 +274,12 @@ def breadboard_vertical():
     for k, x in BBV_COLS.items():
         if k.endswith("+"): b.append(T(x, 22, "+", 14, "#d62728", "bold")); b.append(T(x, H_-8, "+", 14, "#d62728", "bold"))
         elif k.endswith("-"): b.append(T(x, 22, "−", 14, "#1f6fd0", "bold")); b.append(T(x, H_-8, "−", 14, "#1f6fd0", "bold"))
-        else: b.append(T(x, bbv_y(0)+3.5, k, 9, "#888")); b.append(T(x, bbv_y(31)+3.5, k, 9, "#888"))
+        else: b.append(T(x, bbv_y(0)+4.5, k, 13, LBL, "bold")); b.append(T(x, bbv_y(31)+4.5, k, 13, LBL, "bold"))
     pins = []
     for r in range(0, 32):
         y = bbv_y(r)
         if 1 <= r <= 30 and (r == 1 or r % 5 == 0):
-            b.append(T(72, y+3, str(r), 8, "#888")); b.append(T(330, y+3, str(r), 8, "#888"))
+            b.append(T(72, y+4, str(r), 12, LBL, "bold")); b.append(T(330, y+4, str(r), 12, LBL, "bold"))
         for k, x in BBV_COLS.items():
             if len(k) == 1 and not 1 <= r <= 30: continue
             pins.append((x, y))
@@ -322,17 +346,80 @@ def wire_style(color, ortho=False):
 
 # --------------------------------------------------------------------------- build library
 bb = breadboard(); perfboard(); pad()
-r100 = resistor("100 Ω", "10", "1"); r220 = resistor("220 Ω", "22", "1"); r1k = resistor("1 kΩ", "10", "2"); resistor("10 kΩ", "10", "3")
+r100 = resistor("100 Ω", 100); r220 = resistor("220 Ω", 220); r470 = resistor("470 Ω", 470); r1k = resistor("1 kΩ", 1_000); resistor("10 kΩ", 10_000)
 diode("1N4007", "#202020", "#cfd3d6", "Diode 1N4007 rectifier")
 d4007 = diode("1N4007", "#202020", "#cfd3d6", "Diode 1N4007 rectifier", band_left=True)
 diode("1N4148", "#e8603a", "#111", "Diode 1N4148 signal"); diode("1N4148", "#e8603a", "#111", "Diode 1N4148 signal", band_left=True)
 ledr = led("#ff3b30", "red", "#ffc2bd"); led("#34c759", "green", "#c8f5d2"); led("#2f7bf5", "blue", "#c9dcff"); led("#ffd60a", "yellow", "#fff3b0"); led("#f2f2f2", "white", "#ffffff")
 cap_ceramic(); cap_electrolytic()
-btn = push_button(); slide_switch(); rel = relay(); relr = relay(rotated=True)
+btn = push_button(); btn12 = push_button_12x6(); slide_switch(); rel = relay(); relr = relay(rotated=True)
 bat = battery9v(); battery_aa2(); screw_terminal(2); screw_terminal(3)
 transistor("NPN"); transistor("PNP"); potentiometer(); buzz = buzzer(); ldr(); esp = esp32()
 bbv = breadboard_vertical(); mpu = mpu6050(); oled = oled096(); trim = trimmer3386(); ldr_2 = ldr2()
 r10k = [p for p in PARTS if p["title"].startswith("Resistor 10 kΩ")][0]
+
+# --------------------------------------------------------------------------- breadboard power module (BPM)
+# HW-131 module of the Freenove FNK0020 kit, drawn from a photo: DC jack, push switch, green LED, USB-A,
+# two SOT-223 regulators, 5V / 3.3V / GND header, one "5V OFF 3.3" jumper per side.
+# Drawn for the VERTICAL board (400 x 250): rail pins at x 30/50 (left + −) and 350/370 (right + −),
+# two pins per rail at y 150 and 230 (4 holes apart). DC plug enters at the top-left (pins 8, 9).
+BPM_W, BPM_H = 400, 250
+def _bpm_body():
+    W = "#f2f2f2"
+    def t(x, y, s, size=9, anchor="middle", color=W, weight="bold"): return T(x, y, s, size, color, weight, anchor)
+    b = ['<path d="M 6 2 H 394 V 216 L 394 246 L 330 246 L 320 236 H 80 L 70 246 L 6 246 Z" fill="#141414" stroke="#000" stroke-width="2"/>',
+         # DC jack (top-left), plug from the top
+         '<rect x="2" y="0" width="92" height="134" rx="4" fill="#222" stroke="#000"/><rect x="14" y="0" width="68" height="20" fill="#0d0d0d"/>',
+         '<circle cx="48" cy="70" r="24" fill="#2e2e2e" stroke="#555" stroke-width="2"/><circle cx="48" cy="70" r="6" fill="#999"/>',
+         t(48, 124, "DC-10", 9, color="#888"),
+         # push switch (latching)
+         '<rect x="98" y="8" width="72" height="80" rx="3" fill="#c9c9c4" stroke="#777"/><rect x="116" y="20" width="36" height="50" rx="2" fill="#efefea" stroke="#999"/>',
+         '<rect x="104" y="94" width="58" height="34" fill="none" stroke="#ddd" stroke-width="1.5"/>',
+         # green LED + SMD resistor, electrolytic capacitor
+         '<circle cx="198" cy="51" r="12" fill="#3fd25a" stroke="#1b7a2c" stroke-width="2"/><circle cx="194" cy="47" r="4" fill="#b9f5c4"/>',
+         '<rect x="232" y="44" width="10" height="16" fill="#222" stroke="#ddd"/>',
+         '<circle cx="198" cy="94" r="18" fill="#1e1e1e" stroke="#555" stroke-width="2"/><circle cx="198" cy="94" r="12" fill="#e6e6e6"/>',
+         # USB-A female (top-right)
+         '<rect x="254" y="12" width="122" height="122" rx="3" fill="#c3c6c9" stroke="#777" stroke-width="1.5"/>',
+         '<rect x="276" y="34" width="26" height="50" rx="2" fill="#9ea2a6"/><rect x="330" y="34" width="26" height="50" rx="2" fill="#9ea2a6"/>',
+         f'<text x="392" y="64" font-size="13" fill="{W}" font-weight="bold" text-anchor="middle" transform="rotate(-90 392 64)">HW-131</text>',
+         # 5V / 3.3V / GND header (4 x 2 pins)
+         t(120, 175, "5V", 9, "end"), t(120, 207, "3.3V", 9, "end"),
+         f'<text x="186" y="182" font-size="8" fill="{W}" font-weight="bold" text-anchor="middle" transform="rotate(-90 186 182)">GND</text>']
+    for y in (148, 170, 194, 216):
+        b.append(f'<rect x="132" y="{y - 9}" width="44" height="18" rx="2" fill="#efd27a" stroke="#a88a2a"/>'
+                 f'<circle cx="143" cy="{y}" r="3" fill="#7a5d18"/><circle cx="165" cy="{y}" r="3" fill="#7a5d18"/>')
+    # two SOT-223 regulators (no readable marking) + SMD capacitors
+    for x0 in (192, 252):
+        b.append(f'<rect x="{x0 + 6}" y="138" width="34" height="16" fill="#cfd2d4" stroke="#888"/>'
+                 f'<rect x="{x0}" y="152" width="46" height="26" fill="#1c1c1c" stroke="#444"/>'
+                 + "".join(f'<rect x="{x0 + 4 + 16 * k}" y="182" width="9" height="10" fill="#cfd2d4"/>' for k in range(3)))
+    for x0 in (194, 226, 258):
+        b.append(f'<rect x="{x0}" y="204" width="26" height="14" fill="none" stroke="#ddd"/><rect x="{x0 + 8}" y="207" width="10" height="8" fill="#b08a5a"/>')
+    # jumpers "5V OFF 3.3" (cap on 5V) on each side
+    for x0, labs in ((10, (("5V", 18), ("OFF", 52), ("3.3", 92))), (306, (("5V", 314), ("OFF", 348), ("3.3", 384)))):
+        b.append(f'<rect x="{x0}" y="190" width="86" height="22" rx="2" fill="#efd27a" stroke="#a88a2a"/>'
+                 + "".join(f'<circle cx="{x0 + 11 + 21 * k}" cy="201" r="3" fill="#7a5d18"/>' for k in range(4))
+                 + f'<rect x="{x0 + 2}" y="186" width="40" height="30" rx="3" fill="#f3e3a6" stroke="#a88a2a"/>')
+        b.append("".join(t(x, 182, s, 9) for s, x in labs))
+    # rail pins: two per rail (y 150 and 230), labels + / −
+    for x, lab in ((30, "+"), (50, "−"), (350, "+"), (370, "−")):
+        for y in (150, 230):
+            b.append(f'<circle cx="{x}" cy="{y}" r="7" fill="#111" stroke="#bbb" stroke-width="1.5"/><circle cx="{x}" cy="{y}" r="3" fill="#d4a017"/>')
+        b.append(t(x + 12, 216, lab, 11, color="#ffffff"))
+    return "".join(b)
+_BPM_PINS_V = [(30, 230), (50, 230), (350, 230), (370, 230), (30, 150), (50, 150), (350, 150), (370, 150), (56, 0), (40, 0)]
+def bpm(horizontal=False):
+    """BPM part. pins: 0 L+ 1 L− 2 R+ 3 R− (y 230) · 4-7 same rails at y 150 · 8/9 DC plug + / −.
+    horizontal=True: rotated for the horizontal board (250 x 400), left of the board:
+    L+ → b+ (y 370), L− → b− (350), R+ → t+ (50), R− → t− (30); pins at x 230 and 150; DC plug on the left edge."""
+    body = _bpm_body()
+    if not horizontal:
+        return part("Breadboard power module BPM HW-131 (vertical board)", BPM_W, BPM_H, body, _BPM_PINS_V)
+    pins = [(y, BPM_W - x) for x, y in _BPM_PINS_V]
+    return part("Breadboard power module BPM HW-131 (horizontal board, plug on the left)", BPM_H, BPM_W,
+                f'<g transform="matrix(0,-1,1,0,0,{BPM_W})">{body}</g>', pins)
+bpm_v = bpm(); bpm_h = bpm(horizontal=True)
 
 def vertex_xml(p, cid="2", x=0, y=0, extra=""):
     return (f'<mxCell id="{cid}" value="{esc(p["value"])}" style="{p["style"]}{extra}" vertex="1" parent="1">'
@@ -371,23 +458,23 @@ def main():
     B = "bb"
     batt = place(bat, 0, 1, "t+"); cells.pop()                       # place battery off-board instead:
     n[0] += 1; batt = f"p{n[0]}"; cells.append(vertex_xml(bat, batt, 40, 160))
-    b1 = place(btn, 0, 3, "e")                                       # button cols 3/5
-    ra = place(r100, 0, 5, "c")                                      # 100R  col5 -> col9
-    k1 = place(relr, 5, 14, "e")                                     # pin 5 = COM 6 at (10,10) after rotation                                     # relay COM col14, coil col18, NC/NO col19
-    dd = place(d4007, 0, 18, "c")                                    # band-left variant: cathode col18, anode col22
-    rb = place(r1k, 0, 19, "h")                                      # 1k   col19 -> col23 (bottom half)
-    l1 = place(ledr, 0, 23, "g")                                     # LED anode col23, cathode col24
+    b1 = place(btn, 0, 3, "f")                                       # button cols 3/5
+    ra = place(r100, 0, 5, "h")                                      # 100R  col5 -> col9
+    k1 = place(relr, 5, 14, "f")                                     # pin 5 = COM 6 at (10,10) after rotation                                     # relay COM col14, coil col18, NC/NO col19
+    dd = place(d4007, 0, 18, "h")                                    # band-left variant: cathode col18, anode col22
+    rb = place(r1k, 0, 19, "c")                                      # 1k   col19 -> col23 (bottom half)
+    l1 = place(ledr, 0, 23, "d")                                     # LED anode col23, cathode col24
     R, K, O = "#d62728", "#1b1b1b", "#f28e1c"
     wire(R, batt, pin_ref(bat, 0), B, bb_ref(1, "t+"), [(70, 130)])
     wire(K, batt, pin_ref(bat, 1), B, bb_ref(1, "t-"), [(90, 150)])
     wire(R, B, bb_ref(30, "t+"), B, bb_ref(30, "b+"), [(880, 130), (880, 470)])
     wire(K, B, bb_ref(30, "t-"), B, bb_ref(30, "b-"), [(860, 150), (860, 450)])
-    wire(R, B, bb_ref(3, "t+"), B, bb_ref(3, "a"))                    # + rail -> button
-    wire(O, B, bb_ref(9, "b"), B, bb_ref(18, "b"))                    # 100R -> coil (pin 4)
-    wire(K, B, bb_ref(22, "a"), B, bb_ref(22, "t-"))                  # diode anode -> - rail
-    wire(R, B, bb_ref(14, "a"), B, bb_ref(14, "t+"))                  # COM -> + rail
-    wire(K, B, bb_ref(18, "j"), B, bb_ref(18, "b-"))                  # coil (pin 3) -> - rail
-    wire(K, B, bb_ref(24, "j"), B, bb_ref(24, "b-"))                  # LED cathode -> - rail
+    wire(R, B, bb_ref(3, "t+"), B, bb_ref(3, "j"))                    # + rail -> button
+    wire(O, B, bb_ref(9, "i"), B, bb_ref(18, "i"))                    # 100R -> coil (pin 4)
+    wire(K, B, bb_ref(22, "j"), B, bb_ref(22, "t-"))                  # diode anode -> - rail
+    wire(R, B, bb_ref(14, "j"), B, bb_ref(14, "t+"))                  # COM -> + rail
+    wire(K, B, bb_ref(18, "a"), B, bb_ref(18, "b-"))                  # coil (pin 3) -> - rail
+    wire(K, B, bb_ref(24, "a"), B, bb_ref(24, "b-"))                  # LED cathode -> - rail
     def text(x, y, s, size=13, bold=False):
         n[0] += 1
         cells.append(f'<mxCell id="t{n[0]}" value="{esc(s)}" style="text;html=1;align=left;verticalAlign=middle;fontSize={size};fontStyle={1 if bold else 0};fontColor=#1d2a3a;" vertex="1" parent="1">'
